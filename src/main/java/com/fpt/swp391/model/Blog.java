@@ -22,5 +22,5 @@ public class Blog {
     private String content;
     @ManyToOne
     @JoinColumn(name = "blog_category_id", nullable = false)
-    private Category blogCategory;
+    private BlogCategory blogCategory;
 }
