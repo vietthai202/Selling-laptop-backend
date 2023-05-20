@@ -25,6 +25,7 @@ public class BrandServiceImpl implements BrandService{
         brandRepository.save(br);
         return br;
     }
+
     @Override
     public Brand findById(Long id) {
         Optional<Brand> brandOptional = brandRepository.findById(id);
@@ -34,6 +35,7 @@ public class BrandServiceImpl implements BrandService{
         }
         return null;
     }
+
     @Override
     public List<Brand> listAllBrand() {
         return brandRepository.findAll();
