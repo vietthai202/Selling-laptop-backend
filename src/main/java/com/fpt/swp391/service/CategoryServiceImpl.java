@@ -4,11 +4,12 @@ import com.fpt.swp391.model.Category;
 import com.fpt.swp391.repository.CategoryRepository;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.Optional;
 
 @Service
 public class CategoryServiceImpl implements CategoryService {
-    private final CategoryRepository categoryRepository;
+    private final CategoryRepository categoryRepository ;
 
     public CategoryServiceImpl(CategoryRepository categoryRepository){
         this.categoryRepository = categoryRepository;
@@ -22,6 +23,21 @@ public class CategoryServiceImpl implements CategoryService {
         c.setImage(category.getImage());
         categoryRepository.save(c);
         return c;
+    }
+
+    @Override
+    public Category findById(Long id) {
+        Optional<Category> categoryOptional = categoryRepository.findById(id);
+        if(categoryOptional.isPresent()){
+            Category category = categoryOptional.get();
+            return category;
+        }
+        return null;
+    }
+
+    @Override
+    public List<Category> listAll() {
+        return (List<Category>) categoryRepository.findAll();
     }
 
     @Override
