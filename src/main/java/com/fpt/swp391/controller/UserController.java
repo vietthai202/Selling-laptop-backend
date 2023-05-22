@@ -7,6 +7,7 @@ import com.fpt.swp391.security.dto.DeleteRequest;
 import com.fpt.swp391.security.service.UserService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
@@ -48,6 +49,7 @@ public class UserController {
         }
     }
 
+    @PreAuthorize("hasRole('ADMIN')")
     @PostMapping("/users/delete")
     public ResponseEntity<ApiExceptionResponse> deleteUserByUserName(@Valid @RequestBody DeleteRequest deleteRequest) {
         User user = userService.findByUsername(deleteRequest.getUsername());
