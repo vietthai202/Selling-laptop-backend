@@ -5,6 +5,7 @@ import com.fpt.swp391.dto.BrandDto;
 import com.fpt.swp391.exceptions.ApiExceptionResponse;
 import com.fpt.swp391.model.Brand;
 import com.fpt.swp391.service.BrandService;
+import com.fpt.swp391.utils.ApiSuccessResponse;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -31,40 +32,38 @@ public class BrandController {
         return ResponseEntity.status(HttpStatus.OK).body(BrandDtos);
     }
     @PostMapping("/createBrand")
-    public ResponseEntity<Brand> sayHello(@RequestBody Brand brand) {
+    public ResponseEntity<?> createBrand(@RequestBody Brand brand) {
         Brand br = brandService.createBrand(brand);
         if(br != null){
-            final ApiExceptionResponse response = new ApiExceptionResponse("Success!", HttpStatus.OK, LocalDateTime.now());
-            return ResponseEntity.status(HttpStatus.OK).body(br);
+            ApiSuccessResponse response = new ApiSuccessResponse("Create Successfully!", HttpStatus.OK, LocalDateTime.now());
+            return ResponseEntity.status(HttpStatus.OK).body(response);
         }
-        final ApiExceptionResponse response = new ApiExceptionResponse("User not found!", HttpStatus.BAD_REQUEST, LocalDateTime.now());
+        final ApiExceptionResponse response = new ApiExceptionResponse("Create Fail!", HttpStatus.BAD_REQUEST, LocalDateTime.now());
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(null);
     }
 
     @DeleteMapping("/brands/{id}")
-    public ResponseEntity<ApiExceptionResponse> deleteBrand(@PathVariable Long id){
+    public ResponseEntity<?> deleteBrand(@PathVariable Long id){
         Brand br = brandService.findById(id);
-        ApiExceptionResponse response;
         if (br != null) {
             boolean isDelete = brandService.deleteBrand(br.getId());
             if(isDelete){
-                response = new ApiExceptionResponse("Delete Success!", HttpStatus.OK, LocalDateTime.now());
+                ApiSuccessResponse response = new ApiSuccessResponse("Delete Successfully!", HttpStatus.OK, LocalDateTime.now());
                 return ResponseEntity.status(HttpStatus.OK).body(response);
             }
         }
-        response = new ApiExceptionResponse("Delete Fail!", HttpStatus.OK, LocalDateTime.now());
-        return ResponseEntity.status(HttpStatus.OK).body(response);
+        ApiExceptionResponse response = new ApiExceptionResponse("Delete Fail!", HttpStatus.BAD_REQUEST, LocalDateTime.now());
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
         }
 
         @PostMapping("/brands/update/{id}")
-        public ResponseEntity<ApiExceptionResponse> updateBrand(@PathVariable Long id, @RequestBody BrandDto brandDto) {
+        public ResponseEntity<?> updateBrand(@PathVariable Long id, @RequestBody BrandDto brandDto) {
             Brand br = brandService.updateBrand(id, brandDto);
-            ApiExceptionResponse response;
             if (br != null) {
-                response = new ApiExceptionResponse("Update brand successfully!", HttpStatus.OK, LocalDateTime.now());
+                ApiSuccessResponse response = new ApiSuccessResponse("Update Successfully!", HttpStatus.OK, LocalDateTime.now());
                 return ResponseEntity.status(HttpStatus.OK).body(response);
             }
-            response = new ApiExceptionResponse("Update brand fail!", HttpStatus.BAD_REQUEST, LocalDateTime.now());
+            ApiExceptionResponse response = new ApiExceptionResponse("Update Fail!", HttpStatus.BAD_REQUEST, LocalDateTime.now());
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
         }
     }

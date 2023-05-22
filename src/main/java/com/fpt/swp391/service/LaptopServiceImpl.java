@@ -1,17 +1,53 @@
 package com.fpt.swp391.service;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
+import com.fpt.swp391.dto.LaptopDto;
+import com.fpt.swp391.model.Brand;
+import com.fpt.swp391.model.Category;
 import com.fpt.swp391.model.Laptop;
-import com.fpt.swp391.repository.LaptopRepository;
+import com.fpt.swp391.model.User;
+import com.fpt.swp391.repository.*;
+import org.springframework.stereotype.Service;
 
+@Service
 public class LaptopServiceImpl implements LaptopService{
-    private LaptopRepository laptopRepository = null;
+
+    private final LaptopRepository laptopRepository;
+    private final CategoryRepository categoryRepository;
+    private final BrandRepository brandRepository;
+    private final UserRepository userRepository;
+    public LaptopServiceImpl( LaptopRepository laptopRepository, CategoryRepository categoryRepository, BrandRepository brandRepository, UserRepository userRepository) {
+        this.laptopRepository = laptopRepository;
+        this.categoryRepository = categoryRepository;
+        this.brandRepository = brandRepository;
+        this.userRepository = userRepository;
+    }
 
     @Override
-    public List<Laptop> listAllLaptop(){
-        return laptopRepository.findAll();
+    public List<LaptopDto> listAllLaptop(){
+        List<Laptop> lt = laptopRepository.findAll();
+        List<LaptopDto> lt1 = new ArrayList<>();
+
+        for (Laptop laptop:lt) {
+            LaptopDto laptopDto = new LaptopDto();
+            laptopDto.setUserId(laptop.getUser().getId());
+            laptopDto.setTitle(laptop.getTitle());
+            laptopDto.setMetaTitle(laptop.getMetaTitle());
+            laptopDto.setSlug(laptop.getSlug());
+            laptopDto.setSummary(laptop.getSummary());
+            laptopDto.setSku(laptop.getSku());
+            laptopDto.setPrice(laptop.getPrice());
+            laptopDto.setDiscount(laptop.getDiscount());
+            laptopDto.setQuantity(laptop.getQuantity());
+            laptopDto.setCategoryId(laptop.getCategory().getId());
+            laptopDto.setBrandId(laptop.getBrand().getId());
+            lt1.add(laptopDto);
+
+        }
+        return lt1;
     }
 
     @Override
@@ -25,9 +61,9 @@ public class LaptopServiceImpl implements LaptopService{
     }
 
     @Override
-    public Laptop createLaptop(Laptop laptop) {
+    public Laptop createLaptop(LaptopDto laptop) {
         Laptop lt = new Laptop();
-        lt.setUser(laptop.getUser());
+
         lt.setTitle(laptop.getTitle());
         lt.setMetaTitle(laptop.getMetaTitle());
         lt.setSlug(laptop.getSlug());
@@ -36,14 +72,24 @@ public class LaptopServiceImpl implements LaptopService{
         lt.setPrice(laptop.getPrice());
         lt.setDiscount(laptop.getDiscount());
         lt.setQuantity(laptop.getQuantity());
-        lt.setMetadata(laptop.getMetadata());
-        lt.setTags(laptop.getTags());
-        lt.setCategory(laptop.getCategory());
-        lt.setBrand(laptop.getBrand());
-        lt.setCartItems(laptop.getCartItems());
-        lt.setListFaps(laptop.getListFaps() );
-        lt.setOrderItems(laptop.getOrderItems());
-        lt.setReviews(laptop.getReviews());
+//        lt.setMetadata(laptop.getMetadata());
+//        lt.setTags(laptop.getTags());
+
+        User u = userRepository.findById(laptop.getUserId()).orElse(new User());
+        lt.setUser(u);
+        Category c = categoryRepository.findById(laptop.getCategoryId()).orElse(new Category());
+        lt.setCategory(c);
+
+        Brand b = brandRepository.findById(laptop.getBrandId()).orElse(new Brand());
+        lt.setBrand(b);
+
+
+
+
+//        lt.setCartItems(laptop.getCartItems());
+//        lt.setListFaps(laptop.getListFaps() );
+//        lt.setOrderItems(laptop.getOrderItems());
+//        lt.setReviews(laptop.getReviews());
         laptopRepository.save(lt);
         return lt;
     }
@@ -60,11 +106,10 @@ public class LaptopServiceImpl implements LaptopService{
     }
 
     @Override
-    public Laptop updateLaptop(Long id, Laptop laptop){
+    public Laptop updateLaptop(Long id, LaptopDto laptop){
         Optional<Laptop> laptopOptional = laptopRepository.findById(id);
         if(laptopOptional.isPresent()){
             Laptop lt = laptopOptional.get();
-            lt.setUser(laptop.getUser());
             lt.setTitle(laptop.getTitle());
             lt.setMetaTitle(laptop.getMetaTitle());
             lt.setSlug(laptop.getSlug());
@@ -73,14 +118,10 @@ public class LaptopServiceImpl implements LaptopService{
             lt.setPrice(laptop.getPrice());
             lt.setDiscount(laptop.getDiscount());
             lt.setQuantity(laptop.getQuantity());
-            lt.setMetadata(laptop.getMetadata());
-            lt.setTags(laptop.getTags());
-            lt.setCategory(laptop.getCategory());
-            lt.setBrand(laptop.getBrand());
-            lt.setCartItems(laptop.getCartItems());
-            lt.setListFaps(laptop.getListFaps() );
-            lt.setOrderItems(laptop.getOrderItems());
-            lt.setReviews(laptop.getReviews());
+            Category c = categoryRepository.findById(laptop.getCategoryId()).orElse(new Category());
+            lt.setCategory(c);
+            Brand b = brandRepository.findById(laptop.getBrandId()).orElse(new Brand());
+            lt.setBrand(b);
             laptopRepository.save(lt);
             return lt;
         }
