@@ -3,6 +3,7 @@ package com.fpt.swp391.model;
 import lombok.*;
 
 import javax.persistence.*;
+import java.util.Date;
 
 @Getter
 @Setter
@@ -20,6 +21,10 @@ public class Blog {
     private User user;
     private String name;
     private String content;
+    private  String image;
+    private Date createdAt;
+    private String shortContent;
+    private String slug;
     @ManyToOne
     @JoinColumn(name = "blog_category_id", nullable = false)
     private BlogCategory blogCategory;
