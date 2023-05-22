@@ -1,6 +1,5 @@
 package com.fpt.swp391.controller;
 
-
 import com.fpt.swp391.dto.BrandDto;
 import com.fpt.swp391.exceptions.ApiExceptionResponse;
 import com.fpt.swp391.model.Brand;
@@ -12,7 +11,6 @@ import org.springframework.web.bind.annotation.*;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
-
 
 @RestController
 

@@ -19,10 +19,13 @@ public class Blog {
     @ManyToOne
     @JoinColumn(name="user_id", nullable=false)
     private User user;
+    @Column(columnDefinition = "VARCHAR(1000)")
     private String name;
+    @Column(columnDefinition = "TEXT")
     private String content;
     private  String image;
     private Date createdAt;
+    @Column(columnDefinition = "VARCHAR(1000)")
     private String shortContent;
     private String slug;
     @ManyToOne

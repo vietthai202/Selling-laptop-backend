@@ -1,14 +1,16 @@
 package com.fpt.swp391.service;
+
 import com.fpt.swp391.dto.BrandDto;
 import com.fpt.swp391.model.Brand;
 import com.fpt.swp391.repository.BrandRepository;
 import org.springframework.stereotype.Service;
+
 import java.util.List;
 import java.util.Optional;
 
 @Service
 
-public class BrandServiceImpl implements BrandService{
+public class BrandServiceImpl implements BrandService {
     private BrandRepository brandRepository = null;
 
     public BrandServiceImpl(BrandRepository brandRepository) {
@@ -53,9 +55,9 @@ public class BrandServiceImpl implements BrandService{
     }
 
     @Override
-    public Brand updateBrand(Long id, BrandDto brandDto){
+    public Brand updateBrand(Long id, BrandDto brandDto) {
         Optional<Brand> brandOptional = brandRepository.findById(id);
-        if(brandOptional.isPresent()){
+        if (brandOptional.isPresent()) {
             Brand brand = brandOptional.get();
             brand.setName(brandDto.getName());
             brand.setImage(brandDto.getImage());
