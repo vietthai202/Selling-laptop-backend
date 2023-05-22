@@ -11,14 +11,35 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 @RestController
 public class BlogController {
     private final BlogService blogService;
     public BlogController(BlogService blogService) {
         this.blogService = blogService;
-
     }
+
+    @GetMapping("/blog/{slug}")
+    public ResponseEntity<BlogDto> getBlogBySlug(@PathVariable String slug) {
+        BlogDto blog = blogService.getBlogBySlug(slug);
+        if(blog != null) {
+            return ResponseEntity.status(HttpStatus.OK).body(blog);
+        } else {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+        }
+    }
+
+    @GetMapping("/blogs")
+    public ResponseEntity<List<BlogDto>> getAllBlog() {
+        List<BlogDto> blogDtoList = blogService.getAllBlog();
+        if(blogDtoList != null) {
+            return ResponseEntity.status(HttpStatus.OK).body(blogDtoList);
+        } else {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+        }
+    }
+
     @PostMapping( "/createBlog")
     public ResponseEntity<Blog> createBlogCategory(@RequestBody BlogDto blog) {
         blogService.createBlog(blog);

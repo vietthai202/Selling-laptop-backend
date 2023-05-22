@@ -7,26 +7,23 @@ import com.fpt.swp391.model.User;
 import com.fpt.swp391.repository.BlogCategogyRepository;
 import com.fpt.swp391.repository.BlogRespository;
 import com.fpt.swp391.repository.UserRepository;
-import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
 import java.util.Optional;
 
-@Slf4j
 @Service
-@RequiredArgsConstructor
 public class BlogServiceIml implements BlogService {
-    private BlogRespository blogRespository = null;
-    private BlogCategogyRepository blogCategogyRepository = null;
-    private UserRepository userRepository = null;
+    private final BlogRespository blogRespository;
+    private final BlogCategogyRepository blogCategogyRepository;
+    private final UserRepository userRepository;
 
-
-    public BlogServiceIml(BlogRespository blogRespository, BlogCategogyRepository blogCategogyRepository,UserRepository userRepository) {
+    public BlogServiceIml(BlogRespository blogRespository, BlogCategogyRepository blogCategogyRepository, UserRepository userRepository) {
         this.blogRespository = blogRespository;
         this.blogCategogyRepository = blogCategogyRepository;
         this.userRepository = userRepository;
-
     }
 
     @Override
@@ -34,6 +31,10 @@ public class BlogServiceIml implements BlogService {
         Blog bl = new Blog();
         bl.setName(blogDto.getName());
         bl.setContent(blogDto.getContent());
+        bl.setSlug(blogDto.getSlug());
+        bl.setImage(blogDto.getImage());
+        bl.setCreatedAt(new Date());
+        bl.setShortContent(blogDto.getShortContent());
         BlogCategory bc = blogCategogyRepository.findById(blogDto.getCategoryId()).orElse(new BlogCategory());
         bl.setBlogCategory(bc);
         User u = userRepository.findByUsername(blogDto.getUserName());
@@ -70,5 +71,43 @@ public class BlogServiceIml implements BlogService {
         return null;
     }
 
+    @Override
+    public BlogDto getBlogBySlug(String slug) {
+        try {
+            Blog blog = blogRespository.findBlogBySlug(slug);
+            BlogDto blogDto = blogDtoConvert(blog);
+            return blogDto;
+        }catch (Exception e){
+            return null;
+        }
+    }
 
+    @Override
+    public List<BlogDto> getAllBlog() {
+        try {
+            List<Blog> blogs = blogRespository.findAll();
+            List<BlogDto> blogDtoList = new ArrayList<>();
+            for (Blog blog: blogs) {
+                BlogDto blogDto = blogDtoConvert(blog);
+                blogDtoList.add(blogDto);
+            }
+            return blogDtoList;
+        } catch (Exception e) {
+            return null;
+        }
+    }
+
+    private BlogDto blogDtoConvert(Blog blog) {
+        BlogDto blogDto = new BlogDto();
+        blogDto.setId(blog.getId());
+        blogDto.setUserName(blog.getUser().getUsername());
+        blogDto.setName(blog.getName());
+        blogDto.setContent(blog.getContent());
+        blogDto.setImage(blog.getImage());
+        blogDto.setCreatedAt(blog.getCreatedAt());
+        blogDto.setShortContent(blog.getShortContent());
+        blogDto.setSlug(blog.getSlug());
+        blogDto.setCategoryId(blog.getBlogCategory().getId());
+        return blogDto;
+    }
 }
