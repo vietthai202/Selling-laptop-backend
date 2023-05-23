@@ -31,4 +31,8 @@ public class BlogCategoryController {
         return null;
     }
 
+    @GetMapping("/blogcategories")
+    public ResponseEntity<?> getAllBlogCategory() {
+        return null;
+    }
 }
