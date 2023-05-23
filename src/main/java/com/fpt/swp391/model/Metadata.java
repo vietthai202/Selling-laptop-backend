@@ -21,7 +21,8 @@ public class Metadata {
     private String iconType;
     private String title;
     private String content;
-    @OneToOne(mappedBy = "metadata")
+    @ManyToOne()
+    @JoinColumn(name="laptop_id", nullable=false)
     private Laptop laptop;
     @ManyToOne
     @JoinColumn(name="group_id", nullable=false)
