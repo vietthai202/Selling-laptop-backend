@@ -31,11 +31,13 @@ public class LaptopServiceImpl implements LaptopService {
 
         for (Laptop laptop : lt) {
             LaptopDto laptopDto = new LaptopDto();
+            laptopDto.setId(laptop.getId());
             laptopDto.setUserName(laptop.getUser().getUsername());
             laptopDto.setTitle(laptop.getTitle());
             laptopDto.setMetaTitle(laptop.getMetaTitle());
             laptopDto.setSlug(laptop.getSlug());
             laptopDto.setSummary(laptop.getSummary());
+            laptopDto.setImage(laptop.getImage());
             laptopDto.setSku(laptop.getSku());
             laptopDto.setPrice(laptop.getPrice());
             laptopDto.setDiscount(laptop.getDiscount());
@@ -61,13 +63,14 @@ public class LaptopServiceImpl implements LaptopService {
     @Override
     public Laptop createLaptop(LaptopDto laptop) {
         Laptop lt = new Laptop();
-
+        lt.setId(laptop.getId());
         lt.setTitle(laptop.getTitle());
         lt.setMetaTitle(laptop.getMetaTitle());
         Date date = new Date();
         long timestamp = date.getTime();
         lt.setSlug(laptop.getSlug() + "-" + timestamp);
         lt.setSummary(laptop.getSummary());
+        lt.setImage(laptop.getImage());
         lt.setSku(laptop.getSku());
         lt.setPrice(laptop.getPrice());
         lt.setDiscount(laptop.getDiscount());
@@ -108,10 +111,12 @@ public class LaptopServiceImpl implements LaptopService {
         Optional<Laptop> laptopOptional = laptopRepository.findById(id);
         if (laptopOptional.isPresent()) {
             Laptop lt = laptopOptional.get();
+            lt.setId(laptop.getId());
             lt.setTitle(laptop.getTitle());
             lt.setMetaTitle(laptop.getMetaTitle());
             lt.setSlug(laptop.getSlug());
             lt.setSummary(laptop.getSummary());
+            lt.setImage(laptop.getImage());
             lt.setSku(laptop.getSku());
             lt.setPrice(laptop.getPrice());
             lt.setDiscount(laptop.getDiscount());

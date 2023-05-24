@@ -11,11 +11,13 @@ import java.util.Set;
 @NoArgsConstructor
 @AllArgsConstructor
 public class LaptopDto {
+    private Long id;
     private String userName;
     private String title;
     private String metaTitle;
     private String slug;
     private String summary;
+    private String image;
     private String sku;
     private Float price;
     private Float discount;

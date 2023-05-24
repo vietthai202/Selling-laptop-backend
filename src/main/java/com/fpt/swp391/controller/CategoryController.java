@@ -90,7 +90,7 @@ public class CategoryController {
         }
     }
 
-    @GetMapping("/category/{slug}")
+    @GetMapping("/getcategory/{slug}")
     public ResponseEntity<CategoryDto> getCategoryBySlug(@PathVariable String slug) {
         CategoryDto categoryDto = categoryService.getCategoryDtoBySlug(slug);
         if (categoryDto != null) {

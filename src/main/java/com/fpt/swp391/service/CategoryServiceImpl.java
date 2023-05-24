@@ -100,6 +100,7 @@ public class CategoryServiceImpl implements CategoryService {
 
     private LaptopDto convertToLaptopDto(Laptop laptop){
         LaptopDto dto = new LaptopDto();
+        dto.setId(laptop.getId());
         dto.setUserName(laptop.getUser().getName());
         dto.setTitle(laptop.getTitle());
         dto.setMetaTitle(laptop.getMetaTitle());
