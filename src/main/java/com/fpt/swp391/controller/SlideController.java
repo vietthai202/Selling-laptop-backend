@@ -5,6 +5,7 @@ import com.fpt.swp391.service.SlideService;
 import com.fpt.swp391.utils.ApiSuccessResponse;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -16,12 +17,11 @@ public class SlideController {
     public SlideController(SlideService slideService) {
         this.slideService = slideService;
     }
-    @PostMapping("/creSlide")
+    @PreAuthorize("hasRole('ADMIN')")
+    @PostMapping("/Slide")
     public ResponseEntity<?> creSlide(@RequestBody Slide slide){
         Slide sl = slideService.createrSlide(slide);
-        if(sl != null){
-            final ApiSuccessResponse response = new ApiSuccessResponse("Successful", HttpStatus.OK, LocalDateTime.now());
-            return ResponseEntity.status(HttpStatus.OK).body(response);
+        if(sl != null){return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(sl);
         }
         final ApiExceptionResponse response = new ApiExceptionResponse("Not Successful", HttpStatus.BAD_REQUEST, LocalDateTime.now());
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
@@ -31,10 +31,15 @@ public class SlideController {
         final List<Slide> listSlide = slideService.listAllSlide();
         List<Slide> slides = new ArrayList<>();
         for (Slide slide : listSlide) {
-            slides.add(new Slide(slide.getId(), slide.getName(),slide.getImage(), slide.getSlug()));
+            Slide s = new Slide();
+            s.getId();
+            s.getName();
+            s.getImage();
+            s.getSlug();
         }
         return ResponseEntity.status(HttpStatus.OK).body(slides);
     }
+    @PreAuthorize("hasRole('ADMIN')")
     @DeleteMapping("/slides/{id}")
     public ResponseEntity<ApiExceptionResponse> deleteSlide(@PathVariable Long id){
         Slide sl = slideService.findById(id);
@@ -49,6 +54,7 @@ public class SlideController {
         response = new ApiExceptionResponse("Delete Fail!", HttpStatus.OK, LocalDateTime.now());
         return ResponseEntity.status(HttpStatus.OK).body(response);
     }
+    @PreAuthorize("hasRole('ADMIN')")
     @PostMapping("/slides/update/{id}")
     public ResponseEntity<ApiExceptionResponse> updateSlide(@PathVariable Long id, @RequestBody Slide slide) {
         Slide sl = slideService.updateSlide(id, slide);
