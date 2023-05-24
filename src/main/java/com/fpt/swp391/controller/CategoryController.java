@@ -1,5 +1,6 @@
 package com.fpt.swp391.controller;
 
+import com.fpt.swp391.dto.CategoryDto;
 import com.fpt.swp391.exceptions.ApiExceptionResponse;
 import com.fpt.swp391.model.Category;
 import com.fpt.swp391.service.CategoryService;
@@ -89,4 +90,13 @@ public class CategoryController {
         }
     }
 
+    @GetMapping("/category/{slug}")
+    public ResponseEntity<CategoryDto> getCategoryBySlug(@PathVariable String slug) {
+        CategoryDto categoryDto = categoryService.getCategoryDtoBySlug(slug);
+        if (categoryDto != null) {
+            return ResponseEntity.status(HttpStatus.OK).body(categoryDto);
+        } else {
+            return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
+        }
+    }
 }

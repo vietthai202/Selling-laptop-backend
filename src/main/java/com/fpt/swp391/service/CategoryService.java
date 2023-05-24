@@ -1,5 +1,6 @@
 package com.fpt.swp391.service;
 
+import com.fpt.swp391.dto.CategoryDto;
 import com.fpt.swp391.model.Category;
 import java.util.List;
 public interface CategoryService {
@@ -12,4 +13,6 @@ public interface CategoryService {
      boolean deleteCategoryById(Long id);
 
      Category updateCategoryById(Long id, Category category);
+
+     CategoryDto getCategoryDtoBySlug(String slug);
 }
