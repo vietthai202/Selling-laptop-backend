@@ -1,6 +1,5 @@
 package com.fpt.swp391.controller;
 
-
 import com.fpt.swp391.dto.LaptopDto;
 import com.fpt.swp391.exceptions.ApiExceptionResponse;
 import com.fpt.swp391.model.Laptop;
@@ -13,7 +12,6 @@ import org.springframework.web.bind.annotation.*;
 import java.time.LocalDateTime;
 import java.util.List;
 
-
 @RestController
 public class LaptopController {
     private final LaptopService laptopService;
@@ -22,15 +20,13 @@ public class LaptopController {
         this.laptopService = laptopService;
     }
 
-
     @GetMapping("/laptops")
     public ResponseEntity<List<LaptopDto>> listAllLaptop() {
         final List<LaptopDto> listLt = laptopService.listAllLaptop();
         return ResponseEntity.status(HttpStatus.OK).body(listLt);
     }
 
-
-    @PostMapping("/createLaptop")
+    @PostMapping("/laptop")
     public ResponseEntity<?> createLaptop(@RequestBody LaptopDto laptopDto) {
         Laptop lt = laptopService.createLaptop(laptopDto);
         if (lt != null) {
@@ -39,10 +35,9 @@ public class LaptopController {
         }
         ApiExceptionResponse response = new ApiExceptionResponse("Create Fail", HttpStatus.BAD_REQUEST, LocalDateTime.now());
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
-
     }
 
-    @PostMapping("laptops/update/{id}")
+    @PutMapping("laptops/{id}")
     public ResponseEntity<?> updateLaptop(@PathVariable Long id, @RequestBody LaptopDto laptopDto) {
         Laptop lt = laptopService.updateLaptop(id, laptopDto);
         if (lt != null) {
@@ -53,9 +48,3 @@ public class LaptopController {
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
     }
 }
-
-
-
-
-
-
