@@ -17,5 +17,7 @@ public interface BlogCategoryService {
 
     List<BlogCategoryDto> listAllBlogCategory();
 
+    BlogCategoryDto getBlogCategoryDtoById(Long id);
+
 }
 
