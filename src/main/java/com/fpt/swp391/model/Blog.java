@@ -28,7 +28,7 @@ public class Blog {
     @Column(columnDefinition = "VARCHAR(1000)")
     private String shortContent;
     private String slug;
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "blog_category_id", nullable = false)
     private BlogCategory blogCategory;
 }

@@ -41,7 +41,7 @@ public class BlogController {
     }
 
     @PostMapping("/createBlog")
-    public ResponseEntity<?> createBlogCategory(@RequestBody BlogDto blog) {
+    public ResponseEntity<?> createBlog(@RequestBody BlogDto blog) {
         Blog bl = blogService.createBlog(blog);
         if (bl != null) {
             ApiSuccessResponse response = new ApiSuccessResponse("Create Successfully!", HttpStatus.OK, LocalDateTime.now());
@@ -51,9 +51,8 @@ public class BlogController {
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
     }
 
-
     @PostMapping("/updateBl/{id}")
-    public ResponseEntity<?> createBlogCategory(@PathVariable Long id, @RequestBody BlogDto blog) {
+    public ResponseEntity<?> updateBlog(@PathVariable Long id, @RequestBody BlogDto blog) {
         Blog bl = blogService.updateBlog(id, blog);
         if (bl != null) {
             ApiSuccessResponse response = new ApiSuccessResponse("Update Successfully!", HttpStatus.OK, LocalDateTime.now());
@@ -65,7 +64,7 @@ public class BlogController {
     }
 
     @DeleteMapping("/deleteBl/{id}")
-    public ResponseEntity<?> deleteBl(@PathVariable Long id) {
+    public ResponseEntity<?> deleteBlog(@PathVariable Long id) {
         boolean isDelete = blogService.deleteBlog(id);
         if (isDelete) {
             ApiSuccessResponse response = new ApiSuccessResponse("Delete Successfully!", HttpStatus.OK, LocalDateTime.now());
