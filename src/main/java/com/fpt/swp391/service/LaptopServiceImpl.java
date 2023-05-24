@@ -1,6 +1,7 @@
 package com.fpt.swp391.service;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 
@@ -33,7 +34,7 @@ public class LaptopServiceImpl implements LaptopService{
 
         for (Laptop laptop:lt) {
             LaptopDto laptopDto = new LaptopDto();
-            laptopDto.setUserId(laptop.getUser().getId());
+            laptopDto.setUserName(laptop.getUser().getUsername());
             laptopDto.setTitle(laptop.getTitle());
             laptopDto.setMetaTitle(laptop.getMetaTitle());
             laptopDto.setSlug(laptop.getSlug());
@@ -66,7 +67,9 @@ public class LaptopServiceImpl implements LaptopService{
 
         lt.setTitle(laptop.getTitle());
         lt.setMetaTitle(laptop.getMetaTitle());
-        lt.setSlug(laptop.getSlug());
+        Date date = new Date();
+        long timestamp = date.getTime();
+        lt.setSlug(laptop.getSlug() + "-" + timestamp);
         lt.setSummary(laptop.getSummary());
         lt.setSku(laptop.getSku());
         lt.setPrice(laptop.getPrice());
@@ -75,9 +78,9 @@ public class LaptopServiceImpl implements LaptopService{
 //        lt.setMetadata(laptop.getMetadata());
 //        lt.setTags(laptop.getTags());
 
-        User u = userRepository.findById(laptop.getUserId()).orElse(new User());
+        User u = userRepository.findByUsername(laptop.getUserName());
         lt.setUser(u);
-        Category c = categoryRepository.findById(laptop.getCategoryId()).orElse(new Category());
+        Category c = categoryRepository.findById(laptop.getCategoryId()).orElse(null);
         lt.setCategory(c);
 
         Brand b = brandRepository.findById(laptop.getBrandId()).orElse(new Brand());
