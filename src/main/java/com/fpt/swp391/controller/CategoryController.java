@@ -66,6 +66,7 @@ public class CategoryController {
         for (Category category : listCategory) {
             Category c = new Category();
             c.setId(category.getId());
+            c.setDescription(category.getDescription());
             c.setName(category.getName());
             c.setSlug(category.getSlug());
             c.setImage(category.getImage());

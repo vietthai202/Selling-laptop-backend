@@ -23,6 +23,7 @@ public class CategoryServiceImpl implements CategoryService {
         Date date =new Date();
         long timeStamp = date.getTime();
         c.setName(category.getName());
+        c.setDescription(category.getDescription());
         c.setSlug(category.getSlug() + "-" + timeStamp);
         c.setImage(category.getImage());
         categoryRepository.save(c);
@@ -61,6 +62,7 @@ public class CategoryServiceImpl implements CategoryService {
         if(c.isPresent()){
             Category c1 = c.get();
             c1.setName(category.getName());
+            c1.setDescription(category.getDescription());
             Date date =new Date();
             long timeStamp = date.getTime();
             c1.setSlug(category.getSlug() + "-" + timeStamp);
@@ -86,6 +88,7 @@ public class CategoryServiceImpl implements CategoryService {
         CategoryDto dto = new CategoryDto();
         dto.setId(category.getId());
         dto.setName(category.getName());
+        dto.setDescription(category.getDescription());
         dto.setSlug(category.getSlug());
         dto.setImage(category.getImage());
         Set<LaptopDto> laptopDTOs = new HashSet<>();

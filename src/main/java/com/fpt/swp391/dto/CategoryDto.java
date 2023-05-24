@@ -14,6 +14,7 @@ import java.util.Set;
 public class CategoryDto {
     private Long id;
     private String name;
+    private String description;
     private String slug;
     private String image;
     private Set<LaptopDto> laptopDtos;
