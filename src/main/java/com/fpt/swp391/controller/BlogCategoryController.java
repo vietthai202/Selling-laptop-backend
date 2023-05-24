@@ -21,7 +21,7 @@ public class BlogCategoryController {
         this.blogCategoryService = blogCategoryService;
     }
 
-    @PostMapping("/createBlogCategory")
+    @PostMapping("/blogcategory")
     public ResponseEntity<?> createBlogCategory(@RequestBody BlogCategory blogCategory) {
         BlogCategory BC = blogCategoryService.createBC(blogCategory);
         if (BC != null) {
@@ -32,8 +32,8 @@ public class BlogCategoryController {
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
     }
 
-    @PostMapping("/updateBC/{id}")
-    public ResponseEntity<?> createBlogCategory(@PathVariable Long id, @RequestBody BlogCategory blogCategory) {
+    @PutMapping("/blogcategories/{id}")
+    public ResponseEntity<?> updateBlogCategory(@PathVariable Long id, @RequestBody BlogCategory blogCategory) {
         BlogCategory BC = blogCategoryService.updateBC(id, blogCategory);
         if (BC != null) {
             ApiSuccessResponse response = new ApiSuccessResponse("Update Successfully!", HttpStatus.OK, LocalDateTime.now());
@@ -44,7 +44,7 @@ public class BlogCategoryController {
 
     }
 
-    @DeleteMapping("/deleteBC/{id}")
+    @DeleteMapping("/blogcategories/{id}")
     public ResponseEntity<?> deleteBC(@PathVariable Long id) {
         BlogCategory bc = blogCategoryService.findById(id);
         boolean delete = blogCategoryService.deleteBC(bc.getId());
@@ -61,6 +61,16 @@ public class BlogCategoryController {
         List<BlogCategoryDto> blogCategoryDtoList = blogCategoryService.listAllBlogCategory();
         if (blogCategoryDtoList.size() > 0) {
             return ResponseEntity.status(HttpStatus.OK).body(blogCategoryDtoList);
+        }
+        final ApiExceptionResponse response = new ApiExceptionResponse("Không có dữ liệu!", HttpStatus.NO_CONTENT, LocalDateTime.now());
+        return ResponseEntity.status(HttpStatus.NO_CONTENT).body(response);
+    }
+
+    @GetMapping("/blogcategories/{id}")
+    public ResponseEntity<?> getBlogCategoryById(@PathVariable Long id) {
+        BlogCategoryDto blogCategoryDto = blogCategoryService.getBlogCategoryDtoById(id);
+        if (blogCategoryDto != null) {
+            return ResponseEntity.status(HttpStatus.OK).body(blogCategoryDto);
         }
         final ApiExceptionResponse response = new ApiExceptionResponse("Không có dữ liệu!", HttpStatus.NO_CONTENT, LocalDateTime.now());
         return ResponseEntity.status(HttpStatus.NO_CONTENT).body(response);

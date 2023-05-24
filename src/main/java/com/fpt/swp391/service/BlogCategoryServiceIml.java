@@ -76,6 +76,16 @@ public class BlogCategoryServiceIml implements BlogCategoryService {
         }
     }
 
+    @Override
+    public BlogCategoryDto getBlogCategoryDtoById(Long id) {
+        BlogCategory bc = blogCategogyRepository.findById(id).orElse(null);
+        if(bc != null){
+            BlogCategoryDto blogCategoryDto = convertToCategoryDTO(bc);
+            return blogCategoryDto;
+        }
+        return null;
+    }
+
     private BlogCategoryDto convertToCategoryDTO(BlogCategory category) {
         BlogCategoryDto dto = new BlogCategoryDto();
         dto.setId(category.getId());
