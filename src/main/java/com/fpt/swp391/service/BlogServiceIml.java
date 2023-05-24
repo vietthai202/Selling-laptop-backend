@@ -28,7 +28,9 @@ public class BlogServiceIml implements BlogService {
         Blog bl = new Blog();
         bl.setName(blogDto.getName());
         bl.setContent(blogDto.getContent());
-        bl.setSlug(blogDto.getSlug());
+        Date date = new Date();
+        long timestamp = date.getTime();
+        bl.setSlug(blogDto.getSlug() + "-" + timestamp);
         bl.setImage(blogDto.getImage());
         bl.setCreatedAt(new Date());
         bl.setShortContent(blogDto.getShortContent());
@@ -61,7 +63,9 @@ public class BlogServiceIml implements BlogService {
             bl.setImage(blog.getImage());
             bl.setCreatedAt(blog.getCreatedAt());
             bl.setShortContent(blog.getShortContent());
-            bl.setSlug(blog.getSlug());
+            Date date = new Date();
+            long timestamp = date.getTime();
+            bl.setSlug(blog.getSlug() + "-" + timestamp);
             blogRespository.save(bl);
         }
 
