@@ -18,12 +18,13 @@ public class BlogCategoryServiceIml implements BlogCategoryService {
     }
 
     @Override
-    public BlogCategory createBC(BlogCategory blogCategory) {
+    public BlogCategoryDto createBC(BlogCategory blogCategory) {
         BlogCategory bc = new BlogCategory();
         bc.setName(blogCategory.getName());
         bc.setContent(blogCategory.getContent());
         blogCategogyRepository.save(bc);
-        return bc;
+        BlogCategoryDto dto = convertToCategoryDTO(bc);
+        return dto;
     }
 
     @Override

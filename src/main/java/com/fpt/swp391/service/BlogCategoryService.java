@@ -7,7 +7,7 @@ import com.fpt.swp391.model.BlogCategory;
 import java.util.List;
 
 public interface BlogCategoryService {
-    BlogCategory createBC(BlogCategory blogCategory);
+    BlogCategoryDto createBC(BlogCategory blogCategory);
 
     Boolean deleteBC(Long id);
 

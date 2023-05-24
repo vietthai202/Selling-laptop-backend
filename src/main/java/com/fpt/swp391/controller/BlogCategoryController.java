@@ -23,10 +23,9 @@ public class BlogCategoryController {
 
     @PostMapping("/blogcategory")
     public ResponseEntity<?> createBlogCategory(@RequestBody BlogCategory blogCategory) {
-        BlogCategory BC = blogCategoryService.createBC(blogCategory);
-        if (BC != null) {
-            ApiSuccessResponse response = new ApiSuccessResponse("Create Successfully!", HttpStatus.OK, LocalDateTime.now());
-            return ResponseEntity.status(HttpStatus.OK).body(response);
+        BlogCategoryDto dto = blogCategoryService.createBC(blogCategory);
+        if (dto != null) {
+            return ResponseEntity.status(HttpStatus.OK).body(dto);
         }
         final ApiExceptionResponse response = new ApiExceptionResponse("Create Fail!", HttpStatus.BAD_REQUEST, LocalDateTime.now());
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
