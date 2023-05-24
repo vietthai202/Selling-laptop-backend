@@ -5,6 +5,7 @@ import com.fpt.swp391.dto.BlogDto;
 import com.fpt.swp391.model.Blog;
 import com.fpt.swp391.model.BlogCategory;
 import com.fpt.swp391.repository.BlogCategogyRepository;
+import com.fpt.swp391.repository.BlogRespository;
 import org.springframework.stereotype.Service;
 
 import java.util.*;
@@ -12,9 +13,10 @@ import java.util.*;
 @Service
 public class BlogCategoryServiceIml implements BlogCategoryService {
     public final BlogCategogyRepository blogCategogyRepository;
-
-    public BlogCategoryServiceIml(BlogCategogyRepository blogCategogyRepository) {
+    public  final BlogRespository blogRespository;
+    public BlogCategoryServiceIml(BlogCategogyRepository blogCategogyRepository, BlogRespository blogRespository) {
         this.blogCategogyRepository = blogCategogyRepository;
+        this.blogRespository = blogRespository;
     }
 
     @Override
@@ -28,15 +30,21 @@ public class BlogCategoryServiceIml implements BlogCategoryService {
     }
 
     @Override
-    public Boolean deleteBC(Long id) {
-        Optional<BlogCategory> blogCategoryOp = blogCategogyRepository.findById(id);
-        if (blogCategoryOp.isPresent()) {
-            BlogCategory bc = blogCategoryOp.get();
-            blogCategogyRepository.delete(bc);
-            return true;
-
+    public boolean deleteBC(Long id) {
+        Blog blog = new Blog();
+        BlogCategory blogCategoryOp = blogCategogyRepository.findById(id).orElse(null);
+        if (blogCategoryOp.getBlogs().size() > 0) {
+            Set<Blog> blogs = blogCategoryOp.getBlogs();
+            BlogCategory bnew = new BlogCategory();
+            bnew.setName("Uncategorized");
+            bnew.setContent("Uncategorized");
+            for (Blog b : blogs) {
+                b.setBlogCategory(bnew);
+                blogRespository.save(b);
+            }
         }
-        return null;
+        return true;
+
     }
 
     @Override
@@ -68,7 +76,7 @@ public class BlogCategoryServiceIml implements BlogCategoryService {
         try {
             List<BlogCategoryDto> blogCategoryDtoList = new ArrayList<>();
             List<BlogCategory> blogCategoryList = blogCategogyRepository.findAll();
-            for (BlogCategory b: blogCategoryList) {
+            for (BlogCategory b : blogCategoryList) {
                 blogCategoryDtoList.add(convertToCategoryDTO(b));
             }
             return blogCategoryDtoList;
@@ -80,7 +88,7 @@ public class BlogCategoryServiceIml implements BlogCategoryService {
     @Override
     public BlogCategoryDto getBlogCategoryDtoById(Long id) {
         BlogCategory bc = blogCategogyRepository.findById(id).orElse(null);
-        if(bc != null){
+        if (bc != null) {
             BlogCategoryDto blogCategoryDto = convertToCategoryDTO(bc);
             return blogCategoryDto;
         }
