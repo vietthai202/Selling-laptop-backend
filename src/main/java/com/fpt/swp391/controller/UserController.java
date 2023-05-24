@@ -31,7 +31,7 @@ public class UserController {
 
         List<UserDto> userDtos = new ArrayList<>();
         for (User user : listUser) {
-            userDtos.add(new UserDto(user.getId(), user.getName(), user.getPhone(), user.getDateOfBirth(), user.getUsername(), user.getEmail(), user.getUserRole()));
+            userDtos.add(new UserDto(user.getId(), user.getName(), user.getPhone(), user.getDateOfBirth(), user.getUsername(), user.getEmail(), user.getUserRole(), user.getAddress()));
         }
 
         return ResponseEntity.status(HttpStatus.OK).body(userDtos);
@@ -41,7 +41,7 @@ public class UserController {
     public ResponseEntity<?> getUserByUserName(@PathVariable String username) {
         User user = userService.findByUsername(username);
         if(user != null) {
-            UserDto userDto = new UserDto(user.getId(), user.getName(), user.getPhone(), user.getDateOfBirth(), user.getUsername(), user.getEmail(), user.getUserRole());
+            UserDto userDto = new UserDto(user.getId(), user.getName(), user.getPhone(), user.getDateOfBirth(), user.getUsername(), user.getEmail(), user.getUserRole(), user.getAddress());
             return ResponseEntity.status(HttpStatus.OK).body(userDto);
         } else {
             final ApiExceptionResponse response = new ApiExceptionResponse("User not found!", HttpStatus.BAD_REQUEST, LocalDateTime.now());
@@ -61,6 +61,9 @@ public class UserController {
                     response = new ApiExceptionResponse("Delete user successfully!", HttpStatus.OK, LocalDateTime.now());
                     return ResponseEntity.status(HttpStatus.OK).body(response);
                 }
+            } else {
+                response = new ApiExceptionResponse("Can't delete admin!", HttpStatus.BAD_REQUEST, LocalDateTime.now());
+                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
             }
         }
         response = new ApiExceptionResponse("User not found!", HttpStatus.BAD_REQUEST, LocalDateTime.now());
