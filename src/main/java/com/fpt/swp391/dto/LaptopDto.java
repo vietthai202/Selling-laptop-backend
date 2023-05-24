@@ -11,7 +11,7 @@ import java.util.Set;
 @NoArgsConstructor
 @AllArgsConstructor
 public class LaptopDto {
-    private Long userId;
+    private String userName;
     private String title;
     private String metaTitle;
     private String slug;
