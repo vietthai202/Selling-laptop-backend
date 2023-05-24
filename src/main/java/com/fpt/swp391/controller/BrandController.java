@@ -23,13 +23,19 @@ public class BrandController {
     }
 
     @GetMapping("/brands")
-    public ResponseEntity<List<BrandDto>> getAllBrand() {
+    public ResponseEntity<List<Brand>> getAllBrand() {
         final List<Brand> listBrand = brandService.listAllBrand();
-        List<BrandDto> BrandDtos = new ArrayList<>();
+        List<Brand> brandd = new ArrayList<>();
         for (Brand brand : listBrand) {
-            BrandDtos.add(new BrandDto(brand.getId(), brand.getName(), brand.getDescription(), brand.getImage(), brand.getSlug()));
+                Brand b = new Brand();
+                b.setId(brand.getId());
+                b.setName(brand.getName());
+                b.setImage(brand.getImage());
+                b.setSlug(brand.getSlug());
+                b.setDescription(brand.getDescription());
+                brandd.add(b);
         }
-        return ResponseEntity.status(HttpStatus.OK).body(BrandDtos);
+        return ResponseEntity.status(HttpStatus.OK).body(brandd);
     }
 
     @PostMapping("/brand")
@@ -76,6 +82,16 @@ public class BrandController {
         }
         ApiExceptionResponse response = new ApiExceptionResponse("Update Fail!", HttpStatus.BAD_REQUEST, LocalDateTime.now());
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
+    }
+
+    @GetMapping("/category/{slug}")
+    public ResponseEntity<BrandDto> getBrandBySlug(@PathVariable String slug) {
+        BrandDto categoryDto = brandService.getBrandDtoBySlug(slug);
+        if (categoryDto != null) {
+            return ResponseEntity.status(HttpStatus.OK).body(categoryDto);
+        } else {
+            return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
+        }
     }
 }
 

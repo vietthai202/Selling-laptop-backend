@@ -17,4 +17,6 @@ public interface BrandService {
     Brand updateBrand(Long id, BrandDto brandDto);
 
     BrandDto findBrandDtoById(Long id);
+
+    BrandDto getBrandDtoBySlug(String slug);
 }
