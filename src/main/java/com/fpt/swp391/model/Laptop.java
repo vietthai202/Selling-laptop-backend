@@ -24,6 +24,7 @@ public class Laptop {
     private String metaTitle;
     private String slug;
     private String summary;
+    private String image;
     private String sku;
     private Float price;
     private Float discount;

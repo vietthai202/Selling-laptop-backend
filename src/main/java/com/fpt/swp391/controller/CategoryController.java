@@ -66,6 +66,7 @@ public class CategoryController {
         for (Category category : listCategory) {
             Category c = new Category();
             c.setId(category.getId());
+            c.setDescription(category.getDescription());
             c.setName(category.getName());
             c.setSlug(category.getSlug());
             c.setImage(category.getImage());
@@ -90,7 +91,7 @@ public class CategoryController {
         }
     }
 
-    @GetMapping("/category/{slug}")
+    @GetMapping("/getcategory/{slug}")
     public ResponseEntity<CategoryDto> getCategoryBySlug(@PathVariable String slug) {
         CategoryDto categoryDto = categoryService.getCategoryDtoBySlug(slug);
         if (categoryDto != null) {
