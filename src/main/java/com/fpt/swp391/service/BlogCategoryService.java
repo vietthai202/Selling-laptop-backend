@@ -9,7 +9,7 @@ import java.util.List;
 public interface BlogCategoryService {
     BlogCategoryDto createBC(BlogCategory blogCategory);
 
-    Boolean deleteBC(Long id);
+    boolean deleteBC(Long id);
 
     BlogCategory findById(Long id);
 
