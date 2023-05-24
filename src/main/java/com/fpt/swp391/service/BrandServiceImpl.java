@@ -5,6 +5,7 @@ import com.fpt.swp391.model.Brand;
 import com.fpt.swp391.repository.BrandRepository;
 import org.springframework.stereotype.Service;
 
+import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 
@@ -23,7 +24,9 @@ public class BrandServiceImpl implements BrandService {
         br.setName(brand.getName());
         br.setDescription(brand.getDescription());
         br.setImage(brand.getImage());
-        br.setSlug(brand.getSlug());
+        Date date = new Date();
+        long timestamp = date.getTime();
+        br.setSlug(brand.getSlug() + "-"+ timestamp);
         brandRepository.save(br);
         return br;
     }
@@ -60,10 +63,28 @@ public class BrandServiceImpl implements BrandService {
         if (brandOptional.isPresent()) {
             Brand brand = brandOptional.get();
             brand.setName(brandDto.getName());
+            brand.setDescription(brandDto.getDescription());
             brand.setImage(brandDto.getImage());
-            brand.setSlug(brandDto.getSlug());
+            Date date = new Date();
+            long timestamp = date.getTime();
+            brand.setSlug(brandDto.getSlug() + "-" + timestamp);
             brandRepository.save(brand);
             return brand;
+        }
+        return null;
+    }
+
+    @Override
+    public BrandDto findBrandDtoById(Long id) {
+        Brand b = brandRepository.findById(id).orElse(null);
+        if(b != null) {
+            BrandDto dto = new BrandDto();
+            dto.setId(b.getId());
+            dto.setName(b.getName());
+            dto.setDescription(b.getDescription());
+            dto.setImage(dto.getImage());
+            dto.setSlug(dto.getSlug());
+            return dto;
         }
         return null;
     }

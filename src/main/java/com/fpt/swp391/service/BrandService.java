@@ -15,4 +15,6 @@ public interface BrandService {
     boolean deleteBrand(Long id);
 
     Brand updateBrand(Long id, BrandDto brandDto);
+
+    BrandDto findBrandDtoById(Long id);
 }
