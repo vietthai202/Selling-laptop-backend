@@ -28,9 +28,8 @@ public class Laptop {
     private Float price;
     private Float discount;
     private int quantity;
-    @OneToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name = "metadata_id", referencedColumnName = "id")
-    private Metadata metadata;
+    @OneToMany(mappedBy = "laptop")
+    private Set<Metadata> listMetadata;
     @ManyToMany(mappedBy = "laptops")
     private Set<Tag> tags = new HashSet<>();
     @ManyToOne
