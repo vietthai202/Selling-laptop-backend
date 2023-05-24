@@ -1,9 +1,6 @@
 package com.fpt.swp391.service;
 
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
 import com.fpt.swp391.dto.LaptopDto;
 import com.fpt.swp391.model.Brand;
@@ -14,13 +11,13 @@ import com.fpt.swp391.repository.*;
 import org.springframework.stereotype.Service;
 
 @Service
-public class LaptopServiceImpl implements LaptopService{
+public class LaptopServiceImpl implements LaptopService {
 
     private final LaptopRepository laptopRepository;
     private final CategoryRepository categoryRepository;
     private final BrandRepository brandRepository;
     private final UserRepository userRepository;
-    public LaptopServiceImpl( LaptopRepository laptopRepository, CategoryRepository categoryRepository, BrandRepository brandRepository, UserRepository userRepository) {
+    public LaptopServiceImpl(LaptopRepository laptopRepository, CategoryRepository categoryRepository, BrandRepository brandRepository, UserRepository userRepository) {
         this.laptopRepository = laptopRepository;
         this.categoryRepository = categoryRepository;
         this.brandRepository = brandRepository;
@@ -28,11 +25,11 @@ public class LaptopServiceImpl implements LaptopService{
     }
 
     @Override
-    public List<LaptopDto> listAllLaptop(){
+    public List<LaptopDto> listAllLaptop() {
         List<Laptop> lt = laptopRepository.findAll();
         List<LaptopDto> lt1 = new ArrayList<>();
 
-        for (Laptop laptop:lt) {
+        for (Laptop laptop : lt) {
             LaptopDto laptopDto = new LaptopDto();
             laptopDto.setUserName(laptop.getUser().getUsername());
             laptopDto.setTitle(laptop.getTitle());
@@ -52,9 +49,9 @@ public class LaptopServiceImpl implements LaptopService{
     }
 
     @Override
-    public Laptop findById(Long id){
+    public Laptop findById(Long id) {
         Optional<Laptop> laptopOptional = laptopRepository.findById(id);
-        if(laptopOptional.isPresent()){
+        if (laptopOptional.isPresent()) {
             Laptop laptop = laptopOptional.get();
             return laptop;
         }
@@ -87,8 +84,6 @@ public class LaptopServiceImpl implements LaptopService{
         lt.setBrand(b);
 
 
-
-
 //        lt.setCartItems(laptop.getCartItems());
 //        lt.setListFaps(laptop.getListFaps() );
 //        lt.setOrderItems(laptop.getOrderItems());
@@ -98,9 +93,9 @@ public class LaptopServiceImpl implements LaptopService{
     }
 
     @Override
-    public boolean deleteLaptop(Long id){
+    public boolean deleteLaptop(Long id) {
         Optional<Laptop> laptopOptional = laptopRepository.findById(id);
-        if(laptopOptional.isPresent()){
+        if (laptopOptional.isPresent()) {
             Laptop lt = laptopOptional.get();
             laptopRepository.delete(lt);
             return true;
@@ -109,9 +104,9 @@ public class LaptopServiceImpl implements LaptopService{
     }
 
     @Override
-    public Laptop updateLaptop(Long id, LaptopDto laptop){
+    public Laptop updateLaptop(Long id, LaptopDto laptop) {
         Optional<Laptop> laptopOptional = laptopRepository.findById(id);
-        if(laptopOptional.isPresent()){
+        if (laptopOptional.isPresent()) {
             Laptop lt = laptopOptional.get();
             lt.setTitle(laptop.getTitle());
             lt.setMetaTitle(laptop.getMetaTitle());
