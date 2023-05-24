@@ -9,10 +9,7 @@ import com.fpt.swp391.repository.BlogRespository;
 import com.fpt.swp391.repository.UserRepository;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
 @Service
 public class BlogServiceIml implements BlogService {
@@ -91,6 +88,7 @@ public class BlogServiceIml implements BlogService {
                 BlogDto blogDto = blogDtoConvert(blog);
                 blogDtoList.add(blogDto);
             }
+            Collections.reverse(blogDtoList);
             return blogDtoList;
         } catch (Exception e) {
             return null;

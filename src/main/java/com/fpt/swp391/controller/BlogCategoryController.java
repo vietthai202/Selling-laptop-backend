@@ -1,20 +1,22 @@
 package com.fpt.swp391.controller;
 
+import com.fpt.swp391.dto.BlogCategoryDto;
 import com.fpt.swp391.exceptions.ApiExceptionResponse;
 import com.fpt.swp391.model.BlogCategory;
 import com.fpt.swp391.service.BlogCategoryService;
 import com.fpt.swp391.utils.ApiSuccessResponse;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 @RestController
 public class BlogCategoryController {
     // them sưa xóa
     private final BlogCategoryService blogCategoryService;
-
     public BlogCategoryController(BlogCategoryService blogCategoryService) {
         this.blogCategoryService = blogCategoryService;
     }
@@ -54,4 +56,13 @@ public class BlogCategoryController {
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
     }
 
+    @GetMapping("/blogcategories")
+    public ResponseEntity<?> getAllBlogCategory() {
+        List<BlogCategoryDto> blogCategoryDtoList = blogCategoryService.listAllBlogCategory();
+        if (blogCategoryDtoList.size() > 0) {
+            return ResponseEntity.status(HttpStatus.OK).body(blogCategoryDtoList);
+        }
+        final ApiExceptionResponse response = new ApiExceptionResponse("Không có dữ liệu!", HttpStatus.NO_CONTENT, LocalDateTime.now());
+        return ResponseEntity.status(HttpStatus.NO_CONTENT).body(response);
+    }
 }
