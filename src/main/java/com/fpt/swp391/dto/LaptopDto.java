@@ -24,5 +24,6 @@ public class LaptopDto {
     private int quantity;
     private Long categoryId;
     private Long brandId;
+    private Set<MetadataDto> metadataDtoSet;
 }
 

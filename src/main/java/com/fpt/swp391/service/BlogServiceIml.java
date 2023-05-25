@@ -56,19 +56,21 @@ public class BlogServiceIml implements BlogService {
     @Override
     public Blog updateBlog(Long id, BlogDto blog) {
         Optional<Blog> blogOp = blogRespository.findById(id);
-        if (blogOp.isPresent()) {
+        BlogCategory category = blogCategogyRepository.findById(blog.getCategoryId()).orElse(null);
+        if (blogOp.isPresent() && category != null) {
             Blog bl = blogOp.get();
             bl.setName(blog.getName());
             bl.setContent(blog.getContent());
             bl.setImage(blog.getImage());
             bl.setCreatedAt(blog.getCreatedAt());
             bl.setShortContent(blog.getShortContent());
+            bl.setBlogCategory(category);
             Date date = new Date();
             long timestamp = date.getTime();
             bl.setSlug(blog.getSlug() + "-" + timestamp);
             blogRespository.save(bl);
+            return bl;
         }
-
         return null;
     }
 

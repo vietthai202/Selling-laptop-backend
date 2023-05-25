@@ -1,5 +1,6 @@
 package com.fpt.swp391.controller;
 
+import com.fpt.swp391.dto.MetadataGroupDto;
 import com.fpt.swp391.exceptions.ApiExceptionResponse;
 import com.fpt.swp391.model.Category;
 import com.fpt.swp391.model.MetadataGroup;
@@ -57,5 +58,15 @@ public class MetadataGroupController {
             metadataGroups.add(m);
         }
         return ResponseEntity.ok().body(metadataGroups);
+    }
+
+    @GetMapping("/metadatagroup/{laptopSlug}")
+    public ResponseEntity<?> getMetadataGroupByLaptopId(@PathVariable String laptopSlug) {
+        List<MetadataGroupDto> metadataGroupList = metadataGroupService.findByLaptopSlug(laptopSlug);
+        if(metadataGroupList != null) {
+            return ResponseEntity.status(HttpStatus.OK).body(metadataGroupList);
+        }
+        final ApiExceptionResponse response = new ApiExceptionResponse("Not Successful", HttpStatus.NO_CONTENT, LocalDateTime.now());
+        return ResponseEntity.status(HttpStatus.NO_CONTENT).body(response);
     }
 }

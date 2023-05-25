@@ -7,7 +7,6 @@ import com.fpt.swp391.model.Laptop;
 
 public interface LaptopService {
 
-
     List<LaptopDto> listAllLaptop();
     Laptop findById(Long id);
 
@@ -16,4 +15,6 @@ public interface LaptopService {
     boolean deleteLaptop(Long id);
 
     Laptop updateLaptop(Long id, LaptopDto laptop);
+
+    LaptopDto getLaptopBySlug(String slug);
 }
