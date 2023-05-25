@@ -26,6 +26,16 @@ public class LaptopController {
         return ResponseEntity.status(HttpStatus.OK).body(listLt);
     }
 
+    @GetMapping("/laptops/{slug}")
+    public ResponseEntity<?> getLaptopBySlug(@PathVariable String slug) {
+        LaptopDto dto = laptopService.getLaptopBySlug(slug);
+        if (dto != null) {
+            return ResponseEntity.status(HttpStatus.OK).body(dto);
+        }
+        ApiExceptionResponse response = new ApiExceptionResponse("Can't get by slug!", HttpStatus.NO_CONTENT, LocalDateTime.now());
+        return ResponseEntity.status(HttpStatus.NO_CONTENT).body(response);
+    }
+
     @PostMapping("/laptop")
     public ResponseEntity<?> createLaptop(@RequestBody LaptopDto laptopDto) {
         Laptop lt = laptopService.createLaptop(laptopDto);

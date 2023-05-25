@@ -3,10 +3,8 @@ package com.fpt.swp391.service;
 import java.util.*;
 
 import com.fpt.swp391.dto.LaptopDto;
-import com.fpt.swp391.model.Brand;
-import com.fpt.swp391.model.Category;
-import com.fpt.swp391.model.Laptop;
-import com.fpt.swp391.model.User;
+import com.fpt.swp391.dto.MetadataDto;
+import com.fpt.swp391.model.*;
 import com.fpt.swp391.repository.*;
 import org.springframework.stereotype.Service;
 
@@ -129,5 +127,52 @@ public class LaptopServiceImpl implements LaptopService {
             return lt;
         }
         return null;
+    }
+
+    @Override
+    public LaptopDto getLaptopBySlug(String slug) {
+        Laptop laptop = laptopRepository.findLaptopBySlug(slug);
+        if(laptop != null) {
+            return convertToLaptopDto(laptop);
+        }
+        return null;
+    }
+
+    private LaptopDto convertToLaptopDto(Laptop laptop){
+        LaptopDto dto = new LaptopDto();
+        dto.setId(laptop.getId());
+        dto.setUserName(laptop.getUser().getName());
+        dto.setTitle(laptop.getTitle());
+        dto.setMetaTitle(laptop.getMetaTitle());
+        dto.setSlug(laptop.getSlug());
+        dto.setSummary(laptop.getSummary());
+        dto.setImage(laptop.getImage());
+        dto.setSku(laptop.getSku());
+        dto.setPrice(laptop.getPrice());
+        dto.setDiscount(laptop.getDiscount());
+        dto.setQuantity(laptop.getQuantity());
+        dto.setCategoryId(laptop.getCategory().getId());
+        dto.setBrandId(laptop.getBrand().getId());
+
+        Set<Metadata> metadataSet = laptop.getListMetadata();
+        Set<MetadataDto> metadataDtoSet = new HashSet<>();
+        for (Metadata meta: metadataSet) {
+            MetadataDto mdto = converToMetaDataDto(meta);
+            metadataDtoSet.add(mdto);
+        }
+        dto.setMetadataDtoSet(metadataDtoSet);
+        return dto;
+    }
+
+    private MetadataDto converToMetaDataDto(Metadata metadata) {
+        MetadataDto dto = new MetadataDto();
+        dto.setId(metadata.getId());
+        dto.setIcon(metadata.getIcon());
+        dto.setIconType(metadata.getIconType());
+        dto.setTitle(metadata.getTitle());
+        dto.setContent(metadata.getContent());
+        dto.setLaptop_id(metadata.getLaptop().getId());
+        dto.setGroup_id(metadata.getMetadataGroup().getId());
+        return dto;
     }
 }
