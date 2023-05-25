@@ -84,7 +84,7 @@ public class BrandController {
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
     }
 
-    @GetMapping("/category/{slug}")
+    @GetMapping("/brand/{slug}")
     public ResponseEntity<BrandDto> getBrandBySlug(@PathVariable String slug) {
         BrandDto categoryDto = brandService.getBrandDtoBySlug(slug);
         if (categoryDto != null) {
