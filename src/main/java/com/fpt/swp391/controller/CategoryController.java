@@ -81,6 +81,7 @@ public class CategoryController {
         if (category != null) {
             Category c = new Category();
             c.setId(category.getId());
+            c.setDescription(category.getDescription());
             c.setName(category.getName());
             c.setSlug(category.getSlug());
             c.setImage(category.getImage());
