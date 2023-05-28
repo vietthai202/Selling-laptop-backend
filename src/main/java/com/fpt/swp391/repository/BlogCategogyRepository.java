@@ -8,4 +8,5 @@ import org.springframework.web.bind.annotation.RequestBody;
 
 @Repository
 public interface BlogCategogyRepository extends JpaRepository<BlogCategory, Long> {
+    BlogCategory findBlogCategoryByName(String name);
 }

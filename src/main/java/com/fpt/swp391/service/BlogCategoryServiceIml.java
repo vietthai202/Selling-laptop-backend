@@ -31,20 +31,33 @@ public class BlogCategoryServiceIml implements BlogCategoryService {
 
     @Override
     public boolean deleteBC(Long id) {
-        Blog blog = new Blog();
-        BlogCategory blogCategoryOp = blogCategogyRepository.findById(id).orElse(null);
-        if (blogCategoryOp.getBlogs().size() > 0) {
-            Set<Blog> blogs = blogCategoryOp.getBlogs();
-            BlogCategory bnew = new BlogCategory();
-            bnew.setName("Uncategorized");
-            bnew.setContent("Uncategorized");
-            for (Blog b : blogs) {
-                b.setBlogCategory(bnew);
-                blogRespository.save(b);
-            }
-        }
-        return true;
+        try {
+            BlogCategory blogCategoryOp = blogCategogyRepository.findById(id).orElse(null);
+            if (blogCategoryOp.getBlogs().size() > 0) {
+                Set<Blog> blogs = blogCategoryOp.getBlogs();
 
+                BlogCategory category = blogCategogyRepository.findBlogCategoryByName("Uncategorized");
+                if (category != null) {
+                    for (Blog b : blogs) {
+                        b.setBlogCategory(category);
+                        blogRespository.save(b);
+                    }
+                } else {
+                    BlogCategory bnew = new BlogCategory();
+                    bnew.setName("Uncategorized");
+                    bnew.setContent("Uncategorized");
+                    blogCategogyRepository.save(bnew);
+                    for (Blog b : blogs) {
+                        b.setBlogCategory(bnew);
+                        blogRespository.save(b);
+                    }
+                }
+            }
+            blogCategogyRepository.delete(blogCategoryOp);
+            return true;
+        } catch (Exception e){
+            return false;
+        }
     }
 
     @Override
