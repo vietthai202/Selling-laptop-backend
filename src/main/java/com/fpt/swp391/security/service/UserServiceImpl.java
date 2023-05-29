@@ -62,7 +62,23 @@ public class UserServiceImpl implements UserService {
 			u.setDateOfBirth(userDto.getDateOfBirth());
 			u.setPhone(userDto.getPhone());
 			u.setAddress(userDto.getAddress());
-//			u.setUserRole(userDto.getUserRole());
+
+			if(userDto.getPassword() != null){
+				u.setPassword(bCryptPasswordEncoder.encode(userDto.getPassword()));
+			}
+
+			if(userDto.getUserRole().equals(UserRole.ROLE_ADMIN.name())) {
+				u.setUserRole(UserRole.ROLE_ADMIN);
+			}
+			if(userDto.getUserRole().equals(UserRole.ROLE_BLOG.name())) {
+				u.setUserRole(UserRole.ROLE_BLOG);
+			}
+			if(userDto.getUserRole().equals(UserRole.ROLE_PRODUCT.name())) {
+				u.setUserRole(UserRole.ROLE_PRODUCT);
+			}
+			if(userDto.getUserRole().equals(UserRole.ROLE_USER.name())) {
+				u.setUserRole(UserRole.ROLE_USER);
+			}
 			userRepository.save(u);
 			return u;
 		}
@@ -78,6 +94,26 @@ public class UserServiceImpl implements UserService {
 
 		user.setPassword(bCryptPasswordEncoder.encode(user.getPassword()));
 		user.setUserRole(UserRole.ROLE_USER);
+
+		userRepository.save(user);
+
+		final String username = registrationRequest.getUsername();
+		final String registrationSuccessMessage = generalMessageAccessor.getMessage(null, REGISTRATION_SUCCESSFUL, username);
+
+		log.info("{} registered successfully!", username);
+
+		return new RegistrationResponse(registrationSuccessMessage);
+	}
+
+	@Override
+	public RegistrationResponse createUserByAdmin(RegistrationRequest registrationRequest, UserRole userRole) {
+
+		userValidationService.validateUser(registrationRequest);
+
+		final User user = UserMapper.INSTANCE.convertToUser(registrationRequest);
+
+		user.setPassword(bCryptPasswordEncoder.encode(user.getPassword()));
+		user.setUserRole(userRole);
 
 		userRepository.save(user);
 

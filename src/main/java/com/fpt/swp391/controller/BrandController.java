@@ -14,7 +14,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 @RestController
-
+@RequestMapping("/brand")
 public class BrandController {
     private final BrandService brandService;
 
@@ -22,23 +22,23 @@ public class BrandController {
         this.brandService = brandService;
     }
 
-    @GetMapping("/brands")
+    @GetMapping("/list")
     public ResponseEntity<List<Brand>> getAllBrand() {
         final List<Brand> listBrand = brandService.listAllBrand();
         List<Brand> brandd = new ArrayList<>();
         for (Brand brand : listBrand) {
-                Brand b = new Brand();
-                b.setId(brand.getId());
-                b.setName(brand.getName());
-                b.setImage(brand.getImage());
-                b.setSlug(brand.getSlug());
-                b.setDescription(brand.getDescription());
-                brandd.add(b);
+            Brand b = new Brand();
+            b.setId(brand.getId());
+            b.setName(brand.getName());
+            b.setImage(brand.getImage());
+            b.setSlug(brand.getSlug());
+            b.setDescription(brand.getDescription());
+            brandd.add(b);
         }
         return ResponseEntity.status(HttpStatus.OK).body(brandd);
     }
 
-    @PostMapping("/brand")
+    @PostMapping("/create")
     public ResponseEntity<?> createBrand(@RequestBody Brand brand) {
         Brand br = brandService.createBrand(brand);
         if (br != null) {
@@ -49,7 +49,7 @@ public class BrandController {
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(null);
     }
 
-    @DeleteMapping("/brands/{id}")
+    @DeleteMapping("/delete/{id}")
     public ResponseEntity<?> deleteBrand(@PathVariable Long id) {
         Brand br = brandService.findById(id);
         if (br != null) {
@@ -63,7 +63,7 @@ public class BrandController {
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
     }
 
-    @PutMapping("/brands/{id}")
+    @PutMapping("/edit/{id}")
     public ResponseEntity<?> updateBrand(@PathVariable Long id, @RequestBody BrandDto brandDto) {
         Brand br = brandService.updateBrand(id, brandDto);
         if (br != null) {
@@ -74,7 +74,7 @@ public class BrandController {
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
     }
 
-    @GetMapping("/brands/{id}")
+    @GetMapping("/getById/{id}")
     public ResponseEntity<?> getBrandById(@PathVariable Long id) {
         BrandDto br = brandService.findBrandDtoById(id);
         if (br != null) {
@@ -84,7 +84,7 @@ public class BrandController {
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
     }
 
-    @GetMapping("/brand/{slug}")
+    @GetMapping("/get/{slug}")
     public ResponseEntity<BrandDto> getBrandBySlug(@PathVariable String slug) {
         BrandDto categoryDto = brandService.getBrandDtoBySlug(slug);
         if (categoryDto != null) {
