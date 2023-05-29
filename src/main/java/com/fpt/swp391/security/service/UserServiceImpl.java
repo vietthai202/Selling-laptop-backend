@@ -62,7 +62,7 @@ public class UserServiceImpl implements UserService {
 			u.setDateOfBirth(userDto.getDateOfBirth());
 			u.setPhone(userDto.getPhone());
 			u.setAddress(userDto.getAddress());
-//			u.setUserRole(userDto.getUserRole());
+			u.setUserRole(userDto.getUserRole());
 			userRepository.save(u);
 			return u;
 		}

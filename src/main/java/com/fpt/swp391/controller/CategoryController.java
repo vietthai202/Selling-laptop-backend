@@ -7,7 +7,6 @@ import com.fpt.swp391.service.CategoryService;
 import com.fpt.swp391.utils.ApiSuccessResponse;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDateTime;
@@ -15,6 +14,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 @RestController
+@RequestMapping("/category")
 public class CategoryController {
     private final CategoryService categoryService;
 
@@ -22,8 +22,7 @@ public class CategoryController {
         this.categoryService = categoryService;
     }
 
-    @PreAuthorize("hasRole('ADMIN')")
-    @PostMapping("/creCategory")
+    @PostMapping("/create")
     public ResponseEntity<?> createCategory(@RequestBody Category category) {
         Category c = categoryService.createCategory(category);
         if (c != null) {
@@ -34,8 +33,7 @@ public class CategoryController {
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
     }
 
-    @PreAuthorize("hasRole('ADMIN')")
-    @DeleteMapping("/delCategory/{id}")
+    @DeleteMapping("/delete/{id}")
     public ResponseEntity<?> deleteCategory(@PathVariable Long id) {
         Category c = new Category();
         if (c != null) {
@@ -47,8 +45,7 @@ public class CategoryController {
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
     }
 
-    @PreAuthorize("hasRole('ADMIN')")
-    @PostMapping("/updateCategory/{id}")
+    @PostMapping("/edit/{id}")
     public ResponseEntity<?> updateCategory(@PathVariable Long id, @RequestBody Category category) {
         Category c = categoryService.updateCategoryById(id, category);
         if (c != null) {
@@ -59,7 +56,7 @@ public class CategoryController {
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
     }
 
-    @GetMapping("/categories")
+    @GetMapping("/list")
     public ResponseEntity<List<Category>> getAll() {
         final List<Category> listCategory = categoryService.listAll();
         List<Category> categories = new ArrayList<>();
@@ -75,7 +72,7 @@ public class CategoryController {
         return ResponseEntity.ok().body(categories);
     }
 
-    @GetMapping("/categories/{id}")
+    @GetMapping("/getById/{id}")
     public ResponseEntity<?> getCategoryById(@PathVariable Long id) {
         Category category = categoryService.findById(id);
         if (category != null) {
@@ -92,7 +89,7 @@ public class CategoryController {
         }
     }
 
-    @GetMapping("/getcategory/{slug}")
+    @GetMapping("/get/{slug}")
     public ResponseEntity<CategoryDto> getCategoryBySlug(@PathVariable String slug) {
         CategoryDto categoryDto = categoryService.getCategoryDtoBySlug(slug);
         if (categoryDto != null) {
