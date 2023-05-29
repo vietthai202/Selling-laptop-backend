@@ -45,7 +45,7 @@ public class BlogController {
     public ResponseEntity<?> createBlog(@RequestBody BlogDto blog) {
         Blog bl = blogService.createBlog(blog);
         if (bl != null) {
-            return ResponseEntity.status(HttpStatus.OK).body(bl);
+            return ResponseEntity.status(HttpStatus.OK).body("Tạo thành công");
         }
         final ApiExceptionResponse response = new ApiExceptionResponse("Create Fail!", HttpStatus.BAD_REQUEST, LocalDateTime.now());
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
