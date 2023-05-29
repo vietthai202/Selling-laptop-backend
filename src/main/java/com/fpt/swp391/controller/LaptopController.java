@@ -13,6 +13,7 @@ import java.time.LocalDateTime;
 import java.util.List;
 
 @RestController
+@RequestMapping("/laptop")
 public class LaptopController {
     private final LaptopService laptopService;
 
@@ -20,13 +21,13 @@ public class LaptopController {
         this.laptopService = laptopService;
     }
 
-    @GetMapping("/laptops")
+    @GetMapping("/list")
     public ResponseEntity<List<LaptopDto>> listAllLaptop() {
         final List<LaptopDto> listLt = laptopService.listAllLaptop();
         return ResponseEntity.status(HttpStatus.OK).body(listLt);
     }
 
-    @GetMapping("/laptops/{slug}")
+    @GetMapping("/get/{slug}")
     public ResponseEntity<?> getLaptopBySlug(@PathVariable String slug) {
         LaptopDto dto = laptopService.getLaptopBySlug(slug);
         if (dto != null) {
@@ -36,7 +37,7 @@ public class LaptopController {
         return ResponseEntity.status(HttpStatus.NO_CONTENT).body(response);
     }
 
-    @PostMapping("/laptop")
+    @PostMapping("/create")
     public ResponseEntity<?> createLaptop(@RequestBody LaptopDto laptopDto) {
         Laptop lt = laptopService.createLaptop(laptopDto);
         if (lt != null) {
@@ -47,7 +48,7 @@ public class LaptopController {
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
     }
 
-    @PutMapping("laptops/{id}")
+    @PutMapping("/edit/{id}")
     public ResponseEntity<?> updateLaptop(@PathVariable Long id, @RequestBody LaptopDto laptopDto) {
         Laptop lt = laptopService.updateLaptop(id, laptopDto);
         if (lt != null) {

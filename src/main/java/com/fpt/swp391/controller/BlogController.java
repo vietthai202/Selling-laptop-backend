@@ -63,7 +63,7 @@ public class BlogController {
 
     }
 
-    @DeleteMapping("/deleteBl/{id}")
+    @DeleteMapping("/delete/{id}")
     public ResponseEntity<?> deleteBlog(@PathVariable Long id) {
         boolean isDelete = blogService.deleteBlog(id);
         if (isDelete) {
