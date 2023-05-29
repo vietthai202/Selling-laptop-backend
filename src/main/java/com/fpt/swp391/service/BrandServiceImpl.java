@@ -82,8 +82,8 @@ public class BrandServiceImpl implements BrandService {
             dto.setId(b.getId());
             dto.setName(b.getName());
             dto.setDescription(b.getDescription());
-            dto.setImage(dto.getImage());
-            dto.setSlug(dto.getSlug());
+            dto.setImage(b.getImage());
+            dto.setSlug(b.getSlug());
             return dto;
         }
         return null;
