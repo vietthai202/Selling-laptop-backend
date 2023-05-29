@@ -62,6 +62,11 @@ public class UserServiceImpl implements UserService {
 			u.setDateOfBirth(userDto.getDateOfBirth());
 			u.setPhone(userDto.getPhone());
 			u.setAddress(userDto.getAddress());
+
+			if(userDto.getPassword() != null){
+				u.setPassword(bCryptPasswordEncoder.encode(userDto.getPassword()));
+			}
+
 			if(userDto.getUserRole().equals(UserRole.ROLE_ADMIN.name())) {
 				u.setUserRole(UserRole.ROLE_ADMIN);
 			}
