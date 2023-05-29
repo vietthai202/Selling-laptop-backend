@@ -11,11 +11,12 @@ import java.util.List;
 
 public interface BlogService {
     Blog createBlog(BlogDto blog);
+
     boolean deleteBlog(Long id);
-    Blog updateBlog(Long id, BlogDto blog);
+
+    boolean updateBlog(Long id, BlogDto blog);
 
     BlogDto getBlogBySlug(String slug);
 
     List<BlogDto> getAllBlog();
-
 }

@@ -12,13 +12,14 @@ import java.util.ArrayList;
 import java.util.List;
 
 @RestController
+@RequestMapping("/slide")
 public class SlideController {
     private final SlideService slideService;
     public SlideController(SlideService slideService) {
         this.slideService = slideService;
     }
-    @PreAuthorize("hasRole('ADMIN')")
-    @PostMapping("/Slide")
+
+    @PostMapping("/create")
     public ResponseEntity<?> creSlide(@RequestBody Slide slide){
         Slide sl = slideService.createrSlide(slide);
         if(sl != null){return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(sl);
@@ -26,7 +27,7 @@ public class SlideController {
         final ApiExceptionResponse response = new ApiExceptionResponse("Not Successful", HttpStatus.BAD_REQUEST, LocalDateTime.now());
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
     }
-    @GetMapping("/slides")
+    @GetMapping("/list")
     public ResponseEntity<List<Slide>> getAllSlide() {
         final List<Slide> listSlide = slideService.listAllSlide();
         List<Slide> slides = new ArrayList<>();
@@ -39,8 +40,8 @@ public class SlideController {
         }
         return ResponseEntity.status(HttpStatus.OK).body(slides);
     }
-    @PreAuthorize("hasRole('ADMIN')")
-    @DeleteMapping("/slides/{id}")
+
+    @DeleteMapping("/delete/{id}")
     public ResponseEntity<ApiExceptionResponse> deleteSlide(@PathVariable Long id){
         Slide sl = slideService.findById(id);
         ApiExceptionResponse response;
@@ -54,8 +55,8 @@ public class SlideController {
         response = new ApiExceptionResponse("Delete Fail!", HttpStatus.OK, LocalDateTime.now());
         return ResponseEntity.status(HttpStatus.OK).body(response);
     }
-    @PreAuthorize("hasRole('ADMIN')")
-    @PostMapping("/slides/update/{id}")
+
+    @PostMapping("/edit/{id}")
     public ResponseEntity<ApiExceptionResponse> updateSlide(@PathVariable Long id, @RequestBody Slide slide) {
         Slide sl = slideService.updateSlide(id, slide);
         ApiExceptionResponse response;

@@ -11,11 +11,8 @@ import java.util.Set;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class CategoryDto {
+public class MetadataGroupDto {
     private Long id;
     private String name;
-    private String description;
-    private String slug;
-    private String image;
-    private Set<LaptopDto> laptopDtos;
+    private Set<MetadataDto> metadataDtoSet;
 }

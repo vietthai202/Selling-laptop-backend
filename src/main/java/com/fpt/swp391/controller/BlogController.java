@@ -13,6 +13,7 @@ import java.time.LocalDateTime;
 import java.util.List;
 
 @RestController
+@RequestMapping("/blog")
 public class BlogController {
     private final BlogService blogService;
 
@@ -20,57 +21,56 @@ public class BlogController {
         this.blogService = blogService;
     }
 
-    @GetMapping("/blog/{slug}")
+    @GetMapping("/get/{slug}")
     public ResponseEntity<BlogDto> getBlogBySlug(@PathVariable String slug) {
         BlogDto blog = blogService.getBlogBySlug(slug);
         if (blog != null) {
             return ResponseEntity.status(HttpStatus.OK).body(blog);
         } else {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+            return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
         }
     }
 
-    @GetMapping("/blogs")
+    @GetMapping("/list")
     public ResponseEntity<List<BlogDto>> getAllBlog() {
         List<BlogDto> blogDtoList = blogService.getAllBlog();
         if (blogDtoList != null) {
             return ResponseEntity.status(HttpStatus.OK).body(blogDtoList);
         } else {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+            return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
         }
     }
 
-    @PostMapping("/createBlog")
+    @PostMapping("/create")
     public ResponseEntity<?> createBlog(@RequestBody BlogDto blog) {
         Blog bl = blogService.createBlog(blog);
         if (bl != null) {
-            ApiSuccessResponse response = new ApiSuccessResponse("Create Successfully!", HttpStatus.OK, LocalDateTime.now());
-            return ResponseEntity.status(HttpStatus.OK).body(response);
+            return ResponseEntity.status(HttpStatus.OK).body(bl);
         }
         final ApiExceptionResponse response = new ApiExceptionResponse("Create Fail!", HttpStatus.BAD_REQUEST, LocalDateTime.now());
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
     }
 
-    @PostMapping("/updateBl/{id}")
+    @PostMapping("/edit/{id}")
     public ResponseEntity<?> updateBlog(@PathVariable Long id, @RequestBody BlogDto blog) {
-        Blog bl = blogService.updateBlog(id, blog);
-        if (bl != null) {
-            ApiSuccessResponse response = new ApiSuccessResponse("Update Successfully!", HttpStatus.OK, LocalDateTime.now());
+        boolean isUpdate = blogService.updateBlog(id, blog);
+        if (isUpdate) {
+            ApiSuccessResponse response = new ApiSuccessResponse("Blog update Successfully!", HttpStatus.OK, LocalDateTime.now());
             return ResponseEntity.status(HttpStatus.OK).body(response);
         }
-        final ApiExceptionResponse response = new ApiExceptionResponse("Update Fail!", HttpStatus.BAD_REQUEST, LocalDateTime.now());
+        final ApiExceptionResponse response = new ApiExceptionResponse("Blog update Fail!", HttpStatus.BAD_REQUEST, LocalDateTime.now());
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
 
     }
 
-    @DeleteMapping("/deleteBl/{id}")
+    @DeleteMapping("/delete/{id}")
     public ResponseEntity<?> deleteBlog(@PathVariable Long id) {
         boolean isDelete = blogService.deleteBlog(id);
         if (isDelete) {
-            ApiSuccessResponse response = new ApiSuccessResponse("Delete Successfully!", HttpStatus.OK, LocalDateTime.now());
+            ApiSuccessResponse response = new ApiSuccessResponse("Blog delete Successfully!", HttpStatus.OK, LocalDateTime.now());
             return ResponseEntity.status(HttpStatus.OK).body(response);
         }
-        final ApiExceptionResponse response = new ApiExceptionResponse("Delete Fail!", HttpStatus.BAD_REQUEST, LocalDateTime.now());
+        final ApiExceptionResponse response = new ApiExceptionResponse("Blog delete Fail!", HttpStatus.BAD_REQUEST, LocalDateTime.now());
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
     }
 }
