@@ -3,7 +3,9 @@ package com.fpt.swp391.controller;
 import com.fpt.swp391.dto.UserDto;
 import com.fpt.swp391.exceptions.ApiExceptionResponse;
 import com.fpt.swp391.model.User;
-import com.fpt.swp391.security.dto.DeleteRequest;
+import com.fpt.swp391.security.dto.CreateUserRequest;
+import com.fpt.swp391.security.dto.RegistrationRequest;
+import com.fpt.swp391.security.dto.RegistrationResponse;
 import com.fpt.swp391.security.service.UserService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -31,7 +33,16 @@ public class UserController {
 
         List<UserDto> userDtos = new ArrayList<>();
         for (User user : listUser) {
-            userDtos.add(new UserDto(user.getId(), user.getName(), user.getPhone(), user.getDateOfBirth(), user.getUsername(), user.getEmail(), user.getUserRole(), user.getAddress()));
+            UserDto dto = new UserDto();
+            dto.setId(user.getId());
+            dto.setName(user.getName());
+            dto.setEmail(user.getEmail());
+            dto.setPhone(user.getPhone());
+            dto.setUsername(user.getUsername());
+            dto.setUserRole(user.getUserRole().name());
+            dto.setAddress(user.getAddress());
+
+            userDtos.add(dto);
         }
 
         return ResponseEntity.status(HttpStatus.OK).body(userDtos);
@@ -41,21 +52,30 @@ public class UserController {
     public ResponseEntity<?> getUserByUserName(@PathVariable String username) {
         User user = userService.findByUsername(username);
         if (user != null) {
-            UserDto userDto = new UserDto(user.getId(), user.getName(), user.getPhone(), user.getDateOfBirth(), user.getUsername(), user.getEmail(), user.getUserRole(), user.getAddress());
-            return ResponseEntity.status(HttpStatus.OK).body(userDto);
+
+            UserDto dto = new UserDto();
+            dto.setId(user.getId());
+            dto.setName(user.getName());
+            dto.setEmail(user.getEmail());
+            dto.setPhone(user.getPhone());
+            dto.setUsername(user.getUsername());
+            dto.setUserRole(user.getUserRole().name());
+            dto.setAddress(user.getAddress());
+
+            return ResponseEntity.status(HttpStatus.OK).body(dto);
         } else {
             final ApiExceptionResponse response = new ApiExceptionResponse("User not found!", HttpStatus.BAD_REQUEST, LocalDateTime.now());
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
         }
     }
 
-    @DeleteMapping("/delete")
-    public ResponseEntity<ApiExceptionResponse> deleteUserByUserName(@Valid @RequestBody DeleteRequest deleteRequest) {
-        User user = userService.findByUsername(deleteRequest.getUsername());
+    @DeleteMapping("/delete/{username}")
+    public ResponseEntity<ApiExceptionResponse> deleteUserByUserName(@PathVariable String username) {
+        User user = userService.findByUsername(username);
         ApiExceptionResponse response;
         if (user != null) {
             if (!user.getUserRole().equals("ADMIN")) {
-                boolean isDelete = userService.deleteUserByUserName(deleteRequest.getUsername());
+                boolean isDelete = userService.deleteUserByUserName(username);
                 if (isDelete) {
                     response = new ApiExceptionResponse("Delete user successfully!", HttpStatus.OK, LocalDateTime.now());
                     return ResponseEntity.status(HttpStatus.OK).body(response);
@@ -79,5 +99,22 @@ public class UserController {
         }
         response = new ApiExceptionResponse("User not found!", HttpStatus.BAD_REQUEST, LocalDateTime.now());
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
+    }
+
+    @PostMapping("/create")
+    public ResponseEntity<RegistrationResponse> registrationRequest(@Valid @RequestBody CreateUserRequest createUserRequest) {
+
+        RegistrationRequest request = new RegistrationRequest();
+        request.setName(createUserRequest.getName());
+        request.setEmail(createUserRequest.getEmail());
+        request.setPhone(createUserRequest.getPhone());
+        request.setUsername(createUserRequest.getUsername());
+        request.setAddress(createUserRequest.getAddress());
+        request.setPassword(createUserRequest.getPassword());
+        request.setDateOfBirth(createUserRequest.getDateOfBirth());
+
+        final RegistrationResponse registrationResponse = userService.createUserByAdmin(request, createUserRequest.getUserRole());
+
+        return ResponseEntity.status(HttpStatus.CREATED).body(registrationResponse);
     }
 }
