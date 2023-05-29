@@ -32,7 +32,11 @@ public class SlideController {
         final List<Slide> listSlide = slideService.listAllSlide();
         List<Slide> slides = new ArrayList<>();
         for (Slide slide : listSlide) {
-            slides.add(new Slide(slide.getId(), slide.getName(),slide.getImage(), slide.getSlug()));
+            Slide s = new Slide();
+            s.getId();
+            s.getName();
+            s.getImage();
+            s.getSlug();
         }
         return ResponseEntity.status(HttpStatus.OK).body(slides);
     }
