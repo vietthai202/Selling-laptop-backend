@@ -54,7 +54,7 @@ public class BlogServiceIml implements BlogService {
     }
 
     @Override
-    public Blog updateBlog(Long id, BlogDto blog) {
+    public boolean updateBlog(Long id, BlogDto blog) {
         Optional<Blog> blogOp = blogRespository.findById(id);
         BlogCategory category = blogCategogyRepository.findById(blog.getCategoryId()).orElse(null);
         if (blogOp.isPresent() && category != null) {
@@ -69,9 +69,9 @@ public class BlogServiceIml implements BlogService {
             long timestamp = date.getTime();
             bl.setSlug(blog.getSlug() + "-" + timestamp);
             blogRespository.save(bl);
-            return bl;
+            return true;
         }
-        return null;
+        return false;
     }
 
     @Override
