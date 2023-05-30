@@ -4,6 +4,7 @@ import java.util.List;
 
 import com.fpt.swp391.dto.LaptopDto;
 import com.fpt.swp391.model.Laptop;
+import org.springframework.data.domain.Page;
 
 public interface LaptopService {
 
@@ -12,7 +13,7 @@ public interface LaptopService {
 
     Laptop createLaptop(LaptopDto laptopDto);
 
-    boolean deleteLaptop(Long id);
+    Page<LaptopDto> getProducts(int page, int size, String sortBy, String sortOrder);
 
     Laptop updateLaptop(Long id, LaptopDto laptop);
 

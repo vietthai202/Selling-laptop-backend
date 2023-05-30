@@ -6,6 +6,10 @@ import com.fpt.swp391.dto.LaptopDto;
 import com.fpt.swp391.dto.MetadataDto;
 import com.fpt.swp391.model.*;
 import com.fpt.swp391.repository.*;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -15,6 +19,7 @@ public class LaptopServiceImpl implements LaptopService {
     private final CategoryRepository categoryRepository;
     private final BrandRepository brandRepository;
     private final UserRepository userRepository;
+
     public LaptopServiceImpl(LaptopRepository laptopRepository, CategoryRepository categoryRepository, BrandRepository brandRepository, UserRepository userRepository) {
         this.laptopRepository = laptopRepository;
         this.categoryRepository = categoryRepository;
@@ -94,14 +99,22 @@ public class LaptopServiceImpl implements LaptopService {
     }
 
     @Override
-    public boolean deleteLaptop(Long id) {
-        Optional<Laptop> laptopOptional = laptopRepository.findById(id);
-        if (laptopOptional.isPresent()) {
-            Laptop lt = laptopOptional.get();
-            laptopRepository.delete(lt);
-            return true;
+    public Page<LaptopDto> getProducts(int page, int size, String sortBy, String sortOrder) {
+        try {
+            if ((sortOrder.equals("asc")) || (sortOrder.equals("desc"))) {
+                Sort sort = Sort.by(Sort.Direction.fromString(sortOrder), sortBy);
+                Pageable pageable = PageRequest.of(page, size, sort);
+                Page<Laptop> productPage = laptopRepository.findAll(pageable);
+                return productPage.map(this::convertToLaptopDto);
+            } else {
+                Pageable pageable = PageRequest.of(page, size);
+                Page<Laptop> productPage = laptopRepository.findAll(pageable);
+                return productPage.map(this::convertToLaptopDto);
+            }
+
+        } catch (Exception e) {
+            return null;
         }
-        return false;
     }
 
     @Override
@@ -132,13 +145,13 @@ public class LaptopServiceImpl implements LaptopService {
     @Override
     public LaptopDto getLaptopBySlug(String slug) {
         Laptop laptop = laptopRepository.findLaptopBySlug(slug);
-        if(laptop != null) {
+        if (laptop != null) {
             return convertToLaptopDto(laptop);
         }
         return null;
     }
 
-    private LaptopDto convertToLaptopDto(Laptop laptop){
+    private LaptopDto convertToLaptopDto(Laptop laptop) {
         LaptopDto dto = new LaptopDto();
         dto.setId(laptop.getId());
         dto.setUserName(laptop.getUser().getName());
@@ -156,7 +169,7 @@ public class LaptopServiceImpl implements LaptopService {
 
         Set<Metadata> metadataSet = laptop.getListMetadata();
         Set<MetadataDto> metadataDtoSet = new HashSet<>();
-        for (Metadata meta: metadataSet) {
+        for (Metadata meta : metadataSet) {
             MetadataDto mdto = converToMetaDataDto(meta);
             metadataDtoSet.add(mdto);
         }
