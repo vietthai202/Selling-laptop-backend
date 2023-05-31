@@ -15,6 +15,7 @@ public interface MetadataService {
 
     boolean deleteMetadata(Long id);
 
-    Metadata updateMetadata(Long id, MetadataDto metadataDto);
+//    Metadata updateMetadata(Long id, MetadataDto metadataDto);
 
+    boolean updateMetadataByLaptop(String slug,List<MetadataDto> metadataDtoList);
 }

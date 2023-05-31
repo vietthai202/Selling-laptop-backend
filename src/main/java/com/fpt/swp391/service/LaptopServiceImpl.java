@@ -29,7 +29,6 @@ public class LaptopServiceImpl implements LaptopService {
     public List<LaptopDto> listAllLaptop() {
         List<Laptop> lt = laptopRepository.findAll();
         List<LaptopDto> lt1 = new ArrayList<>();
-
         for (Laptop laptop : lt) {
             LaptopDto laptopDto = new LaptopDto();
             laptopDto.setId(laptop.getId());
@@ -46,8 +45,9 @@ public class LaptopServiceImpl implements LaptopService {
             laptopDto.setCategoryId(laptop.getCategory().getId());
             laptopDto.setBrandId(laptop.getBrand().getId());
             lt1.add(laptopDto);
-
         }
+//        lt1.sort(Comparator.comparingLong(LaptopDto::getId).reversed());
+        Collections.reverse(lt1);
         return lt1;
     }
 

@@ -24,10 +24,10 @@ public class CategoryController {
 
     @PostMapping("/create")
     public ResponseEntity<?> createCategory(@RequestBody Category category) {
-        Category c = categoryService.createCategory(category);
+        CategoryDto c = categoryService.createCategory(category);
         if (c != null) {
             final ApiSuccessResponse response = new ApiSuccessResponse("Successful", HttpStatus.OK, LocalDateTime.now());
-            return ResponseEntity.status(HttpStatus.OK).body(response);
+            return ResponseEntity.status(HttpStatus.OK).body(c);
         }
         final ApiExceptionResponse response = new ApiExceptionResponse("Not Successful", HttpStatus.BAD_REQUEST, LocalDateTime.now());
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);

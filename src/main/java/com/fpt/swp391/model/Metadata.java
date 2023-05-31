@@ -22,9 +22,9 @@ public class Metadata {
     private String title;
     private String content;
     @ManyToOne()
-    @JoinColumn(name="laptop_id", nullable=false)
+    @JoinColumn(name = "laptop_id", nullable = false)
     private Laptop laptop;
     @ManyToOne
-    @JoinColumn(name="group_id", nullable=false)
+    @JoinColumn(name = "group_id", nullable = false)
     private MetadataGroup metadataGroup;
 }
