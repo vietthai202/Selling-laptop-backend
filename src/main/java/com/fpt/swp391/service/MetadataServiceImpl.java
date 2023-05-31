@@ -14,7 +14,7 @@ import java.util.List;
 import java.util.Optional;
 
 @Service
-public class MetadataServiceImpl implements MetadataService{
+public class MetadataServiceImpl implements MetadataService {
     private final MetadataRepository metadataRepository;
 
     private final MetadataGroupRepository metadataGroupRepository;
@@ -31,7 +31,7 @@ public class MetadataServiceImpl implements MetadataService{
     public List<MetadataDto> listAll() {
         List<Metadata> m = metadataRepository.findAll();
         List<MetadataDto> m1 = new ArrayList<>();
-        for (Metadata metadata : m){
+        for (Metadata metadata : m) {
             MetadataDto metadataDto = new MetadataDto();
             metadataDto.setId(metadata.getId());
             metadataDto.setIcon(metadata.getIcon());
@@ -48,7 +48,7 @@ public class MetadataServiceImpl implements MetadataService{
     @Override
     public Metadata findById(Long id) {
         Optional<Metadata> metadataOptional = metadataRepository.findById(id);
-        if(metadataOptional.isPresent()){
+        if (metadataOptional.isPresent()) {
             Metadata metadata = metadataOptional.get();
             return metadata;
         }
@@ -73,7 +73,7 @@ public class MetadataServiceImpl implements MetadataService{
     @Override
     public boolean deleteMetadata(Long id) {
         Optional<Metadata> metadataOptional = metadataRepository.findById(id);
-        if(metadataOptional.isPresent()){
+        if (metadataOptional.isPresent()) {
             Metadata m = metadataOptional.get();
             metadataRepository.delete(m);
             return true;
@@ -82,19 +82,31 @@ public class MetadataServiceImpl implements MetadataService{
     }
 
     @Override
-    public Metadata updateMetadata(Long id, MetadataDto metadataDto) {
-        Optional<Metadata> metadataOptional = metadataRepository.findById(id);
-        if(metadataOptional.isPresent()) {
-            Metadata m = metadataOptional.get();
-            m.setIcon(metadataDto.getIcon());
-            m.setIconType(metadataDto.getIconType());
-            m.setTitle(metadataDto.getTitle());
-            m.setContent(metadataDto.getContent());
-            MetadataGroup m1 = metadataGroupRepository.findById(metadataDto.getGroup_id()).orElse(new MetadataGroup());
-            m.setMetadataGroup(m1);
-            metadataRepository.save(m);
-            return m;
+    public boolean updateMetadataByLaptop(String slug, List<MetadataDto> metadataDtoList) {
+        try {
+            Laptop l = laptopRepository.findLaptopBySlug(slug);
+            if (l != null) {
+                List<Metadata> listMetadata = metadataRepository.findMetadataByLaptop_Id(l.getId());
+                for (MetadataDto dto : metadataDtoList) {
+                    for (Metadata meta : listMetadata) {
+                        if (dto.getId() == meta.getId()) {
+                            Metadata m = metadataRepository.findById(dto.getId()).orElse(null);
+                            if (m != null) {
+                                m.setContent(dto.getContent());
+                                m.setIcon(dto.getIcon());
+                                m.setTitle(dto.getTitle());
+                                m.setIconType(dto.getIconType());
+                                metadataRepository.save(m);
+                            }
+                        }
+                    }
+                }
+            }
+            return true;
+        } catch (Exception e) {
+
         }
-        return null;
+        return false;
     }
+
 }

@@ -46,7 +46,8 @@ public class LaptopServiceImpl implements LaptopService {
             laptopDto.setBrandId(laptop.getBrand().getId());
             lt1.add(laptopDto);
         }
-        lt1.sort(Comparator.comparingLong(LaptopDto::getId).reversed());
+//        lt1.sort(Comparator.comparingLong(LaptopDto::getId).reversed());
+        Collections.reverse(lt1);
         return lt1;
     }
 

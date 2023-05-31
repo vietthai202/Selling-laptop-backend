@@ -109,12 +109,14 @@ public class BrandServiceImpl implements BrandService {
         dto.setSlug(brand.getSlug());
         dto.setImage(brand.getImage());
         Set<LaptopDto> laptopDTOs = new HashSet<>();
-//        Set<Laptop> laptops = brand.getLaptops();
-//        for (Laptop laptop : laptops) {
-//            LaptopDto dt = convertToLaptopDto(laptop);
-//            laptopDTOs.add(dt);
-//        }
-        dto.setLaptopDtos(laptopDTOs);
+        Set<Laptop> laptops = brand.getLaptops();
+        if(laptops != null) {
+            for (Laptop laptop : laptops) {
+                LaptopDto dt = convertToLaptopDto(laptop);
+                laptopDTOs.add(dt);
+            }
+            dto.setLaptopDtos(laptopDTOs);
+        }
         return dto;
 
     }

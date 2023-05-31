@@ -116,12 +116,14 @@ public class CategoryServiceImpl implements CategoryService {
         dto.setSlug(category.getSlug());
         dto.setImage(category.getImage());
         Set<LaptopDto> laptopDTOs = new HashSet<>();
-//        Set<Laptop> laptops = category.getLaptops();
-//        for (Laptop laptop : laptops) {
-//            LaptopDto dt = convertToLaptopDto(laptop);
-//            laptopDTOs.add(dt);
-//        }
-        dto.setLaptopDtos(laptopDTOs);
+        Set<Laptop> laptops = category.getLaptops();
+        if(laptops != null) {
+            for (Laptop laptop : laptops) {
+                LaptopDto dt = convertToLaptopDto(laptop);
+                laptopDTOs.add(dt);
+            }
+            dto.setLaptopDtos(laptopDTOs);
+        }
         return dto;
     }
 
