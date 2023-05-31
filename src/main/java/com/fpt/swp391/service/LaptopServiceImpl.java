@@ -91,7 +91,7 @@ public class LaptopServiceImpl implements LaptopService {
         lt.setSlug(laptop.getSlug() + "-" + timestamp);
         lt.setSummary(laptop.getSummary());
         lt.setImage(laptop.getImage());
-        lt.setSku(laptop.getSku());
+        lt.setSku(timestamp + "");
         lt.setPrice(laptop.getPrice());
         lt.setDiscount(laptop.getDiscount());
         lt.setQuantity(laptop.getQuantity());
@@ -142,10 +142,12 @@ public class LaptopServiceImpl implements LaptopService {
             lt.setId(laptop.getId());
             lt.setTitle(laptop.getTitle());
             lt.setMetaTitle(laptop.getMetaTitle());
-            lt.setSlug(laptop.getSlug());
+            Date date = new Date();
+            long timestamp = date.getTime();
+            lt.setSlug(laptop.getSlug() + "-" + timestamp);
             lt.setSummary(laptop.getSummary());
             lt.setImage(laptop.getImage());
-            lt.setSku(laptop.getSku());
+//            lt.setSku(laptop.getSku()); - không thay đổi SKU
             lt.setPrice(laptop.getPrice());
             lt.setDiscount(laptop.getDiscount());
             lt.setQuantity(laptop.getQuantity());

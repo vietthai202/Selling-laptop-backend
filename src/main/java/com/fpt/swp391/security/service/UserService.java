@@ -17,4 +17,5 @@ public interface UserService {
 	RegistrationResponse registration(RegistrationRequest registrationRequest);
 	RegistrationResponse createUserByAdmin(RegistrationRequest registrationRequest, UserRole userRole);
 	AuthenticatedUserDto findAuthenticatedUserByUsername(String username);
+	boolean sendPasswordToEmail(String email);
 }
