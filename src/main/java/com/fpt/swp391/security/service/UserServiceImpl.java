@@ -10,7 +10,8 @@ import com.fpt.swp391.security.dto.RegistrationResponse;
 import com.fpt.swp391.security.mapper.UserMapper;
 import com.fpt.swp391.service.UserValidationService;
 import com.fpt.swp391.utils.GeneralMessageAccessor;
-import lombok.RequiredArgsConstructor;
+import com.fpt.swp391.utils.RandomPasswordGenerator;
+import com.fpt.swp391.utils.SendMail;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -19,18 +20,27 @@ import java.util.List;
 
 @Slf4j
 @Service
-@RequiredArgsConstructor
 public class UserServiceImpl implements UserService {
 
 	private static final String REGISTRATION_SUCCESSFUL = "registration_successful";
 
 	private final UserRepository userRepository;
 
+	private final SendMail sendMail;
+
 	private final BCryptPasswordEncoder bCryptPasswordEncoder;
 
 	private final UserValidationService userValidationService;
 
 	private final GeneralMessageAccessor generalMessageAccessor;
+
+	public UserServiceImpl(UserRepository userRepository, SendMail sendMail, BCryptPasswordEncoder bCryptPasswordEncoder, UserValidationService userValidationService, GeneralMessageAccessor generalMessageAccessor) {
+		this.userRepository = userRepository;
+		this.sendMail = sendMail;
+		this.bCryptPasswordEncoder = bCryptPasswordEncoder;
+		this.userValidationService = userValidationService;
+		this.generalMessageAccessor = generalMessageAccessor;
+	}
 
 	@Override
 	public User findByUsername(String username) {
@@ -131,5 +141,22 @@ public class UserServiceImpl implements UserService {
 		final User user = findByUsername(username);
 
 		return UserMapper.INSTANCE.convertToAuthenticatedUserDto(user);
+	}
+
+	@Override
+	public boolean sendPasswordToEmail(String email) {
+		try {
+			User u = userRepository.findUserByEmail(email);
+			RandomPasswordGenerator rpg = new RandomPasswordGenerator();
+			String pass = rpg.generateRandomPassword();
+			u.setPassword(bCryptPasswordEncoder.encode(pass));
+			userRepository.save(u);
+			String bodyEmail = "Mật khẩu mới cho tài khoản " + u.getUsername() + " là: " + pass;
+			sendMail.sendMailRender(u.getEmail(), "PASSWORD RECOVER", bodyEmail);
+			return true;
+		} catch (Exception e) {
+
+		}
+		return false;
 	}
 }
