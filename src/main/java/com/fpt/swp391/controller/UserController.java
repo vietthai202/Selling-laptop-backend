@@ -1,5 +1,6 @@
 package com.fpt.swp391.controller;
 
+import com.fpt.swp391.dto.ForgotRequest;
 import com.fpt.swp391.dto.UserDto;
 import com.fpt.swp391.exceptions.ApiExceptionResponse;
 import com.fpt.swp391.model.User;
@@ -7,6 +8,7 @@ import com.fpt.swp391.security.dto.CreateUserRequest;
 import com.fpt.swp391.security.dto.RegistrationRequest;
 import com.fpt.swp391.security.dto.RegistrationResponse;
 import com.fpt.swp391.security.service.UserService;
+import com.fpt.swp391.utils.ApiSuccessResponse;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -117,4 +119,16 @@ public class UserController {
 
         return ResponseEntity.status(HttpStatus.CREATED).body(registrationResponse);
     }
+
+    @PostMapping("/loss-pass")
+    public ResponseEntity<?> forgotPassword(@Valid @RequestBody ForgotRequest forgotRequest) {
+        boolean sent = userService.sendPasswordToEmail(forgotRequest.getEmail());
+        if (sent) {
+            final ApiSuccessResponse response = new ApiSuccessResponse("Successful", HttpStatus.OK, LocalDateTime.now());
+            return ResponseEntity.status(HttpStatus.OK).body(response);
+        }
+        final ApiExceptionResponse response = new ApiExceptionResponse("Not Successful", HttpStatus.BAD_REQUEST, LocalDateTime.now());
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
+    }
+
 }

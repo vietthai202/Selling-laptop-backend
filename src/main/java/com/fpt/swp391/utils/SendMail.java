@@ -1,17 +1,18 @@
 package com.fpt.swp391.utils;
 
-
-import lombok.AllArgsConstructor;
 import lombok.NoArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
+import org.springframework.stereotype.Component;
 
-@AllArgsConstructor
 @NoArgsConstructor
+@Component
 public class SendMail {
     private JavaMailSender mailSender;
 
-    public void SendMailController(JavaMailSender mailSender) {
+    @Autowired
+    public SendMail(JavaMailSender mailSender) {
         this.mailSender = mailSender;
     }
 
