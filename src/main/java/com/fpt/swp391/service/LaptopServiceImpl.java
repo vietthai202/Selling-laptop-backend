@@ -6,10 +6,8 @@ import com.fpt.swp391.dto.LaptopDto;
 import com.fpt.swp391.dto.MetadataDto;
 import com.fpt.swp391.model.*;
 import com.fpt.swp391.repository.*;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
+import org.springframework.data.domain.*;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -61,6 +59,25 @@ public class LaptopServiceImpl implements LaptopService {
             return laptop;
         }
         return null;
+    }
+
+    @Override
+    public Page<LaptopDto> getProductsByFilter(String categoryName, String brandName, String sortDirection, float minPrice, float maxPrice, int pageSize, int pageNumber) {
+        try {
+            Specification<Laptop> specification = LaptopSpecifications.hasCategoryAndBrand(categoryName, brandName, sortDirection).and(LaptopSpecifications.hasPriceBetween(minPrice, maxPrice));
+            Pageable pageable = PageRequest.of(pageNumber, pageSize);
+            Page<Laptop> resultPage = laptopRepository.findAll(specification, pageable);
+            int totalPages = resultPage.getTotalPages();
+            long totalElements = resultPage.getTotalElements();
+            if (pageNumber >= totalPages && totalElements > 0) {
+                pageNumber = totalPages - 1;
+                pageable = PageRequest.of(pageNumber, pageSize);
+                resultPage = laptopRepository.findAll(specification, pageable);
+            }
+            return resultPage.map(this::convertToLaptopDto);
+        } catch (Exception e) {
+            return null;
+        }
     }
 
     @Override
