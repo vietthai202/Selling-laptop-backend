@@ -19,7 +19,7 @@ public class BrandServiceImpl implements BrandService {
     }
 
     @Override
-    public Brand createBrand(Brand brand) {
+    public BrandDto createBrand(Brand brand) {
         Brand br = new Brand();
         br.setName(brand.getName());
         br.setDescription(brand.getDescription());
@@ -28,7 +28,8 @@ public class BrandServiceImpl implements BrandService {
         long timestamp = date.getTime();
         br.setSlug(brand.getSlug() + "-"+ timestamp);
         brandRepository.save(br);
-        return br;
+        BrandDto dto =  converToBrandDTO(br);
+        return dto;
     }
 
     @Override
@@ -102,15 +103,17 @@ public class BrandServiceImpl implements BrandService {
 
     private BrandDto converToBrandDTO(Brand brand){
         BrandDto dto = new BrandDto();
+        dto.setId(brand.getId());
         dto.setName(brand.getName());
+        dto.setDescription(brand.getDescription());
         dto.setSlug(brand.getSlug());
         dto.setImage(brand.getImage());
         Set<LaptopDto> laptopDTOs = new HashSet<>();
-        Set<Laptop> laptops = brand.getLaptops();
-        for (Laptop laptop : laptops) {
-            LaptopDto dt = convertToLaptopDto(laptop);
-            laptopDTOs.add(dt);
-        }
+//        Set<Laptop> laptops = brand.getLaptops();
+//        for (Laptop laptop : laptops) {
+//            LaptopDto dt = convertToLaptopDto(laptop);
+//            laptopDTOs.add(dt);
+//        }
         dto.setLaptopDtos(laptopDTOs);
         return dto;
 

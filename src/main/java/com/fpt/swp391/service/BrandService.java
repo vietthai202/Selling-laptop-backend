@@ -6,7 +6,7 @@ import com.fpt.swp391.model.Brand;
 import java.util.List;
 
 public interface BrandService {
-    Brand createBrand(Brand brand);
+    BrandDto createBrand(Brand brand);
 
     Brand findById(Long id);
 

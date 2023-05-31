@@ -26,7 +26,6 @@ public class LaptopServiceImpl implements LaptopService {
     public List<LaptopDto> listAllLaptop() {
         List<Laptop> lt = laptopRepository.findAll();
         List<LaptopDto> lt1 = new ArrayList<>();
-
         for (Laptop laptop : lt) {
             LaptopDto laptopDto = new LaptopDto();
             laptopDto.setId(laptop.getId());
@@ -43,8 +42,8 @@ public class LaptopServiceImpl implements LaptopService {
             laptopDto.setCategoryId(laptop.getCategory().getId());
             laptopDto.setBrandId(laptop.getBrand().getId());
             lt1.add(laptopDto);
-
         }
+        lt1.sort(Comparator.comparingLong(LaptopDto::getId).reversed());
         return lt1;
     }
 
@@ -69,7 +68,7 @@ public class LaptopServiceImpl implements LaptopService {
         lt.setSlug(laptop.getSlug() + "-" + timestamp);
         lt.setSummary(laptop.getSummary());
         lt.setImage(laptop.getImage());
-        lt.setSku(laptop.getSku());
+        lt.setSku(timestamp+"");
         lt.setPrice(laptop.getPrice());
         lt.setDiscount(laptop.getDiscount());
         lt.setQuantity(laptop.getQuantity());
@@ -115,7 +114,6 @@ public class LaptopServiceImpl implements LaptopService {
             lt.setSlug(laptop.getSlug());
             lt.setSummary(laptop.getSummary());
             lt.setImage(laptop.getImage());
-            lt.setSku(laptop.getSku());
             lt.setPrice(laptop.getPrice());
             lt.setDiscount(laptop.getDiscount());
             lt.setQuantity(laptop.getQuantity());

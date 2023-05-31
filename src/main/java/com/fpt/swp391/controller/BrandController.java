@@ -40,10 +40,10 @@ public class BrandController {
 
     @PostMapping("/create")
     public ResponseEntity<?> createBrand(@RequestBody Brand brand) {
-        Brand br = brandService.createBrand(brand);
+        BrandDto br = brandService.createBrand(brand);
         if (br != null) {
             ApiSuccessResponse response = new ApiSuccessResponse("Create Successfully!", HttpStatus.OK, LocalDateTime.now());
-            return ResponseEntity.status(HttpStatus.OK).body(response);
+            return ResponseEntity.status(HttpStatus.OK).body(br);
         }
         final ApiExceptionResponse response = new ApiExceptionResponse("Create Fail!", HttpStatus.BAD_REQUEST, LocalDateTime.now());
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(null);
