@@ -47,4 +47,6 @@ public class Laptop {
     private Set<OrderItem> orderItems;
     @OneToMany(mappedBy = "laptop")
     private Set<Review> reviews;
+    @OneToMany(mappedBy = "laptop")
+    private Set<LaptopImg> listImg;
 }
