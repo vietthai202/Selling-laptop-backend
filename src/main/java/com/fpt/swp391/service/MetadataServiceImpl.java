@@ -71,6 +71,32 @@ public class MetadataServiceImpl implements MetadataService {
     }
 
     @Override
+    public boolean createMetadataMultiple(List<MetadataDto> metadataDtoList, Long laptopId) {
+        try {
+            for (MetadataDto dto : metadataDtoList) {
+                Metadata m = new Metadata();
+                m.setTitle(dto.getTitle());
+                m.setContent(dto.getContent());
+                m.setIcon(dto.getIcon());
+                m.setIconType(dto.getIconType());
+                MetadataGroup g = metadataGroupRepository.findById(dto.getGroup_id()).orElse(null);
+                if (g != null) {
+                    m.setMetadataGroup(g);
+                }
+                Laptop l = laptopRepository.findById(laptopId).orElse(null);
+                if (l != null) {
+                    m.setLaptop(l);
+                }
+                metadataRepository.save(m);
+            }
+            return true;
+        } catch (Exception e) {
+
+        }
+        return false;
+    }
+
+    @Override
     public boolean deleteMetadata(Long id) {
         Optional<Metadata> metadataOptional = metadataRepository.findById(id);
         if (metadataOptional.isPresent()) {

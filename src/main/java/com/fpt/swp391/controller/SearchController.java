@@ -34,7 +34,7 @@ public class SearchController {
         if (lstDto1 != null) {
             result.addAll(lstDto1);
         }
-        if (result.size() > 0) {
+        if (result.size() > 0 && !keyword.trim().equals("")) {
             return ResponseEntity.status(HttpStatus.OK).body(result);
         }
         ApiExceptionResponse response = new ApiExceptionResponse("No content", HttpStatus.NO_CONTENT, LocalDateTime.now());

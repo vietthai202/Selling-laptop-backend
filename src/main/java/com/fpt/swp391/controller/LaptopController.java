@@ -65,8 +65,8 @@ public class LaptopController {
     public ResponseEntity<?> createLaptop(@RequestBody LaptopDto laptopDto) {
         Laptop lt = laptopService.createLaptop(laptopDto);
         if (lt != null) {
-            ApiSuccessResponse response = new ApiSuccessResponse("Create Successfully!", HttpStatus.OK, LocalDateTime.now());
-            return ResponseEntity.status(HttpStatus.OK).body(response);
+            Long laptopId = lt.getId();
+            return ResponseEntity.status(HttpStatus.OK).body(laptopId);
         }
         ApiExceptionResponse response = new ApiExceptionResponse("Create Fail", HttpStatus.BAD_REQUEST, LocalDateTime.now());
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
