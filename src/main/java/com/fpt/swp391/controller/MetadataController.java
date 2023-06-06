@@ -33,6 +33,17 @@ public class MetadataController {
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
     }
 
+    @PostMapping("/create-multiple/{laptopId}")
+    public ResponseEntity<?> createMeta(@RequestBody List<MetadataDto> metadataDtoList, @PathVariable Long laptopId) {
+        boolean created = metadataService.createMetadataMultiple(metadataDtoList, laptopId);
+        if (created) {
+            final ApiSuccessResponse response = new ApiSuccessResponse("Successful", HttpStatus.OK, LocalDateTime.now());
+            return ResponseEntity.status(HttpStatus.OK).body(response);
+        }
+        final ApiExceptionResponse response = new ApiExceptionResponse("Not Successful", HttpStatus.BAD_REQUEST, LocalDateTime.now());
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
+    }
+
     @PostMapping("/edit/{slug}")
     public ResponseEntity<?> updateMeta(@PathVariable String slug,@RequestBody List<MetadataDto> metadataDtoList) {
         boolean m = metadataService.updateMetadataByLaptop(slug,metadataDtoList);

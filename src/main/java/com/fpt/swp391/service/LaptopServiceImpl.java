@@ -46,7 +46,6 @@ public class LaptopServiceImpl implements LaptopService {
             laptopDto.setBrandId(laptop.getBrand().getId());
             lt1.add(laptopDto);
         }
-//        lt1.sort(Comparator.comparingLong(LaptopDto::getId).reversed());
         Collections.reverse(lt1);
         return lt1;
     }
@@ -83,7 +82,6 @@ public class LaptopServiceImpl implements LaptopService {
     @Override
     public Laptop createLaptop(LaptopDto laptop) {
         Laptop lt = new Laptop();
-        lt.setId(laptop.getId());
         lt.setTitle(laptop.getTitle());
         lt.setMetaTitle(laptop.getMetaTitle());
         Date date = new Date();

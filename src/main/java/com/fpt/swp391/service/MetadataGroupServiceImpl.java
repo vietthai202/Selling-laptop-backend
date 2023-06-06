@@ -2,8 +2,10 @@ package com.fpt.swp391.service;
 
 import com.fpt.swp391.dto.MetadataDto;
 import com.fpt.swp391.dto.MetadataGroupDto;
+import com.fpt.swp391.model.Laptop;
 import com.fpt.swp391.model.Metadata;
 import com.fpt.swp391.model.MetadataGroup;
+import com.fpt.swp391.repository.LaptopRepository;
 import com.fpt.swp391.repository.MetadataGroupRepository;
 import org.springframework.stereotype.Service;
 
@@ -12,9 +14,11 @@ import java.util.*;
 @Service
 public class MetadataGroupServiceImpl implements MetadataGroupService {
     private final MetadataGroupRepository metadataGroupRepository;
+    private final LaptopRepository laptopRepository;
 
-    public MetadataGroupServiceImpl(MetadataGroupRepository metadataGroupRepository) {
+    public MetadataGroupServiceImpl(MetadataGroupRepository metadataGroupRepository, LaptopRepository laptopRepository) {
         this.metadataGroupRepository = metadataGroupRepository;
+        this.laptopRepository = laptopRepository;
     }
 
     @Override
@@ -47,7 +51,7 @@ public class MetadataGroupServiceImpl implements MetadataGroupService {
         List<MetadataGroup> metadataGroupList = metadataGroupRepository.findMetadataGroupByLaptopSlug(slug);
         List<MetadataGroupDto> dto = new ArrayList<>();
         for (MetadataGroup metagroup: metadataGroupList) {
-            dto.add(convertToMetadataGroupDto(metagroup));
+            dto.add(convertToMetadataGroupDto(metagroup, slug));
         }
         if(dto.size() > 0) {
             return dto;
@@ -55,14 +59,18 @@ public class MetadataGroupServiceImpl implements MetadataGroupService {
         return null;
     }
 
-    private MetadataGroupDto convertToMetadataGroupDto(MetadataGroup metadataGroup) {
+    private MetadataGroupDto convertToMetadataGroupDto(MetadataGroup metadataGroup, String slug) {
         MetadataGroupDto dto = new MetadataGroupDto();
         dto.setId(metadataGroup.getId());
         dto.setName(metadataGroup.getName());
         Set<Metadata> metadataSet = metadataGroup.getMetadatas();
         Set<MetadataDto> metadataDtoSet = new HashSet<>();
+
+        Laptop l = laptopRepository.findLaptopBySlug(slug);
+
         for (Metadata m: metadataSet) {
-            metadataDtoSet.add(convertToMetaDataDto(m));
+            if(l.getId() == m.getLaptop().getId())
+                metadataDtoSet.add(convertToMetaDataDto(m));
         }
         dto.setMetadataDtoSet(metadataDtoSet);
         return dto;

@@ -23,6 +23,7 @@ public class Laptop {
     private String title;
     private String metaTitle;
     private String slug;
+    @Column(columnDefinition = "TEXT")
     private String summary;
     private String image;
     private String sku;

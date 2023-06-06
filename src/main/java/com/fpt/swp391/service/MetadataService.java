@@ -13,6 +13,8 @@ public interface MetadataService {
 
     Metadata createMetadata(MetadataDto metadataDto);
 
+    boolean createMetadataMultiple(List<MetadataDto> metadataDtoList, Long laptopId);
+
     boolean deleteMetadata(Long id);
 
 //    Metadata updateMetadata(Long id, MetadataDto metadataDto);
