@@ -56,7 +56,7 @@ public class MetadataServiceImpl implements MetadataService {
     }
 
     @Override
-    public Metadata createMetadata(MetadataDto metadataDto) {
+    public MetadataDto createMetadata(MetadataDto metadataDto) {
         Metadata m = new Metadata();
         m.setIcon(metadataDto.getIcon());
         m.setIconType(metadataDto.getIconType());
@@ -67,7 +67,8 @@ public class MetadataServiceImpl implements MetadataService {
         Laptop lt = laptopRepository.findById(metadataDto.getLaptop_id()).orElse(new Laptop());
         m.setLaptop(lt);
         metadataRepository.save(m);
-        return m;
+        MetadataDto dto = convertMetadataDto(m);
+        return dto;
     }
 
     @Override
@@ -108,6 +109,23 @@ public class MetadataServiceImpl implements MetadataService {
     }
 
     @Override
+    public Metadata updateMetadata(Long id, MetadataDto metadataDto) {
+        Metadata m = metadataRepository.findById(id).orElse(null);
+        if (m != null) {
+            m.setContent(metadataDto.getContent());
+            m.setTitle(metadataDto.getTitle());
+            m.setIcon(metadataDto.getIcon());
+            Laptop lt = laptopRepository.findById(metadataDto.getLaptop_id()).orElse(new Laptop());
+            m.setLaptop(lt);
+            MetadataGroup mg = metadataGroupRepository.findById(metadataDto.getGroup_id()).orElse(new MetadataGroup());
+            m.setMetadataGroup(mg);
+            metadataRepository.save(m);
+            return m;
+        }
+        return null;
+    }
+
+    @Override
     public boolean updateMetadataByLaptop(String slug, List<MetadataDto> metadataDtoList) {
         try {
             Laptop l = laptopRepository.findLaptopBySlug(slug);
@@ -133,6 +151,17 @@ public class MetadataServiceImpl implements MetadataService {
 
         }
         return false;
+    }
+
+    private MetadataDto convertMetadataDto(Metadata metadata) {
+        MetadataDto dto = new MetadataDto();
+        dto.setId(metadata.getId());
+        dto.setTitle(metadata.getTitle());
+        dto.setContent(metadata.getContent());
+        dto.setIcon(metadata.getIcon());
+        dto.setLaptop_id(metadata.getLaptop().getId());
+        dto.setGroup_id(metadata.getMetadataGroup().getId());
+        return dto;
     }
 
 }

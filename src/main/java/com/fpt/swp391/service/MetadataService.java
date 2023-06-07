@@ -11,13 +11,13 @@ public interface MetadataService {
 
     Metadata findById(Long id);
 
-    Metadata createMetadata(MetadataDto metadataDto);
+    MetadataDto createMetadata(MetadataDto metadataDto);
 
     boolean createMetadataMultiple(List<MetadataDto> metadataDtoList, Long laptopId);
 
     boolean deleteMetadata(Long id);
 
-//    Metadata updateMetadata(Long id, MetadataDto metadataDto);
+    Metadata updateMetadata(Long id, MetadataDto metadataDto);
 
     boolean updateMetadataByLaptop(String slug,List<MetadataDto> metadataDtoList);
 }
