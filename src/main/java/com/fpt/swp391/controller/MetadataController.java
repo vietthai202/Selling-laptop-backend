@@ -24,10 +24,9 @@ public class MetadataController {
 
     @PostMapping("/create")
     public ResponseEntity<?> createMeta(@RequestBody MetadataDto metadataDto) {
-        Metadata m = metadataService.createMetadata(metadataDto);
+        MetadataDto m = metadataService.createMetadata(metadataDto);
         if (m != null) {
-            final ApiSuccessResponse response = new ApiSuccessResponse("Successful", HttpStatus.OK, LocalDateTime.now());
-            return ResponseEntity.status(HttpStatus.OK).body(response);
+            return ResponseEntity.status(HttpStatus.OK).body(m);
         }
         final ApiExceptionResponse response = new ApiExceptionResponse("Not Successful", HttpStatus.BAD_REQUEST, LocalDateTime.now());
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
@@ -44,10 +43,10 @@ public class MetadataController {
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
     }
 
-    @PostMapping("/edit/{slug}")
-    public ResponseEntity<?> updateMeta(@PathVariable String slug,@RequestBody List<MetadataDto> metadataDtoList) {
-        boolean m = metadataService.updateMetadataByLaptop(slug,metadataDtoList);
-        if (m) {
+    @PostMapping("/edit/{id}")
+    public ResponseEntity<?> updateMeta(@PathVariable Long id,@RequestBody MetadataDto metadataDto) {
+        Metadata m = metadataService.updateMetadata(id,metadataDto);
+        if (m != null) {
             final ApiSuccessResponse response = new ApiSuccessResponse("Update Successful", HttpStatus.OK, LocalDateTime.now());
             return ResponseEntity.status(HttpStatus.OK).body(response);
         }

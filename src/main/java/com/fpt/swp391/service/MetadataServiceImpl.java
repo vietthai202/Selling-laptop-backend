@@ -1,5 +1,6 @@
 package com.fpt.swp391.service;
 
+import com.fpt.swp391.dto.LaptopDto;
 import com.fpt.swp391.dto.MetadataDto;
 import com.fpt.swp391.model.Laptop;
 import com.fpt.swp391.model.Metadata;
@@ -9,9 +10,7 @@ import com.fpt.swp391.repository.MetadataGroupRepository;
 import com.fpt.swp391.repository.MetadataRepository;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
 @Service
 public class MetadataServiceImpl implements MetadataService {
@@ -56,7 +55,7 @@ public class MetadataServiceImpl implements MetadataService {
     }
 
     @Override
-    public Metadata createMetadata(MetadataDto metadataDto) {
+    public MetadataDto createMetadata(MetadataDto metadataDto) {
         Metadata m = new Metadata();
         m.setIcon(metadataDto.getIcon());
         m.setIconType(metadataDto.getIconType());
@@ -67,7 +66,8 @@ public class MetadataServiceImpl implements MetadataService {
         Laptop lt = laptopRepository.findById(metadataDto.getLaptop_id()).orElse(new Laptop());
         m.setLaptop(lt);
         metadataRepository.save(m);
-        return m;
+        MetadataDto dto = convertMetadataDto(m);
+        return dto;
     }
 
     @Override
@@ -108,6 +108,24 @@ public class MetadataServiceImpl implements MetadataService {
     }
 
     @Override
+    public Metadata updateMetadata(Long id, MetadataDto metadataDto) {
+        Metadata m = metadataRepository.findById(id).orElse(null);
+        if(m != null){
+            Metadata meta = new Metadata();
+            meta.setContent(metadataDto.getContent());
+            meta.setTitle(metadataDto.getTitle());
+            meta.setIcon(metadataDto.getIcon());
+            Laptop lt = laptopRepository.findById(metadataDto.getLaptop_id()).orElse(new Laptop());
+            meta.setLaptop(lt);
+            MetadataGroup mg = metadataGroupRepository.findById(metadataDto.getGroup_id()).orElse(new MetadataGroup());
+            meta.setMetadataGroup(mg);
+            metadataRepository.save(meta);
+            return meta;
+        }
+        return null;
+    }
+
+    @Override
     public boolean updateMetadataByLaptop(String slug, List<MetadataDto> metadataDtoList) {
         try {
             Laptop l = laptopRepository.findLaptopBySlug(slug);
@@ -133,6 +151,17 @@ public class MetadataServiceImpl implements MetadataService {
 
         }
         return false;
+    }
+
+    private MetadataDto convertMetadataDto (Metadata metadata){
+        MetadataDto dto = new MetadataDto();
+        dto.setId(metadata.getId());
+        dto.setTitle(metadata.getTitle());
+        dto.setContent(metadata.getContent());
+        dto.setIcon(metadata.getIcon());
+       dto.setLaptop_id(metadata.getLaptop().getId());
+       dto.setGroup_id(metadata.getMetadataGroup().getId());
+       return dto;
     }
 
 }
