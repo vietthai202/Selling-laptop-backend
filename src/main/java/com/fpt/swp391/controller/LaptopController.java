@@ -30,7 +30,7 @@ public class LaptopController {
 
     @GetMapping("/page")
     public Page<LaptopDto> getProducts( @RequestParam(defaultValue = "0") int page,
-                                        @RequestParam(defaultValue = "10") int size,
+                                        @RequestParam(defaultValue = "12") int size,
                                         @RequestParam(defaultValue = "brand") String sortBy,
                                         @RequestParam(defaultValue = "")String sortOrder) {
         return  laptopService.getProducts(page, size, sortBy, sortOrder);

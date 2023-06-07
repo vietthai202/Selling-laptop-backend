@@ -115,6 +115,7 @@ public class LaptopServiceImpl implements LaptopService {
 
     @Override
     public Page<LaptopDto> getProducts(int page, int size, String sortBy, String sortOrder) {
+        page = page - 1;
         try {
             if ((sortOrder.equals("asc")) || (sortOrder.equals("desc"))) {
                 Sort sort = Sort.by(Sort.Direction.fromString(sortOrder), sortBy);
