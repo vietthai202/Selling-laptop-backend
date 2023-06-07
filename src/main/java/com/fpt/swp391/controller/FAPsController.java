@@ -32,9 +32,9 @@ public class FAPsController {
     }
 
     @PostMapping("/create-multiple/{laptopId}")
-    public ResponseEntity<?>createFap(@RequestBody List<FAPsDto> listFaps, @PathVariable Long laptopId){
+    public ResponseEntity<?> createFap(@RequestBody List<FAPsDto> listFaps, @PathVariable Long laptopId) {
         boolean created = faPsService.createFapsMultiple(listFaps, laptopId);
-        if(created){
+        if (created) {
             final ApiSuccessResponse response = new ApiSuccessResponse("Successful", HttpStatus.OK, LocalDateTime.now());
             return ResponseEntity.status(HttpStatus.OK).body(response);
         }
@@ -47,7 +47,7 @@ public class FAPsController {
         FAPs f = faPsService.findById(id);
         if (f != null) {
             boolean isDelete = faPsService.deleteFapsById(f.getId());
-            if(isDelete) {
+            if (isDelete) {
                 final ApiSuccessResponse response = new ApiSuccessResponse("Delete Successful", HttpStatus.OK, LocalDateTime.now());
                 return ResponseEntity.status(HttpStatus.OK).body(response);
             }
@@ -57,15 +57,19 @@ public class FAPsController {
     }
 
     @GetMapping("/list")
-    public ResponseEntity<List<FAPsDto>> getAll() {
-        final List<FAPsDto> list = faPsService.listAllFaps();
-        return ResponseEntity.status(HttpStatus.OK).body(list);
+    public ResponseEntity<?> getAll() {
+        List<FAPsDto> list = faPsService.listAllFaps();
+        if (list.size() > 0) {
+            return ResponseEntity.status(HttpStatus.OK).body(list);
+        }
+        final ApiExceptionResponse response = new ApiExceptionResponse("Không có dữ liệu!", HttpStatus.NO_CONTENT, LocalDateTime.now());
+        return ResponseEntity.status(HttpStatus.NO_CONTENT).body(response);
     }
 
     @PostMapping("/edit/{id}")
-    public ResponseEntity<?> updateFaps(@PathVariable Long id,@RequestBody FAPsDto faps){
-        FAPs f = faPsService.updateFaps(id,faps);
-        if(f != null){
+    public ResponseEntity<?> updateFaps(@PathVariable Long id, @RequestBody FAPsDto faps) {
+        FAPs f = faPsService.updateFaps(id, faps);
+        if (f != null) {
             final ApiSuccessResponse response = new ApiSuccessResponse("Update Successful", HttpStatus.OK, LocalDateTime.now());
             return ResponseEntity.status(HttpStatus.OK).body(response);
         }

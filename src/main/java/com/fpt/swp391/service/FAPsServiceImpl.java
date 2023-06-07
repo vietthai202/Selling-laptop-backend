@@ -99,13 +99,12 @@ public class FAPsServiceImpl implements FAPsService{
     public FAPs updateFaps(Long id, FAPsDto faPs) {
         FAPs faps = faPsRepository.findById(id).orElse(null);
         if(faps != null){
-            FAPs fap = new FAPs();
-            fap.setContent(faPs.getContent());
-            fap.setTitle(faPs.getTitle());
+            faps.setContent(faPs.getContent());
+            faps.setTitle(faPs.getTitle());
             Laptop lt =laptopRepository.findById(faPs.getLaptop_id()).orElse(new Laptop());
-            fap.setLaptop(lt);
-            faPsRepository.save(fap);
-            return fap;
+            faps.setLaptop(lt);
+            faPsRepository.save(faps);
+            return faps;
         }
         return null;
     }
