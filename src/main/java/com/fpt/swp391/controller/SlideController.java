@@ -39,6 +39,7 @@ public class SlideController {
             s.setId(slide.getId());
             s.setName(slide.getName());
             s.setImage(slide.getImage());
+            s.setStatus(slide.isStatus());
             s.setUrl(slide.getUrl());
             slides.add(s);
         }
@@ -81,4 +82,27 @@ public class SlideController {
         ApiExceptionResponse response = new ApiExceptionResponse("Update Fail!", HttpStatus.BAD_REQUEST, LocalDateTime.now());
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
     }
+
+    @GetMapping("/getAllWithStatus")
+    public ResponseEntity<?> getAllSlideWithStatus() {
+        List<Slide> sl = slideService.listAllSlideWithStatus();
+        if (sl != null) {
+            return ResponseEntity.status(HttpStatus.OK).body(sl);
+        }
+        ApiExceptionResponse response = new ApiExceptionResponse("Get Fail!", HttpStatus.BAD_REQUEST, LocalDateTime.now());
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
+    }
+
+    @PutMapping("/onOffSlide/{id}")
+    public ResponseEntity<?> updateOnOffSlide(@PathVariable Long id) {
+        Slide sl = slideService.findById(id);
+        sl.setStatus(!sl.isStatus());
+        Slide updated = slideService.updateSlide(id, sl);
+        if (updated != null) {
+            return ResponseEntity.status(HttpStatus.OK).body(updated);
+        }
+        ApiExceptionResponse response = new ApiExceptionResponse("Update slide fail!", HttpStatus.BAD_REQUEST, LocalDateTime.now());
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
+    }
+
 }
