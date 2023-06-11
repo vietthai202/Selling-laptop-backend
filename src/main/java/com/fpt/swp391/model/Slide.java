@@ -17,5 +17,6 @@ public class Slide {
     private Long id;
     private String name;
     private String image;
-    private String slug;
+    private String url;
+    private boolean status;
 }

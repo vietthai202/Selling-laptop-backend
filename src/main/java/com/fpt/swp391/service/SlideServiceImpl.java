@@ -11,17 +11,14 @@ public class SlideServiceImpl implements SlideService{
     public SlideServiceImpl(SlideRepository slideRepositoryRepository) {
         this.slideRepository = slideRepositoryRepository;
     }
-    @Override
-    public Slide createrSlide(Slide slide) {
-        slideRepository.save(slide);
-        return slide;
-    }
+
     @Override
     public Slide createSlide(Slide slide) {
         Slide sl = new Slide();
         sl.setName(slide.getName());
         sl.setImage(slide.getImage());
-        sl.setSlug(slide.getSlug());
+        sl.setUrl(slide.getUrl());
+        sl.setStatus(slide.isStatus());
         slideRepository.save(sl);
         return sl;
     }
@@ -51,12 +48,13 @@ public class SlideServiceImpl implements SlideService{
     public Slide updateSlide(Long id, Slide slide) {
         Optional<Slide> slideOptional = slideRepository.findById(id);
         if(slideOptional.isPresent()){
-            Slide sl= slideOptional.get();
-            slide.setName(slide.getName());
-            slide.setImage(slide.getImage());
-            slide.setSlug(slide.getSlug());
-            slideRepository.save(slide);
-            return slide;
+            Slide s = slideOptional.get();
+            s.setName(slide.getName());
+            s.setImage(slide.getImage());
+            s.setUrl(slide.getUrl());
+            s.setStatus(slide.isStatus());
+            slideRepository.save(s);
+            return s;
         }
         return null;
     }
