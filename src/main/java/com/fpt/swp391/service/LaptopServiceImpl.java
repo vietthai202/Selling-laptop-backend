@@ -46,7 +46,7 @@ public class LaptopServiceImpl implements LaptopService {
             laptopDto.setBrandId(laptop.getBrand().getId());
             lt1.add(laptopDto);
         }
-        Collections.reverse(lt1);
+//        Collections.reverse(lt1);
         return lt1;
     }
 
@@ -61,9 +61,10 @@ public class LaptopServiceImpl implements LaptopService {
     }
 
     @Override
-    public Page<LaptopDto> getProductsByFilter(String categoryName, String brandName, String sortDirection, float minPrice, float maxPrice, int pageSize, int pageNumber) {
+    public Page<LaptopDto> getProductsByFilter(String listCategoryId, String listBrandId, String sortDirection,String priceOrder, float minPrice, float maxPrice, int pageSize, int pageNumber) {
         try {
-            Specification<Laptop> specification = LaptopSpecifications.hasCategoryAndBrand(categoryName, brandName, sortDirection).and(LaptopSpecifications.hasPriceBetween(minPrice, maxPrice));
+            pageNumber -= 1;
+            Specification<Laptop> specification = LaptopSpecifications.hasCategoryAndBrand(listCategoryId ,listBrandId, priceOrder, sortDirection).and(LaptopSpecifications.hasPriceBetween(minPrice, maxPrice));
             Pageable pageable = PageRequest.of(pageNumber, pageSize);
             Page<Laptop> resultPage = laptopRepository.findAll(specification, pageable);
             int totalPages = resultPage.getTotalPages();
