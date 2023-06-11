@@ -2,6 +2,8 @@ package com.fpt.swp391.service;
 import com.fpt.swp391.model.Slide;
 import com.fpt.swp391.repository.SlideRepository;
 import org.springframework.stereotype.Service;
+
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -57,5 +59,21 @@ public class SlideServiceImpl implements SlideService{
             return s;
         }
         return null;
+    }
+
+    @Override
+    public List<Slide> listAllSlideWithStatus() {
+        try {
+            List<Slide> list = new ArrayList<>();
+            List<Slide> lst = slideRepository.findAll();
+            for (Slide lst1 : lst) {
+                if (lst1.isStatus() == true) {
+                    list.add(lst1);
+                }
+            }
+            return list;
+        } catch (Exception e) {
+            return null;
+        }
     }
 }

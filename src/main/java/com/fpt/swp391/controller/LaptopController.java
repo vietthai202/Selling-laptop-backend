@@ -29,25 +29,25 @@ public class LaptopController {
     }
 
     @GetMapping("/page")
-    public Page<LaptopDto> getProducts( @RequestParam(defaultValue = "0") int page,
-                                        @RequestParam(defaultValue = "12") int size,
-                                        @RequestParam(defaultValue = "brand") String sortBy,
-                                        @RequestParam(defaultValue = "")String sortOrder) {
-        return  laptopService.getProducts(page, size, sortBy, sortOrder);
+    public Page<LaptopDto> getProducts(@RequestParam(defaultValue = "0") int page,
+                                       @RequestParam(defaultValue = "12") int size,
+                                       @RequestParam(defaultValue = "brand") String sortBy,
+                                       @RequestParam(defaultValue = "") String sortOrder) {
+        return laptopService.getProducts(page, size, sortBy, sortOrder);
     }
 
     @GetMapping("/products")
     public ResponseEntity<Page<LaptopDto>> getProductsByBrand(
-                                        @RequestParam(required = false) String categoryId,
-                                        @RequestParam(required = false) String listBrandId,
-                                        @RequestParam(required = false) String sortDirection,
-                                        @RequestParam(required = false) String priceOrder,
-                                        @RequestParam(value = "minPrice", required = false) Float minPrice,
-                                        @RequestParam(value = "maxPrice", required = false) Float maxPrice,
-                                        @RequestParam(defaultValue = "12") int pageSize,
-                                        @RequestParam(defaultValue = "1") int pageNumber) {
-        if(minPrice==null) minPrice= 0.0F;
-        if(maxPrice==null) maxPrice= 9999999999F;
+            @RequestParam(required = false) String categoryId,
+            @RequestParam(required = false) String listBrandId,
+            @RequestParam(required = false) String sortDirection,
+            @RequestParam(required = false) String priceOrder,
+            @RequestParam(value = "minPrice", required = false) Float minPrice,
+            @RequestParam(value = "maxPrice", required = false) Float maxPrice,
+            @RequestParam(defaultValue = "12") int pageSize,
+            @RequestParam(defaultValue = "1") int pageNumber) {
+        if (minPrice == 0.0) minPrice = 0.0F;
+        if (maxPrice == 0.0) maxPrice = 9999999999F;
         Page<LaptopDto> laptops = laptopService.getProductsByFilter(categoryId, listBrandId, sortDirection, priceOrder, minPrice, maxPrice, pageSize, pageNumber);
         return ResponseEntity.ok(laptops);
     }

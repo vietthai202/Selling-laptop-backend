@@ -11,4 +11,6 @@ public interface SlideService {
     boolean deleteSlide(Long id);
 
     Slide updateSlide(Long id, Slide slide);
+
+    List<Slide> listAllSlideWithStatus();
 }
