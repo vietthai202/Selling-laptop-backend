@@ -38,16 +38,17 @@ public class LaptopController {
 
     @GetMapping("/products")
     public ResponseEntity<Page<LaptopDto>> getProductsByBrand(
-                                        @RequestParam(required = false) String categoryName,
-                                        @RequestParam(required = false) String brandName,
-                                        @RequestParam(defaultValue = "asc") String sortDirection,
+                                        @RequestParam(required = false) String categoryId,
+                                        @RequestParam(required = false) String listBrandId,
+                                        @RequestParam(required = false) String sortDirection,
+                                        @RequestParam(required = false) String priceOrder,
                                         @RequestParam(value = "minPrice", required = false) Float minPrice,
                                         @RequestParam(value = "maxPrice", required = false) Float maxPrice,
-                                        @RequestParam(defaultValue = "10") int pageSize,
-                                        @RequestParam(defaultValue = "0") int pageNumber) {
+                                        @RequestParam(defaultValue = "12") int pageSize,
+                                        @RequestParam(defaultValue = "1") int pageNumber) {
         if(minPrice==null) minPrice= 0.0F;
         if(maxPrice==null) maxPrice= 9999999999F;
-        Page<LaptopDto> laptops = laptopService.getProductsByFilter(categoryName, brandName, sortDirection, minPrice, maxPrice, pageSize, pageNumber);
+        Page<LaptopDto> laptops = laptopService.getProductsByFilter(categoryId, listBrandId, sortDirection, priceOrder, minPrice, maxPrice, pageSize, pageNumber);
         return ResponseEntity.ok(laptops);
     }
 

@@ -11,7 +11,7 @@ public interface LaptopService {
     List<LaptopDto> listAllLaptop();
     Laptop findById(Long id);
 
-    Page<LaptopDto> getProductsByFilter(String categoryName,String brandName, String sortDirection, float minPrice, float maxPrice, int pageSize, int pageNumber);
+    Page<LaptopDto> getProductsByFilter(String categoryId,String listBrandId, String sortDirection,String priceOrder, float minPrice, float maxPrice, int pageSize, int pageNumber);
 
     Laptop createLaptop(LaptopDto laptopDto);
 
