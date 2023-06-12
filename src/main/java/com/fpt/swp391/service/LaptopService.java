@@ -9,7 +9,10 @@ import org.springframework.data.domain.Page;
 public interface LaptopService {
 
     List<LaptopDto> listAllLaptop();
-    Laptop findById(Long id);
+
+    List<LaptopDto> listAllLaptopWithStatus();
+
+    LaptopDto findById(Long id);
 
     Page<LaptopDto> getProductsByFilter(String categoryId,String listBrandId, String sortDirection,String priceOrder, float minPrice, float maxPrice, int pageSize, int pageNumber);
 
@@ -17,7 +20,7 @@ public interface LaptopService {
 
     Page<LaptopDto> getProducts(int page, int size, String sortBy, String sortOrder);
 
-    Laptop updateLaptop(Long id, LaptopDto laptop);
+    LaptopDto updateLaptop(Long id, LaptopDto laptop);
 
     LaptopDto getLaptopBySlug(String slug);
 }

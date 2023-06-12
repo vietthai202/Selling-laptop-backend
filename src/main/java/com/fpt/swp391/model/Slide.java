@@ -16,6 +16,7 @@ public class Slide {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private String name;
+    @Column(columnDefinition = "VARCHAR(1000)")
     private String image;
     private String url;
     private boolean status;

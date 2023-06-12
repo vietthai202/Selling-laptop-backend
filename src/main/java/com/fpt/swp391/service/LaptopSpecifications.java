@@ -32,6 +32,7 @@ public class LaptopSpecifications {
 
                 predicates.add(root.get("brand").get("id").in(brandIdList));
             }
+            predicates.add(criteriaBuilder.equal(root.get("status"), true));
 
             List<javax.persistence.criteria.Order> orders = getSortByField(root, criteriaBuilder, priceOrder, sortDirection);
             query.orderBy(orders.toArray(new javax.persistence.criteria.Order[0]));

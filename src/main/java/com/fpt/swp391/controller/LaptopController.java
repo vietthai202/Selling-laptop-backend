@@ -28,6 +28,28 @@ public class LaptopController {
         return ResponseEntity.status(HttpStatus.OK).body(listLt);
     }
 
+    @GetMapping("/listLaptopWithStatus")
+    public ResponseEntity<?> listAllLaptopWithStatus() {
+        List<LaptopDto> list = laptopService.listAllLaptopWithStatus();
+        if(list.size() > 0) {
+            return ResponseEntity.status(HttpStatus.OK).body(list);
+        }
+        ApiExceptionResponse response = new ApiExceptionResponse("List fail", HttpStatus.NO_CONTENT, LocalDateTime.now());
+        return ResponseEntity.status(HttpStatus.NO_CONTENT).body(response);
+    }
+
+    @PutMapping("/onOffLaptop/{id}")
+    public ResponseEntity<?> updateOnOffLaptop(@PathVariable Long id){
+        LaptopDto laptop = laptopService.findById(id);
+        laptop.setStatus(!laptop.isStatus());
+        LaptopDto lt = laptopService.updateLaptop(id,laptop);
+        if (lt != null) {
+            return ResponseEntity.status(HttpStatus.OK).body(lt);
+        }
+        ApiExceptionResponse response = new ApiExceptionResponse("Update fail!", HttpStatus.BAD_REQUEST, LocalDateTime.now());
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
+    }
+
     @GetMapping("/page")
     public Page<LaptopDto> getProducts(@RequestParam(defaultValue = "0") int page,
                                        @RequestParam(defaultValue = "12") int size,
@@ -75,7 +97,7 @@ public class LaptopController {
 
     @PutMapping("/edit/{id}")
     public ResponseEntity<?> updateLaptop(@PathVariable Long id, @RequestBody LaptopDto laptopDto) {
-        Laptop lt = laptopService.updateLaptop(id, laptopDto);
+        LaptopDto lt = laptopService.updateLaptop(id, laptopDto);
         if (lt != null) {
             ApiSuccessResponse response = new ApiSuccessResponse("Update Successfully!", HttpStatus.OK, LocalDateTime.now());
             return ResponseEntity.status(HttpStatus.OK).body(response);

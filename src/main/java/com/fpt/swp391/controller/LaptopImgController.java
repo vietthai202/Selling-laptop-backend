@@ -2,6 +2,7 @@ package com.fpt.swp391.controller;
 
 import com.fpt.swp391.dto.LaptopImgDto;
 import com.fpt.swp391.exceptions.ApiExceptionResponse;
+import com.fpt.swp391.model.LaptopImg;
 import com.fpt.swp391.service.LaptopImgService;
 import com.fpt.swp391.utils.ApiSuccessResponse;
 import org.springframework.http.HttpStatus;
@@ -32,11 +33,13 @@ public class LaptopImgController {
 
     @DeleteMapping("/delete/{id}")
     public ResponseEntity<?> deleteLaptopImg(@PathVariable Long id) {
-        boolean img = laptopImgService.deleteImgById(id);
-        if (img) {
-            laptopImgService.deleteImgById(id);
-            final ApiSuccessResponse response = new ApiSuccessResponse("Delete Successful", HttpStatus.OK, LocalDateTime.now());
-            return ResponseEntity.status(HttpStatus.OK).body(response);
+        LaptopImg img = laptopImgService.findById(id);
+        if (img != null) {
+            boolean isDelete = laptopImgService.deleteImgById(img.getId());
+            if(isDelete) {
+                final ApiSuccessResponse response = new ApiSuccessResponse("Delete Successful", HttpStatus.OK, LocalDateTime.now());
+                return ResponseEntity.status(HttpStatus.OK).body(response);
+            }
         }
         final ApiExceptionResponse response = new ApiExceptionResponse("Not Successful", HttpStatus.BAD_REQUEST, LocalDateTime.now());
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);

@@ -8,4 +8,6 @@ import org.springframework.stereotype.Repository;
 public interface BrandRepository extends JpaRepository<Brand, Long> {
 
     Brand findBrandBySlug(String slug);
+
+    Brand findBrandByName(String name);
 }

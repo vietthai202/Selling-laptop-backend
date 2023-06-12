@@ -1,14 +1,18 @@
 package com.fpt.swp391.service;
 
-import java.util.*;
-
 import com.fpt.swp391.dto.LaptopDto;
 import com.fpt.swp391.dto.MetadataDto;
 import com.fpt.swp391.model.*;
-import com.fpt.swp391.repository.*;
+import com.fpt.swp391.repository.BrandRepository;
+import com.fpt.swp391.repository.CategoryRepository;
+import com.fpt.swp391.repository.LaptopRepository;
+import com.fpt.swp391.repository.UserRepository;
 import org.springframework.data.domain.*;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
+
+import java.util.*;
+import java.util.stream.Collectors;
 
 @Service
 public class LaptopServiceImpl implements LaptopService {
@@ -42,29 +46,64 @@ public class LaptopServiceImpl implements LaptopService {
             laptopDto.setPrice(laptop.getPrice());
             laptopDto.setDiscount(laptop.getDiscount());
             laptopDto.setQuantity(laptop.getQuantity());
+            laptopDto.setStatus(laptop.isStatus());
             laptopDto.setCategoryId(laptop.getCategory().getId());
             laptopDto.setBrandId(laptop.getBrand().getId());
             lt1.add(laptopDto);
         }
-//        Collections.reverse(lt1);
+        Collections.reverse(lt1);
         return lt1;
     }
 
     @Override
-    public Laptop findById(Long id) {
+    public List<LaptopDto> listAllLaptopWithStatus() {
+        try {
+            List<LaptopDto> listDto = new ArrayList<>();
+            List<Laptop> listLaptop = laptopRepository.findAll();
+            for (Laptop laptop : listLaptop) {
+                if (laptop.isStatus() == true) {
+                    LaptopDto laptopDto = new LaptopDto();
+                    laptopDto.setId(laptop.getId());
+                    laptopDto.setUserName(laptop.getUser().getUsername());
+                    laptopDto.setTitle(laptop.getTitle());
+                    laptopDto.setMetaTitle(laptop.getMetaTitle());
+                    laptopDto.setSlug(laptop.getSlug());
+                    laptopDto.setSummary(laptop.getSummary());
+                    laptopDto.setImage(laptop.getImage());
+                    laptopDto.setSku(laptop.getSku());
+                    laptopDto.setPrice(laptop.getPrice());
+                    laptopDto.setDiscount(laptop.getDiscount());
+                    laptopDto.setQuantity(laptop.getQuantity());
+                    laptopDto.setStatus(laptop.isStatus());
+                    laptopDto.setCategoryId(laptop.getCategory().getId());
+                    laptopDto.setBrandId(laptop.getBrand().getId());
+                    listDto.add(laptopDto);
+                }
+            }
+            return listDto;
+        } catch (Exception e) {
+
+        }
+        return null;
+    }
+
+
+    @Override
+    public LaptopDto findById(Long id) {
         Optional<Laptop> laptopOptional = laptopRepository.findById(id);
         if (laptopOptional.isPresent()) {
             Laptop laptop = laptopOptional.get();
-            return laptop;
+            LaptopDto dto =convertToLaptopDto(laptop);
+            return dto;
         }
         return null;
     }
 
     @Override
-    public Page<LaptopDto> getProductsByFilter(String listCategoryId, String listBrandId, String sortDirection,String priceOrder, float minPrice, float maxPrice, int pageSize, int pageNumber) {
+    public Page<LaptopDto> getProductsByFilter(String listCategoryId, String listBrandId, String sortDirection, String priceOrder, float minPrice, float maxPrice, int pageSize, int pageNumber) {
         try {
             pageNumber -= 1;
-            Specification<Laptop> specification = LaptopSpecifications.hasCategoryAndBrand(listCategoryId ,listBrandId, priceOrder, sortDirection).and(LaptopSpecifications.hasPriceBetween(minPrice, maxPrice));
+            Specification<Laptop> specification = LaptopSpecifications.hasCategoryAndBrand(listCategoryId, listBrandId, priceOrder, sortDirection).and(LaptopSpecifications.hasPriceBetween(minPrice, maxPrice));
             Pageable pageable = PageRequest.of(pageNumber, pageSize);
             Page<Laptop> resultPage = laptopRepository.findAll(specification, pageable);
             int totalPages = resultPage.getTotalPages();
@@ -74,7 +113,18 @@ public class LaptopServiceImpl implements LaptopService {
                 pageable = PageRequest.of(pageNumber, pageSize);
                 resultPage = laptopRepository.findAll(specification, pageable);
             }
-            return resultPage.map(this::convertToLaptopDto);
+
+            // Lọc các LaptopDto có status == true
+            List<LaptopDto> filteredLaptopDtos = resultPage
+                    .stream()
+                    .map(this::convertToLaptopDto)
+                    .filter(LaptopDto::isStatus) // Chỉ lấy các LaptopDto có status == true
+                    .collect(Collectors.toList());
+
+            // Tạo một trang mới với các LaptopDto đã lọc
+            Page<LaptopDto> filteredResultPage = new PageImpl<>(filteredLaptopDtos, pageable, totalElements);
+
+            return filteredResultPage;
         } catch (Exception e) {
             return null;
         }
@@ -90,10 +140,11 @@ public class LaptopServiceImpl implements LaptopService {
         lt.setSlug(laptop.getSlug() + "-" + timestamp);
         lt.setSummary(laptop.getSummary());
         lt.setImage(laptop.getImage());
-        lt.setSku(timestamp + "");
+        lt.setSku(String.valueOf(timestamp));
         lt.setPrice(laptop.getPrice());
         lt.setDiscount(laptop.getDiscount());
         lt.setQuantity(laptop.getQuantity());
+        lt.setStatus(laptop.isStatus());
 //        lt.setMetadata(laptop.getMetadata());
 //        lt.setTags(laptop.getTags());
 
@@ -135,7 +186,7 @@ public class LaptopServiceImpl implements LaptopService {
     }
 
     @Override
-    public Laptop updateLaptop(Long id, LaptopDto laptop) {
+    public LaptopDto updateLaptop(Long id, LaptopDto laptop) {
         Optional<Laptop> laptopOptional = laptopRepository.findById(id);
         if (laptopOptional.isPresent()) {
             Laptop lt = laptopOptional.get();
@@ -151,12 +202,14 @@ public class LaptopServiceImpl implements LaptopService {
             lt.setPrice(laptop.getPrice());
             lt.setDiscount(laptop.getDiscount());
             lt.setQuantity(laptop.getQuantity());
+            lt.setStatus(laptop.isStatus());
             Category c = categoryRepository.findById(laptop.getCategoryId()).orElse(new Category());
             lt.setCategory(c);
             Brand b = brandRepository.findById(laptop.getBrandId()).orElse(new Brand());
             lt.setBrand(b);
             laptopRepository.save(lt);
-            return lt;
+            LaptopDto dto = convertToLaptopDto(lt);
+            return dto;
         }
         return null;
     }
@@ -183,6 +236,7 @@ public class LaptopServiceImpl implements LaptopService {
         dto.setPrice(laptop.getPrice());
         dto.setDiscount(laptop.getDiscount());
         dto.setQuantity(laptop.getQuantity());
+        dto.setStatus(laptop.isStatus());
         dto.setCategoryId(laptop.getCategory().getId());
         dto.setBrandId(laptop.getBrand().getId());
 
