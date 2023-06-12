@@ -200,7 +200,6 @@ public class LaptopServiceImpl implements LaptopService {
         MetadataDto dto = new MetadataDto();
         dto.setId(metadata.getId());
         dto.setIcon(metadata.getIcon());
-        dto.setIconType(metadata.getIconType());
         dto.setTitle(metadata.getTitle());
         dto.setContent(metadata.getContent());
         dto.setLaptop_id(metadata.getLaptop().getId());

@@ -37,7 +37,6 @@ public class MetadataServiceImpl implements MetadataService {
             metadataDto.setIcon(metadata.getIcon());
             metadataDto.setContent(metadata.getContent());
             metadataDto.setTitle(metadata.getTitle());
-            metadataDto.setIconType(metadata.getIconType());
             metadataDto.setLaptop_id(metadata.getLaptop().getId());
             metadataDto.setGroup_id(metadata.getMetadataGroup().getId());
             m1.add(metadataDto);
@@ -59,7 +58,6 @@ public class MetadataServiceImpl implements MetadataService {
     public MetadataDto createMetadata(MetadataDto metadataDto) {
         Metadata m = new Metadata();
         m.setIcon(metadataDto.getIcon());
-        m.setIconType(metadataDto.getIconType());
         m.setTitle(metadataDto.getTitle());
         m.setContent(metadataDto.getContent());
         MetadataGroup m1 = metadataGroupRepository.findById(metadataDto.getGroup_id()).orElse(new MetadataGroup());
@@ -79,7 +77,6 @@ public class MetadataServiceImpl implements MetadataService {
                 m.setTitle(dto.getTitle());
                 m.setContent(dto.getContent());
                 m.setIcon(dto.getIcon());
-                m.setIconType(dto.getIconType());
                 MetadataGroup g = metadataGroupRepository.findById(dto.getGroup_id()).orElse(null);
                 if (g != null) {
                     m.setMetadataGroup(g);
@@ -109,18 +106,14 @@ public class MetadataServiceImpl implements MetadataService {
     }
 
     @Override
-    public Metadata updateMetadata(Long id, MetadataDto metadataDto) {
+    public MetadataDto updateMetadata(Long id, MetadataDto metadataDto) {
         Metadata m = metadataRepository.findById(id).orElse(null);
         if (m != null) {
             m.setContent(metadataDto.getContent());
             m.setTitle(metadataDto.getTitle());
             m.setIcon(metadataDto.getIcon());
-            Laptop lt = laptopRepository.findById(metadataDto.getLaptop_id()).orElse(new Laptop());
-            m.setLaptop(lt);
-            MetadataGroup mg = metadataGroupRepository.findById(metadataDto.getGroup_id()).orElse(new MetadataGroup());
-            m.setMetadataGroup(mg);
             metadataRepository.save(m);
-            return m;
+            return convertMetadataDto(m);
         }
         return null;
     }
@@ -139,7 +132,6 @@ public class MetadataServiceImpl implements MetadataService {
                                 m.setContent(dto.getContent());
                                 m.setIcon(dto.getIcon());
                                 m.setTitle(dto.getTitle());
-                                m.setIconType(dto.getIconType());
                                 metadataRepository.save(m);
                             }
                         }

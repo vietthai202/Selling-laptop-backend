@@ -12,7 +12,6 @@ import lombok.Setter;
 public class MetadataDto {
     private Long id;
     private String icon;
-    private String iconType;
     private String title;
     private String content;
     private Long laptop_id;

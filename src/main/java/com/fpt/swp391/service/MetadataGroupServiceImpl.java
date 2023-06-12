@@ -80,7 +80,6 @@ public class MetadataGroupServiceImpl implements MetadataGroupService {
         MetadataDto dto = new MetadataDto();
         dto.setId(metadata.getId());
         dto.setIcon(metadata.getIcon());
-        dto.setIconType(metadata.getIconType());
         dto.setLaptop_id(metadata.getLaptop().getId());
         dto.setTitle(metadata.getTitle());
         dto.setContent(metadata.getContent());
