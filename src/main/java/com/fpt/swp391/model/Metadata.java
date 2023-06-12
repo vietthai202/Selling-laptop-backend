@@ -17,8 +17,6 @@ public class Metadata {
     private Long id;
     // mã icon
     private String icon;
-    // có thể dùng nhiều loại icon ví dụ fontawesome, material icon,...
-    private String iconType;
     private String title;
     private String content;
     @ManyToOne()

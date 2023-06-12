@@ -43,11 +43,10 @@ public class MetadataController {
     }
 
     @PostMapping("/edit/{id}")
-    public ResponseEntity<?> updateMeta(@PathVariable Long id,@RequestBody MetadataDto metadataDto) {
-        Metadata m = metadataService.updateMetadata(id,metadataDto);
+    public ResponseEntity<?> updateMeta(@PathVariable Long id, @RequestBody MetadataDto metadataDto) {
+        MetadataDto m = metadataService.updateMetadata(id, metadataDto);
         if (m != null) {
-            final ApiSuccessResponse response = new ApiSuccessResponse("Update Successful", HttpStatus.OK, LocalDateTime.now());
-            return ResponseEntity.status(HttpStatus.OK).body(response);
+            return ResponseEntity.status(HttpStatus.OK).body(m);
         }
         final ApiExceptionResponse response = new ApiExceptionResponse("Not Successful", HttpStatus.BAD_REQUEST, LocalDateTime.now());
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
@@ -74,7 +73,6 @@ public class MetadataController {
             dto.setTitle(m.getTitle());
             dto.setContent(m.getContent());
             dto.setIcon(m.getIcon());
-            dto.setIconType(m.getIconType());
             dto.setLaptop_id(m.getLaptop().getId());
             dto.setGroup_id(m.getMetadataGroup().getId());
             return ResponseEntity.status(HttpStatus.OK).body(dto);
