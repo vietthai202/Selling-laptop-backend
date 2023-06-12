@@ -22,6 +22,7 @@ public class LaptopDto {
     private Float price;
     private Float discount;
     private int quantity;
+    private boolean status;
     private Long categoryId;
     private Long brandId;
     private Set<MetadataDto> metadataDtoSet;

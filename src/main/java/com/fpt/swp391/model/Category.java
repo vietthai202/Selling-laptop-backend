@@ -19,6 +19,7 @@ public class Category {
     private String name;
     private String description;
     private String slug;
+    @Column(columnDefinition = "VARCHAR(1000)")
     private String image;
     @OneToMany(mappedBy = "category")
     private Set<Laptop> laptops;

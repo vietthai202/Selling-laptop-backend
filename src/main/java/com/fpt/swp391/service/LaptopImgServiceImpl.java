@@ -69,6 +69,15 @@ public class LaptopImgServiceImpl implements LaptopImgService {
         return false;
     }
 
+    @Override
+    public LaptopImg findById(Long id) {
+        LaptopImg img = laptopImgRepository.findById(id).orElse(null);
+        if(img != null){
+            return img;
+        }
+        return null;
+    }
+
     private LaptopImgDto convertToLaptopImgDto(LaptopImg laptopImg){
         LaptopImgDto lt = new LaptopImgDto();
         lt.setId(laptopImg.getId());

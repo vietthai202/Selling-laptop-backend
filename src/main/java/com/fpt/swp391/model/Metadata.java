@@ -18,6 +18,7 @@ public class Metadata {
     // mã icon
     private String icon;
     private String title;
+    @Column(columnDefinition = "VARCHAR(1000)")
     private String content;
     @ManyToOne()
     @JoinColumn(name = "laptop_id", nullable = false)

@@ -5,6 +5,7 @@ import com.fpt.swp391.dto.LaptopDto;
 import com.fpt.swp391.model.Brand;
 import com.fpt.swp391.model.Laptop;
 import com.fpt.swp391.repository.BrandRepository;
+import com.fpt.swp391.repository.LaptopRepository;
 import org.springframework.stereotype.Service;
 
 import java.util.*;
@@ -13,9 +14,12 @@ import java.util.*;
 
 public class BrandServiceImpl implements BrandService {
     private BrandRepository brandRepository = null;
+    private final LaptopRepository laptopRepository;
 
-    public BrandServiceImpl(BrandRepository brandRepository) {
+    public BrandServiceImpl(BrandRepository brandRepository,
+                            LaptopRepository laptopRepository) {
         this.brandRepository = brandRepository;
+        this.laptopRepository = laptopRepository;
     }
 
     @Override
@@ -49,13 +53,32 @@ public class BrandServiceImpl implements BrandService {
 
     @Override
     public boolean deleteBrand(Long id) {
-        Optional<Brand> brandOptional = brandRepository.findById(id);
-        if (brandOptional.isPresent()) {
-            Brand brand = brandOptional.get();
-            brandRepository.delete(brand);
+        try{
+            Brand br = brandRepository.findById(id).orElse(null);
+            if(br.getLaptops().size() > 0){
+                Set<Laptop> laptops = br.getLaptops();
+                Brand br1 = brandRepository.findBrandByName("Uncategorized");
+                if(br1 != null){
+                    for (Laptop l : laptops){
+                        l.setBrand(br1);
+                        laptopRepository.save(l);
+                    }
+                }else{
+                    Brand brand = new Brand();
+                    brand.setName("Uncategorized");
+                    brand.setDescription("Uncategorized");
+                    brandRepository.save(brand);
+                    for(Laptop l : laptops){
+                        l.setBrand(brand);
+                        laptopRepository.save(l);
+                    }
+                }
+            }
+            brandRepository.delete(br);
             return true;
+        }catch(Exception e){
+            return false;
         }
-        return false;
     }
 
     @Override
@@ -118,7 +141,6 @@ public class BrandServiceImpl implements BrandService {
             dto.setLaptopDtos(laptopDTOs);
         }
         return dto;
-
     }
 
     private LaptopDto convertToLaptopDto(Laptop laptop){
@@ -137,6 +159,4 @@ public class BrandServiceImpl implements BrandService {
         dto.setBrandId(laptop.getBrand().getId());
         return dto;
     }
-
-
 }

@@ -1,9 +1,9 @@
 package com.fpt.swp391.service;
 
-import com.fpt.swp391.dto.FAPsDto;
-import com.fpt.swp391.model.FAPs;
+import com.fpt.swp391.dto.FAQsDto;
+import com.fpt.swp391.model.FAQs;
 import com.fpt.swp391.model.Laptop;
-import com.fpt.swp391.repository.FAPsRepository;
+import com.fpt.swp391.repository.FAQsRepository;
 import com.fpt.swp391.repository.LaptopRepository;
 import org.springframework.stereotype.Service;
 
@@ -11,43 +11,43 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Service
-public class FAPsServiceImpl implements FAPsService{
-    private final FAPsRepository faPsRepository;
+public class FAQsServiceImpl implements FAQsService {
+    private final FAQsRepository faQsRepository;
 
     private final LaptopRepository laptopRepository;
 
-    public FAPsServiceImpl(FAPsRepository faPsRepository, LaptopRepository laptopRepository) {
-        this.faPsRepository = faPsRepository;
+    public FAQsServiceImpl(FAQsRepository faQsRepository, LaptopRepository laptopRepository) {
+        this.faQsRepository = faQsRepository;
         this.laptopRepository = laptopRepository;
     }
 
     @Override
-    public FAPs findById(Long id) {
-        return faPsRepository.findById(id).orElse(null);
+    public FAQs findById(Long id) {
+        return faQsRepository.findById(id).orElse(null);
     }
 
     @Override
-    public FAPsDto create(FAPsDto fapsdto) {
-        FAPs f = new FAPs();
+    public FAQsDto create(FAQsDto fapsdto) {
+        FAQs f = new FAQs();
         Laptop l = laptopRepository.findById(fapsdto.getLaptop_id()).orElse(null);
         if(l != null){
             f.setTitle(fapsdto.getTitle());
             f.setContent(fapsdto.getContent());
             f.setLaptop(l);
-            faPsRepository.save(f);
-            FAPsDto dto = convertFAPsDto(f);
+            faQsRepository.save(f);
+            FAQsDto dto = convertFAPsDto(f);
             return dto;
         }
         return null;
     }
 
     @Override
-    public List<FAPsDto> listAllFaps() {
+    public List<FAQsDto> listAllFaps() {
         try{
-            List<FAPs> f1 = faPsRepository.findAll();
-            List<FAPsDto> f2 = new ArrayList<>();
-            for(FAPs f : f1){
-                FAPsDto dto = new FAPsDto();
+            List<FAQs> f1 = faQsRepository.findAll();
+            List<FAQsDto> f2 = new ArrayList<>();
+            for(FAQs f : f1){
+                FAQsDto dto = new FAQsDto();
                 dto.setId(f.getId());
                 dto.setTitle(f.getTitle());
                 dto.setContent(f.getContent());
@@ -64,9 +64,9 @@ public class FAPsServiceImpl implements FAPsService{
     @Override
     public boolean deleteFapsById(Long id) {
         try{
-            FAPs f = faPsRepository.findById(id).orElse(null);
+            FAQs f = faQsRepository.findById(id).orElse(null);
             if(f != null){
-                faPsRepository.delete(f);
+                faQsRepository.delete(f);
                 return true;
             }
         }catch (Exception e){
@@ -76,17 +76,17 @@ public class FAPsServiceImpl implements FAPsService{
     }
 
     @Override
-    public boolean createFapsMultiple(List<FAPsDto> listFaps, Long laptopId) {
+    public boolean createFapsMultiple(List<FAQsDto> listFaps, Long laptopId) {
         try{
-            for (FAPsDto dto : listFaps){
-                FAPs f = new FAPs();
+            for (FAQsDto dto : listFaps){
+                FAQs f = new FAQs();
                 f.setTitle(dto.getTitle());
                 f.setContent(dto.getContent());
                 Laptop lt = laptopRepository.findById(laptopId).orElse(null);
                 if(lt != null) {
                     f.setLaptop(lt);
                 }
-                faPsRepository.save(f);
+                faQsRepository.save(f);
             }
             return true;
         }catch(Exception e){
@@ -96,21 +96,21 @@ public class FAPsServiceImpl implements FAPsService{
     }
 
     @Override
-    public FAPs updateFaps(Long id, FAPsDto faPs) {
-        FAPs faps = faPsRepository.findById(id).orElse(null);
+    public FAQs updateFaps(Long id, FAQsDto faPs) {
+        FAQs faps = faQsRepository.findById(id).orElse(null);
         if(faps != null){
             faps.setContent(faPs.getContent());
             faps.setTitle(faPs.getTitle());
             Laptop lt =laptopRepository.findById(faPs.getLaptop_id()).orElse(new Laptop());
             faps.setLaptop(lt);
-            faPsRepository.save(faps);
+            faQsRepository.save(faps);
             return faps;
         }
         return null;
     }
 
-    private FAPsDto convertFAPsDto(FAPs faps){
-        FAPsDto ft = new FAPsDto();
+    private FAQsDto convertFAPsDto(FAQs faps){
+        FAQsDto ft = new FAQsDto();
         ft.setId(faps.getId());
         ft.setTitle(faps.getTitle());
         ft.setContent(faps.getContent());

@@ -58,6 +58,7 @@ public class UserController {
             UserDto dto = new UserDto();
             dto.setId(user.getId());
             dto.setName(user.getName());
+            dto.setDateOfBirth(user.getDateOfBirth());
             dto.setEmail(user.getEmail());
             dto.setPhone(user.getPhone());
             dto.setUsername(user.getUsername());

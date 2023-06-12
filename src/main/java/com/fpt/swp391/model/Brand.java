@@ -18,6 +18,7 @@ public class Brand {
     private Long id;
     private String name;
     private String description;
+    @Column(columnDefinition = "VARCHAR(1000)")
     private String image;
     private String slug;
     @OneToMany(mappedBy = "brand")

@@ -10,12 +10,13 @@ import javax.persistence.*;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-@Table(name = "faps")
-public class FAPs {
+@Table(name = "faqs")
+public class FAQs {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private String title;
+    @Column(columnDefinition = "VARCHAR(1000)")
     private String content;
     @ManyToOne
     @JoinColumn(name = "laptop_id", nullable = false)
