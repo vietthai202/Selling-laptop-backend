@@ -62,6 +62,31 @@ public class FAQsServiceImpl implements FAQsService {
     }
 
     @Override
+    public List<FAQsDto> listAllFaqsByLaptopId(Long id) {
+        try {
+            Laptop laptop = laptopRepository.findById(id).orElse(null);
+            List<FAQsDto> faqsDto = new ArrayList<>();
+            if (laptop != null) {
+                List<FAQs> faq = faQsRepository.findFAQsByLaptopId(laptop.getId());
+                for (FAQs faqs : faq) {
+                    if (faqs.getId() != null) {
+                        FAQsDto f = new FAQsDto();
+                        f.setId(faqs.getId());
+                        f.setTitle(faqs.getTitle());
+                        f.setContent(faqs.getContent());
+                        f.setLaptop_id(faqs.getLaptop().getId());
+                        faqsDto.add(f);
+                    }
+                }
+            }
+            return faqsDto;
+        } catch (Exception e){
+
+        }
+        return null;
+    }
+
+    @Override
     public boolean deleteFapsById(Long id) {
         try{
             FAQs f = faQsRepository.findById(id).orElse(null);

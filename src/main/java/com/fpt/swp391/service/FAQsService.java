@@ -12,6 +12,8 @@ public interface FAQsService {
 
     List<FAQsDto> listAllFaps();
 
+    List<FAQsDto> listAllFaqsByLaptopId(Long id);
+
     boolean deleteFapsById(Long id);
 
     boolean createFapsMultiple(List<FAQsDto> listFaps, Long laptopId);

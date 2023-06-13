@@ -66,6 +66,16 @@ public class FAQsController {
         return ResponseEntity.status(HttpStatus.NO_CONTENT).body(response);
     }
 
+    @GetMapping("/lists/{laptopId}")
+    public ResponseEntity<?> getAllByLaptopId(@PathVariable Long laptopId) {
+        List<FAQsDto> list = faPsService.listAllFaqsByLaptopId(laptopId);
+        if (list.size() > 0) {
+            return ResponseEntity.status(HttpStatus.OK).body(list);
+        }
+        final ApiExceptionResponse response = new ApiExceptionResponse("Không có dữ liệu!", HttpStatus.NO_CONTENT, LocalDateTime.now());
+        return ResponseEntity.status(HttpStatus.NO_CONTENT).body(response);
+    }
+
     @PostMapping("/edit/{id}")
     public ResponseEntity<?> updateFaps(@PathVariable Long id, @RequestBody FAQsDto faps) {
         FAQs f = faPsService.updateFaps(id, faps);
