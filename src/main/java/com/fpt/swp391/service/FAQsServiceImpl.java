@@ -121,13 +121,11 @@ public class FAQsServiceImpl implements FAQsService {
     }
 
     @Override
-    public FAQs updateFaps(Long id, FAQsDto faPs) {
+    public FAQs updateFaq(Long id, FAQsDto faPs) {
         FAQs faps = faQsRepository.findById(id).orElse(null);
         if(faps != null){
             faps.setContent(faPs.getContent());
             faps.setTitle(faPs.getTitle());
-            Laptop lt =laptopRepository.findById(faPs.getLaptop_id()).orElse(new Laptop());
-            faps.setLaptop(lt);
             faQsRepository.save(faps);
             return faps;
         }
