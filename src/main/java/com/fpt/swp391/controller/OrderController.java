@@ -3,6 +3,7 @@ package com.fpt.swp391.controller;
 
 import com.fpt.swp391.dto.ForgotRequest;
 import com.fpt.swp391.dto.OrderDto;
+import com.fpt.swp391.dto.OrderRequestDto;
 import com.fpt.swp391.exceptions.ApiExceptionResponse;
 import com.fpt.swp391.model.Order;
 import com.fpt.swp391.model.StatusEnum;
@@ -102,4 +103,17 @@ public class OrderController {
         o.setUpdatedAt(order.getUpdatedAt());
         return o;
     }
+
+    @PostMapping("/create-mul-order-item")
+    public ResponseEntity<?> createOrderItems(@RequestBody OrderRequestDto orderRequestDto){
+        try {
+            boolean c = orderItemService.addMultiLaptopToCart(orderRequestDto);
+            if(c){
+                return ResponseEntity.ok("Laptop has been added to the Order.");
+            }
+        } catch (RuntimeException e) {
+        }
+        return ResponseEntity.badRequest().body("Failed to add laptop to the Order.");
+    }
+
 }
