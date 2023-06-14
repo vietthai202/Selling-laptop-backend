@@ -68,8 +68,8 @@ public class LaptopController {
             @RequestParam(value = "maxPrice", required = false) Float maxPrice,
             @RequestParam(defaultValue = "12") int pageSize,
             @RequestParam(defaultValue = "1") int pageNumber) {
-        if (minPrice == 0.0) minPrice = 0.0F;
-        if (maxPrice == 0.0) maxPrice = 9999999999F;
+        if (minPrice == 0.0 || minPrice == null) minPrice = 0.0F;
+        if (maxPrice == 0.0 || maxPrice == null) maxPrice = 9999999999F;
         Page<LaptopDto> laptops = laptopService.getProductsByFilter(categoryId, listBrandId, sortDirection, priceOrder, minPrice, maxPrice, pageSize, pageNumber);
         return ResponseEntity.ok(laptops);
     }

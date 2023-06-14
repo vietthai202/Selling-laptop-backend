@@ -14,6 +14,8 @@ import java.util.List;
 public interface LaptopRepository extends JpaRepository<Laptop, Long>, JpaSpecificationExecutor<Laptop> {
     Laptop findLaptopBySlug(String slug);
 
+    Laptop findLaptopById(Long id);
+
     Page<Laptop> findAll(Specification<Laptop> specification, Pageable pageable);
 
     List<Laptop> findByTitleContainingIgnoreCaseOrSummaryContainingIgnoreCaseOrMetaTitleContainingIgnoreCase(String title, String summary, String metaTitle);
