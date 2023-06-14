@@ -27,15 +27,26 @@ public class OrderItemServiceImpl implements OrderItemService {
     @Override
     public void addLaptopToCart(Long orderId, Long laptopId, int quantity) {
         Order order = orderService.getOrderbyId(orderId);
-        OrderItem orderItem = new OrderItem();
         Optional<Laptop> laptopOptional = laptopRepository.findById(laptopId);
         if (laptopOptional.isPresent()) {
             Laptop l = laptopOptional.get();
-            orderItem.setOrder(order);
-            orderItem.setLaptop(l);
-            orderItem.setQuantity(quantity);
-            orderItem.setPrice(orderItem.getQuantity() * orderItem.getLaptop().getPrice());
+            Optional<OrderItem> existingOrderItemOptional = order.getOrderItems().stream()
+                    .filter(orderItem -> orderItem.getLaptop().equals(l))
+                    .findFirst();
+            if(existingOrderItemOptional.isPresent()){
+                OrderItem existingOrderItem = existingOrderItemOptional.get();
+                existingOrderItem.setQuantity(existingOrderItem.getQuantity()+quantity);
+                existingOrderItem.setPrice(existingOrderItem.getQuantity() * existingOrderItem.getLaptop().getPrice());
+                orderItemRepository.save(existingOrderItem);
+            }else{
+                OrderItem newOrderItem = new OrderItem();
+                newOrderItem.setOrder(order);
+                newOrderItem.setLaptop(l);
+                newOrderItem.setQuantity(quantity);
+                newOrderItem.setPrice(newOrderItem.getQuantity() * newOrderItem.getLaptop().getPrice());
+                order.getOrderItems().add(newOrderItem);
+                orderItemRepository.save(newOrderItem);
+            }
         }
-        orderItemRepository.save(orderItem);
     }
 }

@@ -10,6 +10,7 @@ import com.fpt.swp391.service.LaptopService;
 import com.fpt.swp391.service.OrderItemService;
 import com.fpt.swp391.service.OrderService;
 import com.fpt.swp391.utils.ApiSuccessResponse;
+import org.aspectj.weaver.ast.Or;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -36,7 +37,7 @@ public class OrderController {
     public ResponseEntity<?> getOrder(@PathVariable Long id) {
         Order o = orderService.getOrderbyId(id);
         if (o != null) {
-            return ResponseEntity.status(HttpStatus.OK).body(0);
+            return ResponseEntity.status(HttpStatus.OK).body(convertToDto(o));
         }
         return null;
     }
@@ -45,7 +46,7 @@ public class OrderController {
     public ResponseEntity<?> createOrder(@RequestBody OrderDto orderDto) {
         Order createdOrder = orderService.createOrder(orderDto);
         if (createdOrder != null) {
-            return ResponseEntity.status(HttpStatus.OK).body(createdOrder);
+            return ResponseEntity.status(HttpStatus.OK).body(convertToDto(createdOrder));
         }
         return null;
     }
@@ -82,5 +83,23 @@ public class OrderController {
         }
         final ApiExceptionResponse response = new ApiExceptionResponse("Not Successful", HttpStatus.BAD_REQUEST, LocalDateTime.now());
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
+    }
+
+    private OrderDto convertToDto(Order order){
+        OrderDto o = new OrderDto();
+        o.setId(order.getId());
+        o.setFirstName(order.getFirstName());
+        o.setLastName(order.getLastName());
+        o.setStatus(order.getStatus());
+        o.setEmail(order.getEmail());
+        o.setPhoneNumber(order.getPhoneNumber());
+        o.setLine(order.getLine());
+        o.setProvince(order.getProvince());
+        o.setTotalPrice(order.getTotalPrice());
+        o.setUserId(order.getUser().getId());
+        o.setCity(order.getCity());
+        o.setCreatedAt(order.getCreatedAt());
+        o.setUpdatedAt(order.getUpdatedAt());
+        return o;
     }
 }
