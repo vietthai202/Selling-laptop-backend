@@ -12,7 +12,6 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 public class LaptopSpecifications {
-
     public static Specification<Laptop> hasCategoryAndBrand(String categoryIds, String brandIds, String priceOrder, String sortDirection) {
         return (root, query, criteriaBuilder) -> {
             List<Predicate> predicates = new ArrayList<>();
@@ -41,7 +40,6 @@ public class LaptopSpecifications {
         };
     }
 
-
     private static List<javax.persistence.criteria.Order> getSortByField(Root<Laptop> root, CriteriaBuilder criteriaBuilder, String priceOrder, String sortDirection) {
         List<javax.persistence.criteria.Order> orders = new ArrayList<>();
         if (priceOrder != null && priceOrder.equalsIgnoreCase("asc")) {
@@ -63,10 +61,8 @@ public class LaptopSpecifications {
                 orders.add(criteriaBuilder.desc(root.get("id")));
             }
         }
-
         return orders;
     }
-
 
     public static Specification<Laptop> hasPriceBetween(Float minPrice, Float maxPrice) {
         return (root, query, criteriaBuilder) -> {

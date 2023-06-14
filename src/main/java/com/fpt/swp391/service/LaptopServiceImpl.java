@@ -61,7 +61,7 @@ public class LaptopServiceImpl implements LaptopService {
             List<LaptopDto> listDto = new ArrayList<>();
             List<Laptop> listLaptop = laptopRepository.findAll();
             for (Laptop laptop : listLaptop) {
-                if (laptop.isStatus() == true) {
+                if (laptop.isStatus()) {
                     LaptopDto laptopDto = new LaptopDto();
                     laptopDto.setId(laptop.getId());
                     laptopDto.setUserName(laptop.getUser().getUsername());
@@ -93,8 +93,18 @@ public class LaptopServiceImpl implements LaptopService {
         Optional<Laptop> laptopOptional = laptopRepository.findById(id);
         if (laptopOptional.isPresent()) {
             Laptop laptop = laptopOptional.get();
-            LaptopDto dto =convertToLaptopDto(laptop);
+            LaptopDto dto = convertToLaptopDto(laptop);
             return dto;
+        }
+        return null;
+    }
+
+    @Override
+    public Laptop getById(Long id) {
+        Optional<Laptop> laptopOptional = laptopRepository.findById(id);
+        if (laptopOptional.isPresent()) {
+            Laptop laptop = laptopOptional.get();
+            return laptop;
         }
         return null;
     }
