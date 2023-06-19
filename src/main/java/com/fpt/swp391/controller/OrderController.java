@@ -18,6 +18,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 import java.time.LocalDateTime;
+import java.util.Set;
 
 
 @RestController
@@ -25,12 +26,10 @@ import java.time.LocalDateTime;
 public class OrderController {
 
     private final OrderService orderService;
-    private final LaptopService laptopService;
     private final OrderItemService orderItemService;
 
     public OrderController(OrderService orderService, LaptopService laptopService, OrderItemService orderItemService) {
         this.orderService = orderService;
-        this.laptopService = laptopService;
         this.orderItemService = orderItemService;
     }
 
@@ -114,6 +113,16 @@ public class OrderController {
         } catch (RuntimeException e) {
         }
         return ResponseEntity.badRequest().body("Failed to add laptop to the Order.");
+    }
+
+    @GetMapping("/getOrder/{userName}")
+    public ResponseEntity<?> getOrderByUserName(@PathVariable String userName) {
+        Set<OrderDto> dtoSet =  orderService.getOrderDtobyUserName(userName);
+        if(dtoSet.size() > 0) {
+            return ResponseEntity.status(HttpStatus.OK).body(dtoSet);
+        }
+        final ApiExceptionResponse response = new ApiExceptionResponse("Fetch fail!", HttpStatus.BAD_REQUEST, LocalDateTime.now());
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
     }
 
 }

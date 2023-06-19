@@ -18,4 +18,5 @@ public interface UserService {
 	RegistrationResponse createUserByAdmin(RegistrationRequest registrationRequest, UserRole userRole);
 	AuthenticatedUserDto findAuthenticatedUserByUsername(String username);
 	boolean sendPasswordToEmail(String email);
+	User findByPhoneNumber(String phoneNumber);
 }

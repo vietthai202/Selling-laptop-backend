@@ -159,4 +159,9 @@ public class UserServiceImpl implements UserService {
 		}
 		return false;
 	}
+
+	@Override
+	public User findByPhoneNumber(String phoneNumber) {
+		return userRepository.findUserByPhone(phoneNumber);
+	}
 }

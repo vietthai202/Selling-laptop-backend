@@ -6,6 +6,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.util.Date;
+import java.util.Set;
 
 @Getter
 @Setter
@@ -23,6 +24,8 @@ public class OrderDto {
     private String line;
     private String city;
     private String province;
+    private Set<OrderItemDto>  orderItems;
+    private Set<TransactionDto> transactions;
     private Date createdAt;
     private Date updatedAt;
 }
