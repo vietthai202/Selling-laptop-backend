@@ -5,6 +5,8 @@ import com.fpt.swp391.model.Order;
 import com.fpt.swp391.model.StatusEnum;
 import org.springframework.stereotype.Service;
 
+import java.util.Set;
+
 @Service
 public interface OrderService {
     Order createOrder(OrderDto orderDto);
@@ -14,4 +16,6 @@ public interface OrderService {
     void updateOrderStatus(Long orderId, StatusEnum newStatus);
     void updateTotalPrice(Long id);
     boolean sendConfirmPassToEmail(String email);
+
+    Set<OrderDto> getOrderDtobyUserName(String username);
 }

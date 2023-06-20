@@ -18,5 +18,5 @@ public interface FAQsService {
 
     boolean createFapsMultiple(List<FAQsDto> listFaps, Long laptopId);
 
-    FAQs updateFaps(Long id, FAQsDto faPs);
+    FAQs updateFaq(Long id, FAQsDto faPs);
 }
