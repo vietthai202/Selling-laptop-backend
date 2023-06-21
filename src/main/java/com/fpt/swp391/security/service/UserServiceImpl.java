@@ -1,5 +1,6 @@
 package com.fpt.swp391.security.service;
 
+import com.fpt.swp391.dto.PasswordRequest;
 import com.fpt.swp391.dto.UserDto;
 import com.fpt.swp391.repository.UserRepository;
 import com.fpt.swp391.model.User;
@@ -7,6 +8,7 @@ import com.fpt.swp391.model.UserRole;
 import com.fpt.swp391.security.dto.AuthenticatedUserDto;
 import com.fpt.swp391.security.dto.RegistrationRequest;
 import com.fpt.swp391.security.dto.RegistrationResponse;
+import com.fpt.swp391.security.jwt.JwtTokenManager;
 import com.fpt.swp391.security.mapper.UserMapper;
 import com.fpt.swp391.service.UserValidationService;
 import com.fpt.swp391.utils.GeneralMessageAccessor;
@@ -23,18 +25,15 @@ import java.util.List;
 public class UserServiceImpl implements UserService {
 
 	private static final String REGISTRATION_SUCCESSFUL = "registration_successful";
-
+	private final JwtTokenManager jwtTokenManager;
 	private final UserRepository userRepository;
-
 	private final SendMail sendMail;
-
 	private final BCryptPasswordEncoder bCryptPasswordEncoder;
-
 	private final UserValidationService userValidationService;
-
 	private final GeneralMessageAccessor generalMessageAccessor;
 
-	public UserServiceImpl(UserRepository userRepository, SendMail sendMail, BCryptPasswordEncoder bCryptPasswordEncoder, UserValidationService userValidationService, GeneralMessageAccessor generalMessageAccessor) {
+	public UserServiceImpl(JwtTokenManager jwtTokenManager, UserRepository userRepository, SendMail sendMail, BCryptPasswordEncoder bCryptPasswordEncoder, UserValidationService userValidationService, GeneralMessageAccessor generalMessageAccessor) {
+		this.jwtTokenManager = jwtTokenManager;
 		this.userRepository = userRepository;
 		this.sendMail = sendMail;
 		this.bCryptPasswordEncoder = bCryptPasswordEncoder;
@@ -89,6 +88,33 @@ public class UserServiceImpl implements UserService {
 			if(userDto.getUserRole().equals(UserRole.ROLE_USER.name())) {
 				u.setUserRole(UserRole.ROLE_USER);
 			}
+			userRepository.save(u);
+			return u;
+		}
+		return null;
+	}
+
+	@Override
+	public User updateUserProfile(String token, UserDto userDto) {
+		String username = jwtTokenManager.getUsernameFromToken(token);
+		User u = userRepository.findByUsername(userDto.getUsername());
+		if(username.equals(u.getUsername())){
+			u.setName(userDto.getName());
+			u.setDateOfBirth(userDto.getDateOfBirth());
+			u.setAddress(userDto.getAddress());
+			userRepository.save(u);
+			return u;
+		}
+		return null;
+	}
+
+	public User changePassword(String token, PasswordRequest request) {
+
+		String username = jwtTokenManager.getUsernameFromToken(token);
+
+		User u = userRepository.findByUsername(username);
+		if(u != null){
+			u.setPassword(bCryptPasswordEncoder.encode(request.getNewpass()));
 			userRepository.save(u);
 			return u;
 		}

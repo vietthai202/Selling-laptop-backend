@@ -1,5 +1,7 @@
 package com.fpt.swp391.security.jwt;
 
+import com.fpt.swp391.dto.PasswordRequest;
+import com.fpt.swp391.repository.UserRepository;
 import com.fpt.swp391.security.dto.LoginPhoneRequest;
 import com.fpt.swp391.security.mapper.UserMapper;
 import com.fpt.swp391.security.service.UserService;
@@ -23,6 +25,8 @@ public class JwtTokenService {
 	private final UserService userService;
 
 	private final JwtTokenManager jwtTokenManager;
+
+	private final UserRepository userRepository;
 
 	private final AuthenticationManager authenticationManager;
 

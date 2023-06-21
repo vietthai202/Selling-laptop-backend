@@ -1,12 +1,13 @@
 package com.fpt.swp391.controller;
 
 import com.fpt.swp391.dto.ForgotRequest;
+import com.fpt.swp391.dto.PasswordRequest;
 import com.fpt.swp391.dto.UserDto;
 import com.fpt.swp391.exceptions.ApiExceptionResponse;
 import com.fpt.swp391.model.User;
-import com.fpt.swp391.security.dto.CreateUserRequest;
-import com.fpt.swp391.security.dto.RegistrationRequest;
-import com.fpt.swp391.security.dto.RegistrationResponse;
+import com.fpt.swp391.security.dto.*;
+import com.fpt.swp391.security.jwt.JwtTokenManager;
+import com.fpt.swp391.security.jwt.JwtTokenService;
 import com.fpt.swp391.security.service.UserService;
 import com.fpt.swp391.utils.ApiSuccessResponse;
 import org.springframework.http.HttpStatus;
@@ -23,9 +24,13 @@ import java.util.List;
 public class UserController {
 
     private final UserService userService;
+    private final JwtTokenService jwtTokenService;
+    private final JwtTokenManager jwtTokenManager;
 
-    public UserController(UserService userService) {
+    public UserController(UserService userService, JwtTokenService jwtTokenService, JwtTokenManager jwtTokenManager) {
         this.userService = userService;
+        this.jwtTokenService = jwtTokenService;
+        this.jwtTokenManager = jwtTokenManager;
     }
 
     @GetMapping("/list")
@@ -101,6 +106,33 @@ public class UserController {
             return ResponseEntity.status(HttpStatus.OK).body(response);
         }
         response = new ApiExceptionResponse("User not found!", HttpStatus.BAD_REQUEST, LocalDateTime.now());
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
+    }
+
+    @PutMapping("/profileEdit/{token}")
+    public ResponseEntity<?> profileEdit(@PathVariable String token, @RequestBody UserDto userDto) {
+        User u = userService.updateUserProfile(token, userDto);
+        if(u != null) {
+            return  ResponseEntity.status(HttpStatus.OK).body(null);
+        }
+        ApiExceptionResponse response = new ApiExceptionResponse("User not found!", HttpStatus.BAD_REQUEST, LocalDateTime.now());
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
+    }
+
+    @PutMapping("/passwordEdit/{token}")
+    public ResponseEntity<?> profileEdit(@PathVariable String token, @RequestBody PasswordRequest request) {
+        String username = jwtTokenManager.getUsernameFromToken(token);
+        LoginRequest loginRequest = new LoginRequest();
+        loginRequest.setUsername(username);
+        loginRequest.setPassword(request.getOldpass());
+        LoginResponse loginResponse = jwtTokenService.getLoginResponse(loginRequest);
+        if(loginResponse != null) {
+            User u = userService.changePassword(token, request);
+            if(u != null) {
+                return  ResponseEntity.status(HttpStatus.OK).body(null);
+            }
+        }
+        ApiExceptionResponse response = new ApiExceptionResponse("User not found!", HttpStatus.BAD_REQUEST, LocalDateTime.now());
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
     }
 
