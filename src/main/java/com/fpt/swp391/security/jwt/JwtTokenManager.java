@@ -1,5 +1,9 @@
 package com.fpt.swp391.security.jwt;
 
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseAuthException;
+import com.google.firebase.auth.FirebaseToken;
+
 import com.auth0.jwt.JWT;
 import com.auth0.jwt.JWTVerifier;
 import com.auth0.jwt.algorithms.Algorithm;
@@ -38,6 +42,11 @@ public class JwtTokenManager {
 		final DecodedJWT decodedJWT = getDecodedJWT(token);
 
 		return decodedJWT.getSubject();
+	}
+
+	public static FirebaseToken verifyIdToken(String idToken) throws FirebaseAuthException {
+		FirebaseToken token = FirebaseAuth.getInstance().verifyIdToken(idToken);
+		return token;
 	}
 
 	public boolean validateToken(String token, String authenticatedUsername) {

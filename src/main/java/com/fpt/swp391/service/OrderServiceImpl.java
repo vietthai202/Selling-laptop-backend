@@ -1,6 +1,7 @@
 package com.fpt.swp391.service;
 
 import com.fpt.swp391.dto.OrderDto;
+import com.fpt.swp391.dto.OrderItemDto;
 import com.fpt.swp391.model.*;
 import com.fpt.swp391.repository.OrderRepository;
 import com.fpt.swp391.repository.UserRepository;
@@ -101,6 +102,56 @@ public class OrderServiceImpl implements OrderService {
         }
         return false;
     }
+
+    @Override
+    public Set<OrderDto> getOrderDtobyUserName(String username) {
+        try {
+            Set<Order> lo = orderRepository.findOrdersByUserName(username);
+            Set<OrderDto> dtos = new HashSet<>();
+            for (Order o: lo) {
+                if(o.getOrderItems().size() > 0) {
+                    OrderDto dto = new OrderDto();
+                    dto.setId(o.getId());
+                    dto.setUserId(o.getUser().getId());
+                    dto.setTotalPrice(o.getTotalPrice());
+                    dto.setStatus(o.getStatus());
+                    dto.setFirstName(o.getFirstName());
+                    dto.setLastName(o.getLastName());
+                    dto.setPhoneNumber(o.getPhoneNumber());
+                    dto.setEmail(o.getEmail());
+                    dto.setLine(o.getLine());
+                    dto.setCity(o.getCity());
+                    dto.setProvince(o.getProvince());
+                    Set<OrderItem> orderItemSet = o.getOrderItems();
+                    Set<OrderItemDto> odto = new HashSet<>();
+                    for (OrderItem oi: orderItemSet) {
+                        OrderItemDto oidto = new OrderItemDto();
+                        oidto.setId(oi.getId());
+                        oidto.setOrder_id(oi.getOrder().getId());
+                        oidto.setLaptop_id(oi.getLaptop().getId());
+                        oidto.setSku(oi.getSku());
+                        oidto.setPrice(oi.getPrice());
+                        oidto.setDiscount(oi.getDiscount());
+                        oidto.setQuantity(oi.getQuantity());
+                        oidto.setActive(oi.getActive());
+                        oidto.setContent(oi.getContent());
+                        oidto.setCreatedAt(oi.getCreatedAt());
+                        oidto.setUpdatedAt(oi.getUpdatedAt());
+                        odto.add(oidto);
+                    }
+                    dto.setOrderItems(odto);
+                    dto.setCreatedAt(o.getCreatedAt());
+                    dto.setUpdatedAt(o.getUpdatedAt());
+                    dtos.add(dto);
+                }
+            }
+            return dtos;
+        } catch (Exception e) {
+
+        }
+        return null;
+    }
+
     private String generateRandomString() {
         int length = 5;
         String characters = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
