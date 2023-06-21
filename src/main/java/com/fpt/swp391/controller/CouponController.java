@@ -10,6 +10,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 
 @RestController
@@ -73,5 +74,20 @@ public class CouponController {
         }
         ApiExceptionResponse response = new ApiExceptionResponse("Update Fail!", HttpStatus.BAD_REQUEST, LocalDateTime.now());
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
+    }
+
+    @GetMapping("/search")
+    public ResponseEntity<?> searchCouponByName(@RequestParam String name) {
+        List<Coupon> lstCo = couponService.searchCouponByName(name);
+
+        List<Coupon> result = new ArrayList<>();
+        if (lstCo != null) {
+            result.addAll(lstCo);
+        }
+        if (result.size() > 0 && !name.trim().equals("")) {
+            return ResponseEntity.status(HttpStatus.OK).body(result);
+        }
+        ApiExceptionResponse response = new ApiExceptionResponse("No content", HttpStatus.NO_CONTENT, LocalDateTime.now());
+        return ResponseEntity.status(HttpStatus.NO_CONTENT).body(response);
     }
 }

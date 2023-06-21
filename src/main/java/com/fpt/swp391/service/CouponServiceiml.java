@@ -36,8 +36,17 @@ public class CouponServiceiml implements CouponService {
     }
 
     @Override
-    public List<Coupon> listAllCoupon() {
+    public List<Coupon> searchCouponByName(String name) {
+        try {
+            List<Coupon> list = couponRepository.findByNameContainingIgnoreCase(name);
+            return list;
+        } catch (Exception e) {
+        }
+        return null;
+    }
 
+    @Override
+    public List<Coupon> listAllCoupon() {
         return couponRepository.findAll();
     }
 
@@ -51,7 +60,6 @@ public class CouponServiceiml implements CouponService {
         }
         return false;
     }
-
     @Override
     public Coupon updateCoupon(Long id, Coupon coupon) {
         Optional<Coupon> couponOptional = couponRepository.findById(id);
