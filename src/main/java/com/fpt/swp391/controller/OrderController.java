@@ -4,20 +4,22 @@ package com.fpt.swp391.controller;
 import com.fpt.swp391.dto.ForgotRequest;
 import com.fpt.swp391.dto.OrderDto;
 import com.fpt.swp391.dto.OrderRequestDto;
+import com.fpt.swp391.dto.TransactionDto;
 import com.fpt.swp391.exceptions.ApiExceptionResponse;
 import com.fpt.swp391.model.Order;
 import com.fpt.swp391.model.StatusEnum;
+import com.fpt.swp391.model.Transaction;
 import com.fpt.swp391.service.LaptopService;
 import com.fpt.swp391.service.OrderItemService;
 import com.fpt.swp391.service.OrderService;
 import com.fpt.swp391.utils.ApiSuccessResponse;
-import org.aspectj.weaver.ast.Or;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 import java.time.LocalDateTime;
+import java.util.HashSet;
 import java.util.Set;
 
 
@@ -100,7 +102,28 @@ public class OrderController {
         o.setCity(order.getCity());
         o.setCreatedAt(order.getCreatedAt());
         o.setUpdatedAt(order.getUpdatedAt());
+        Set<Transaction> transactionSet = order.getTransactions();
+        Set<TransactionDto> transactionDtoSet = new HashSet<>();
+
+        if(transactionSet != null) {
+            for (Transaction t: transactionSet) {
+                TransactionDto tdto = convertToTransactionDto(t);
+                transactionDtoSet.add(tdto);
+            }
+        }
+        o.setTransactions(transactionDtoSet);
         return o;
+    }
+
+    private TransactionDto convertToTransactionDto(Transaction transaction) {
+        TransactionDto dto = new TransactionDto();
+        dto.setId(transaction.getId());
+        dto.setStatus(transaction.getStatus().toString());
+        dto.setCreatedAt(transaction.getCreatedAt());
+        dto.setUpdatedAt(transaction.getUpdatedAt());
+        dto.setOrderId(transaction.getOrder().getId());
+        dto.setUserId(transaction.getUser().getId());
+        return dto;
     }
 
     @PostMapping("/create-mul-order-item")

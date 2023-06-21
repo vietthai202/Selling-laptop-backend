@@ -66,9 +66,20 @@ public class OrderServiceImpl implements OrderService {
             order.setStatus(String.valueOf(status));
             orderRepository.save(order);
             if (status == StatusEnum.DONE) {
-                createTransactionForOrder(order);
+                Transaction existingTransaction = getTransactionForOrder(order);
+                if (existingTransaction == null) {
+                    createTransactionForOrder(order);
+                }
             }
         }
+    }
+
+    private Transaction getTransactionForOrder(Order order) {
+        Set<Transaction> transactions = order.getTransactions();
+        if (transactions != null && !transactions.isEmpty()) {
+            return transactions.iterator().next();
+        }
+        return null;
     }
 
     @Override
