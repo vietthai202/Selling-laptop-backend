@@ -78,16 +78,21 @@ public class CouponController {
 
     @GetMapping("/search")
     public ResponseEntity<?> searchCouponByName(@RequestParam String name) {
-        List<Coupon> lstCo = couponService.searchCouponByName(name);
-
+        List<Coupon> lstCo;
+        if (name != null && !name.trim().equals("")) {
+            lstCo = couponService.searchCouponByName(name);
+        } else {
+            lstCo = couponService.listAllCoupon(); // Assuming there is a method to retrieve all coupons
+        }
         List<Coupon> result = new ArrayList<>();
         if (lstCo != null) {
             result.addAll(lstCo);
         }
-        if (result.size() > 0 && !name.trim().equals("")) {
+        if (result.size() > 0) {
             return ResponseEntity.status(HttpStatus.OK).body(result);
+        } else {
+            ApiExceptionResponse response = new ApiExceptionResponse("No content", HttpStatus.NO_CONTENT, LocalDateTime.now());
+            return ResponseEntity.status(HttpStatus.NO_CONTENT).body(response);
         }
-        ApiExceptionResponse response = new ApiExceptionResponse("No content", HttpStatus.NO_CONTENT, LocalDateTime.now());
-        return ResponseEntity.status(HttpStatus.NO_CONTENT).body(response);
     }
 }
