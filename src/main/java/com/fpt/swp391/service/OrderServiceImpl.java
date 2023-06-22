@@ -18,7 +18,6 @@ public class OrderServiceImpl implements OrderService {
     private final TransactionService transactionService;
     private final SendMail sendMail;
 
-
     Set<OrderItem> orderItems = new HashSet<>();
 
 

@@ -25,4 +25,6 @@ public interface LaptopService {
     LaptopDto updateLaptop(Long id, LaptopDto laptop);
 
     LaptopDto getLaptopBySlug(String slug);
+    List<LaptopDto> getLaptopsByDiscountId(Long discountId);
+
 }
