@@ -13,10 +13,11 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.io.BufferedReader;
-import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.URL;
 import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 @RestController
 @RequestMapping("/check-bank")
@@ -28,9 +29,9 @@ public class CheckBankController {
     }
 
     @GetMapping("/all")
-    public ResponseEntity<?> checkBank() throws IOException {
+    public ResponseEntity<?> checkBank() {
         try {
-            String url = "https://mb.olygon.pro";
+            String url = "http://mb.olygon.pro/";
 
             // Mở kết nối đến URL và tạo đối tượng BufferedReader
             URL jsonUrl = new URL(url);
@@ -52,7 +53,16 @@ public class CheckBankController {
 
             for (TransactionInfo ti: transactionInfos) {
                 if(ti.getDescription().contains("SWPORDER")) {
-                    Long oid = Long.parseLong(ti.getDescription().split("SWPORDER")[1]);
+                    String regex = "\\d+";
+                    Pattern pattern = Pattern.compile(regex);
+                    Matcher matcher = pattern.matcher(ti.getDescription());
+                    String number = "";
+                    while (matcher.find()) {
+                        number = matcher.group();
+                        System.out.println(number);
+                    }
+
+                    Long oid = Long.parseLong(number);
                     Order o = orderService.getOrderbyId(oid);
                     if(o != null) {
                         if(o.getTotalPrice() <= Float.parseFloat(ti.getAmount())) {
@@ -63,9 +73,8 @@ public class CheckBankController {
             }
             return ResponseEntity.status(HttpStatus.OK).body("Update Done!");
         } catch (Exception e) {
-
+            e.printStackTrace();
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Server Error: " + e.getMessage());
         }
-
-        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Server Error");
     }
 }
