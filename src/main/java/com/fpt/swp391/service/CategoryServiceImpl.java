@@ -137,7 +137,7 @@ public class CategoryServiceImpl implements CategoryService {
         dto.setSummary(laptop.getSummary());
         dto.setSku(laptop.getSku());
         dto.setPrice(laptop.getPrice());
-        dto.setDiscount(laptop.getDiscount());
+
         dto.setQuantity(laptop.getQuantity());
         dto.setCategoryId(laptop.getCategory().getId());
         dto.setBrandId(laptop.getBrand().getId());
