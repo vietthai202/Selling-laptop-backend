@@ -1,12 +1,10 @@
 package com.fpt.swp391.service;
 
+import com.fpt.swp391.dto.DiscountDto;
 import com.fpt.swp391.dto.LaptopDto;
 import com.fpt.swp391.dto.MetadataDto;
 import com.fpt.swp391.model.*;
-import com.fpt.swp391.repository.BrandRepository;
-import com.fpt.swp391.repository.CategoryRepository;
-import com.fpt.swp391.repository.LaptopRepository;
-import com.fpt.swp391.repository.UserRepository;
+import com.fpt.swp391.repository.*;
 import org.springframework.data.domain.*;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
@@ -21,12 +19,14 @@ public class LaptopServiceImpl implements LaptopService {
     private final CategoryRepository categoryRepository;
     private final BrandRepository brandRepository;
     private final UserRepository userRepository;
+    private final DiscountRepository discountRepository;
 
-    public LaptopServiceImpl(LaptopRepository laptopRepository, CategoryRepository categoryRepository, BrandRepository brandRepository, UserRepository userRepository) {
+    public LaptopServiceImpl(LaptopRepository laptopRepository, CategoryRepository categoryRepository, BrandRepository brandRepository, UserRepository userRepository, DiscountRepository discountRepository) {
         this.laptopRepository = laptopRepository;
         this.categoryRepository = categoryRepository;
         this.brandRepository = brandRepository;
         this.userRepository = userRepository;
+        this.discountRepository = discountRepository;
     }
 
     @Override
@@ -44,9 +44,9 @@ public class LaptopServiceImpl implements LaptopService {
             laptopDto.setImage(laptop.getImage());
             laptopDto.setSku(laptop.getSku());
             laptopDto.setPrice(laptop.getPrice());
-            laptopDto.setDiscount(laptop.getDiscount());
             laptopDto.setQuantity(laptop.getQuantity());
             laptopDto.setStatus(laptop.isStatus());
+            laptopDto.setDiscount(laptop.getDiscount());
             laptopDto.setCategoryId(laptop.getCategory().getId());
             laptopDto.setBrandId(laptop.getBrand().getId());
             lt1.add(laptopDto);
@@ -72,9 +72,9 @@ public class LaptopServiceImpl implements LaptopService {
                     laptopDto.setImage(laptop.getImage());
                     laptopDto.setSku(laptop.getSku());
                     laptopDto.setPrice(laptop.getPrice());
-                    laptopDto.setDiscount(laptop.getDiscount());
                     laptopDto.setQuantity(laptop.getQuantity());
                     laptopDto.setStatus(laptop.isStatus());
+                    laptopDto.setDiscount(laptop.getDiscount());
                     laptopDto.setCategoryId(laptop.getCategory().getId());
                     laptopDto.setBrandId(laptop.getBrand().getId());
                     listDto.add(laptopDto);
@@ -86,7 +86,6 @@ public class LaptopServiceImpl implements LaptopService {
         }
         return null;
     }
-
 
     @Override
     public LaptopDto findById(Long id) {
@@ -155,8 +154,6 @@ public class LaptopServiceImpl implements LaptopService {
         lt.setDiscount(laptop.getDiscount());
         lt.setQuantity(laptop.getQuantity());
         lt.setStatus(laptop.isStatus());
-//        lt.setMetadata(laptop.getMetadata());
-//        lt.setTags(laptop.getTags());
 
         User u = userRepository.findByUsername(laptop.getUserName());
         lt.setUser(u);
@@ -166,11 +163,6 @@ public class LaptopServiceImpl implements LaptopService {
         Brand b = brandRepository.findById(laptop.getBrandId()).orElse(new Brand());
         lt.setBrand(b);
 
-
-//        lt.setCartItems(laptop.getCartItems());
-//        lt.setListFaps(laptop.getListFaps() );
-//        lt.setOrderItems(laptop.getOrderItems());
-//        lt.setReviews(laptop.getReviews());
         laptopRepository.save(lt);
         return lt;
     }
@@ -208,9 +200,8 @@ public class LaptopServiceImpl implements LaptopService {
             lt.setSlug(laptop.getSlug() + "-" + timestamp);
             lt.setSummary(laptop.getSummary());
             lt.setImage(laptop.getImage());
-//            lt.setSku(laptop.getSku()); - không thay đổi SKU
-            lt.setPrice(laptop.getPrice());
             lt.setDiscount(laptop.getDiscount());
+            lt.setPrice(laptop.getPrice());
             lt.setQuantity(laptop.getQuantity());
             lt.setStatus(laptop.isStatus());
             Category c = categoryRepository.findById(laptop.getCategoryId()).orElse(new Category());
@@ -233,6 +224,18 @@ public class LaptopServiceImpl implements LaptopService {
         return null;
     }
 
+    public List<LaptopDto> getLaptopsByDiscountId(Long discountId) {
+        Discount discount = discountRepository.findById(discountId)
+                .orElseThrow(() -> new RuntimeException("Discount not found with ID: " + discountId));
+        Set<Laptop> laptops = discount.getLaptops();
+        List<LaptopDto> laptopDtos = new ArrayList<>();
+        for (Laptop laptop : laptops) {
+            LaptopDto laptopDto =  convertToLaptopDto(laptop);
+            laptopDtos.add(laptopDto);
+        }
+        return laptopDtos;
+    }
+
     private LaptopDto convertToLaptopDto(Laptop laptop) {
         LaptopDto dto = new LaptopDto();
         dto.setId(laptop.getId());
@@ -243,13 +246,19 @@ public class LaptopServiceImpl implements LaptopService {
         dto.setSummary(laptop.getSummary());
         dto.setImage(laptop.getImage());
         dto.setSku(laptop.getSku());
-        dto.setPrice(laptop.getPrice());
         dto.setDiscount(laptop.getDiscount());
+        dto.setPrice(laptop.getPrice());
+        Set<Discount> discountSet = laptop.getDiscounts();
+        Set<DiscountDto> discountDtoSet = new HashSet<>();
+        for(Discount discount : discountSet) {
+            DiscountDto ddto = convertToDiscountDto(discount);
+            discountDtoSet.add(ddto);
+        }
+        dto.setDiscountDtoSet(discountDtoSet);
         dto.setQuantity(laptop.getQuantity());
         dto.setStatus(laptop.isStatus());
         dto.setCategoryId(laptop.getCategory().getId());
         dto.setBrandId(laptop.getBrand().getId());
-
         Set<Metadata> metadataSet = laptop.getListMetadata();
         Set<MetadataDto> metadataDtoSet = new HashSet<>();
         for (Metadata meta : metadataSet) {
@@ -268,6 +277,16 @@ public class LaptopServiceImpl implements LaptopService {
         dto.setContent(metadata.getContent());
         dto.setLaptop_id(metadata.getLaptop().getId());
         dto.setGroup_id(metadata.getMetadataGroup().getId());
+        return dto;
+    }
+
+    private DiscountDto convertToDiscountDto(Discount discount) {
+        DiscountDto dto = new DiscountDto();
+        dto.setId(discount.getId());
+        dto.setDescription(discount.getDescription());
+        dto.setCreateDate(discount.getCreateDate());
+        dto.setQuantity(discount.getQuantity());
+        dto.setStatus(discount.getStatus());
         return dto;
     }
 }
