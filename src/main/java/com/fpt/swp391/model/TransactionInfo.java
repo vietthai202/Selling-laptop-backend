@@ -30,4 +30,13 @@ public class TransactionInfo {
     private String creditDebitIndicator;
     @JsonProperty("runningBalance")
     private String runningBalance;
+
+    @JsonProperty("ofsAcctNo")
+    private String ofsAcctNo;
+    @JsonProperty("ofsAcctName")
+    private String ofsAcctName;
+    @JsonProperty("creditorBankNameVn")
+    private String creditorBankNameVn;
+    @JsonProperty("creditorBankNameEn")
+    private String creditorBankNameEn;
 }

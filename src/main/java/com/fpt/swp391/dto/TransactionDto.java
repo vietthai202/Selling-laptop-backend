@@ -1,17 +1,22 @@
 package com.fpt.swp391.dto;
 
-import com.fpt.swp391.model.Order;
-import com.fpt.swp391.model.StatusEnum;
-import com.fpt.swp391.model.User;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 import java.util.Date;
 
+@Setter
+@Getter
+@AllArgsConstructor
+@NoArgsConstructor
 public class TransactionDto {
     private Long id;
-    private StatusEnum status;
-    private Order order;
-    private User user;
     private String content;
+    private String status;
     private Date createdAt;
     private Date updatedAt;
+    private Long orderId;
+    private Long userId;
 }

@@ -20,7 +20,7 @@ public class TransactionServiceImpl implements TransactionService {
 
     public Transaction createTransaction(StatusEnum status, Order order, User user, String content) {
         Transaction transaction = new Transaction();
-        transaction.setStatus(StatusEnum.WAIT);
+        transaction.setStatus(status);
         transaction.setOrder(order);
         transaction.setUser(user);
         transaction.setContent(content);
