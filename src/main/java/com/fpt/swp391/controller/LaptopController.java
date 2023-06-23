@@ -1,8 +1,10 @@
 package com.fpt.swp391.controller;
 
+import com.fpt.swp391.dto.DiscountDto;
 import com.fpt.swp391.dto.LaptopDto;
 import com.fpt.swp391.exceptions.ApiExceptionResponse;
 import com.fpt.swp391.model.Laptop;
+import com.fpt.swp391.service.DiscountService;
 import com.fpt.swp391.service.LaptopService;
 import com.fpt.swp391.utils.ApiSuccessResponse;
 import org.springframework.data.domain.Page;
@@ -17,9 +19,11 @@ import java.util.List;
 @RequestMapping("/laptop")
 public class LaptopController {
     private final LaptopService laptopService;
+    private final DiscountService discountService;
 
-    public LaptopController(LaptopService laptopService) {
+    public LaptopController(LaptopService laptopService, DiscountService discountService) {
         this.laptopService = laptopService;
+        this.discountService = discountService;
     }
 
     @GetMapping("/list")
@@ -31,7 +35,7 @@ public class LaptopController {
     @GetMapping("/listLaptopWithStatus")
     public ResponseEntity<?> listAllLaptopWithStatus() {
         List<LaptopDto> list = laptopService.listAllLaptopWithStatus();
-        if(list.size() > 0) {
+        if (list.size() > 0) {
             return ResponseEntity.status(HttpStatus.OK).body(list);
         }
         ApiExceptionResponse response = new ApiExceptionResponse("List fail", HttpStatus.NO_CONTENT, LocalDateTime.now());
@@ -39,10 +43,10 @@ public class LaptopController {
     }
 
     @PutMapping("/onOffLaptop/{id}")
-    public ResponseEntity<?> updateOnOffLaptop(@PathVariable Long id){
+    public ResponseEntity<?> updateOnOffLaptop(@PathVariable Long id) {
         LaptopDto laptop = laptopService.findById(id);
         laptop.setStatus(!laptop.isStatus());
-        LaptopDto lt = laptopService.updateLaptop(id,laptop);
+        LaptopDto lt = laptopService.updateLaptop(id, laptop);
         if (lt != null) {
             return ResponseEntity.status(HttpStatus.OK).body(lt);
         }
@@ -114,5 +118,36 @@ public class LaptopController {
         }
         ApiExceptionResponse response = new ApiExceptionResponse("Update Fail!", HttpStatus.BAD_REQUEST, LocalDateTime.now());
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
+    }
+
+    @GetMapping("/{laptopId}/discounts")
+    public ResponseEntity<?> getDiscountsByLaptopId(@PathVariable Long laptopId) {
+        List<DiscountDto> list = discountService.getDiscountsByLaptopId(laptopId);
+        if (list.size() > 0) {
+            return ResponseEntity.status(HttpStatus.OK).body(list);
+        }
+        ApiExceptionResponse response = new ApiExceptionResponse("List fail", HttpStatus.NO_CONTENT, LocalDateTime.now());
+        return ResponseEntity.status(HttpStatus.NO_CONTENT).body(response);
+    }
+
+    @GetMapping("/discount/{discountId}")
+    public ResponseEntity<List<LaptopDto>> getLaptopsByDiscountId(@PathVariable Long discountId) {
+        List<LaptopDto> laptopsDto = laptopService.getLaptopsByDiscountId(discountId);
+        return ResponseEntity.ok(laptopsDto);
+    }
+
+    private LaptopDto convertToDto(Laptop laptop) {
+        LaptopDto laptopDto = new LaptopDto();
+        laptopDto.setId(laptop.getId());
+        laptopDto.setTitle(laptop.getTitle());
+        laptopDto.setMetaTitle(laptop.getMetaTitle());
+        laptopDto.setSlug(laptop.getSlug());
+        laptopDto.setSummary(laptop.getSummary());
+        laptopDto.setImage(laptop.getImage());
+        laptopDto.setSku(laptop.getSku());
+        laptopDto.setPrice(laptop.getPrice());
+        laptopDto.setQuantity(laptop.getQuantity());
+        laptopDto.setStatus(laptop.isStatus());
+        return laptopDto;
     }
 }

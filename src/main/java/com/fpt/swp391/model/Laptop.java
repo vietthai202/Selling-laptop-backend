@@ -37,6 +37,8 @@ public class Laptop {
     @OneToMany(mappedBy = "laptop")
     private Set<Metadata> listMetadata;
     @ManyToMany(mappedBy = "laptops")
+    private Set<Discount> discounts = new HashSet<>();
+    @ManyToMany(mappedBy = "laptops")
     private Set<Tag> tags = new HashSet<>();
     @ManyToOne
     @JoinColumn(name = "category_id", nullable = false)

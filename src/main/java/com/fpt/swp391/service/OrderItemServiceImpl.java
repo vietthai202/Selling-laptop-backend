@@ -69,14 +69,16 @@ public class OrderItemServiceImpl implements OrderItemService {
                         if (existingOrderItemOptional.isPresent()) {
                             OrderItem existingOrderItem = existingOrderItemOptional.get();
                             existingOrderItem.setQuantity(existingOrderItem.getQuantity() + Integer.parseInt(quantities[i]));
-                            existingOrderItem.setPrice(existingOrderItem.getQuantity() * existingOrderItem.getLaptop().getPrice());
+                            Float newPrice= existingOrderItem.getLaptop().getPrice() - (existingOrderItem.getLaptop().getPrice() * existingOrderItem.getLaptop().getDiscount() / 100);
+                            existingOrderItem.setPrice(existingOrderItem.getQuantity() * newPrice);
                             orderItemRepository.save(existingOrderItem);
                         } else {
                             OrderItem newOrderItem = new OrderItem();
                             newOrderItem.setOrder(order);
                             newOrderItem.setLaptop(l);
                             newOrderItem.setQuantity(Integer.parseInt(quantities[i]));
-                            newOrderItem.setPrice(newOrderItem.getQuantity() * newOrderItem.getLaptop().getPrice());
+                            Float newPrice= newOrderItem.getLaptop().getPrice() - (newOrderItem.getLaptop().getPrice() * newOrderItem.getLaptop().getDiscount() / 100);
+                            newOrderItem.setPrice(newOrderItem.getQuantity() * newPrice);
                             order.getOrderItems().add(newOrderItem);
                             orderItemRepository.save(newOrderItem);
                         }

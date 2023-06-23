@@ -1,5 +1,6 @@
 package com.fpt.swp391.dto;
 
+import com.fpt.swp391.model.Discount;
 import lombok.*;
 
 import javax.persistence.*;
@@ -19,8 +20,9 @@ public class LaptopDto {
     private String summary;
     private String image;
     private String sku;
-    private Float price;
     private Float discount;
+    private Float price;
+    private Set<DiscountDto> discountDtoSet;
     private int quantity;
     private boolean status;
     private Long categoryId;
