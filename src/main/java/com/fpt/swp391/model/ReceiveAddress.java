@@ -10,20 +10,16 @@ import javax.persistence.*;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-@Table(name = "reviews")
-public class Review {
+@Table(name="receive_address")
+public class ReceiveAddress {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    private String title;
-    private String content;
-    private boolean isEnable;
-    private int rating;
-    @ManyToOne
-    @JoinColumn(name = "laptop_id", nullable = false)
-    private Laptop laptop;
-
     @ManyToOne
     @JoinColumn(name = "user_id", nullable = false)
     private User user;
+    private String name;
+    private String phone;
+    private String address;
+    private boolean defaultaddress;
 }
