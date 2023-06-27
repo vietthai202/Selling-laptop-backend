@@ -36,4 +36,8 @@ public class User {
 	private Set<Transaction> transactions;
 	@OneToMany(mappedBy = "user")
 	private Set<Laptop> laptops;
+	@OneToMany(mappedBy = "user")
+	private Set<ReceiveAddress> rcaddress;
+	@OneToMany(mappedBy = "user")
+	private Set<Review> reviews;
 }

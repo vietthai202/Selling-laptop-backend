@@ -21,7 +21,7 @@ public class Laptop {
     @JoinColumn(name="user_id", nullable=false)
     private User user;
     private String title;
-    @Column(columnDefinition = "VARCHAR(1000)")
+    @Column(columnDefinition = "TEXT")
     private String metaTitle;
     private String slug;
     @Column(columnDefinition = "TEXT")
