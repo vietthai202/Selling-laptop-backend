@@ -31,7 +31,7 @@ public class CheckBankController {
     @GetMapping("/all")
     public ResponseEntity<?> checkBank() {
         try {
-            String url = "http://mb.olygon.pro/";
+            String url = "https://icheck.id.vn/checkbank.php";
 
             // Mở kết nối đến URL và tạo đối tượng BufferedReader
             URL jsonUrl = new URL(url);
@@ -53,20 +53,20 @@ public class CheckBankController {
 
             for (TransactionInfo ti: transactionInfos) {
                 if(ti.getDescription().contains("SWPORDER")) {
-                    String regex = "\\d+";
+                    String regex = "SWPORDER(\\d+)";
                     Pattern pattern = Pattern.compile(regex);
                     Matcher matcher = pattern.matcher(ti.getDescription());
                     String number = "";
                     while (matcher.find()) {
-                        number = matcher.group();
-                        System.out.println(number);
-                    }
-
-                    Long oid = Long.parseLong(number);
-                    Order o = orderService.getOrderbyId(oid);
-                    if(o != null) {
-                        if(o.getTotalPrice() <= Float.parseFloat(ti.getAmount())) {
-                            orderService.updateOrderStatus(o.getId(), StatusEnum.DONE);
+                        number = matcher.group(1);
+                        if(number != "") {
+                            Long oid = Long.parseLong(number);
+                            Order o = orderService.getOrderbyId(oid);
+                            if(o != null) {
+                                if(o.getTotalPrice() <= Float.parseFloat(ti.getAmount())) {
+                                    orderService.updateOrderStatus(o.getId(), StatusEnum.DONE);
+                                }
+                            }
                         }
                     }
                 }

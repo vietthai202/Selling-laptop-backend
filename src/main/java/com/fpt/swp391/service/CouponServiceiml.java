@@ -36,6 +36,15 @@ public class CouponServiceiml implements CouponService {
     }
 
     @Override
+    public Coupon findByName(String name) {
+        Coupon coupon = couponRepository.findCouponByName(name);
+        if (coupon != null) {
+            return coupon;
+        }
+        return null;
+    }
+
+    @Override
     public List<Coupon> searchCouponByName(String name) {
         try {
             List<Coupon> list = couponRepository.findByNameContainingIgnoreCase(name);

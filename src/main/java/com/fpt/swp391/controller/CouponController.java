@@ -76,6 +76,16 @@ public class CouponController {
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
     }
 
+    @GetMapping("/getByName/{name}")
+    public ResponseEntity<?> getCouponByName(@PathVariable String name) {
+        Coupon co = couponService.findByName(name);
+        if (co != null) {
+            return ResponseEntity.status(HttpStatus.OK).body(co);
+        }
+        ApiExceptionResponse response = new ApiExceptionResponse("Update Fail!", HttpStatus.BAD_REQUEST, LocalDateTime.now());
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
+    }
+
     @GetMapping("/search")
     public ResponseEntity<?> searchCouponByName(@RequestParam String name) {
         List<Coupon> lstCo;
