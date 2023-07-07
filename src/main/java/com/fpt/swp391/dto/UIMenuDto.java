@@ -18,9 +18,11 @@ public class UIMenuDto {
     private Long id;
     private String name;
     private String url;
+    private String imageUrl;
     private int sortOrder;
     private String icon;
     private boolean enable;
     private Long parent_id;
+    private String menuType; // header // slide // footer
     private Set<UISubMenuDto> uiSubmenus;
 }

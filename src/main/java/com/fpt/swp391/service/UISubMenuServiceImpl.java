@@ -3,18 +3,18 @@ package com.fpt.swp391.service;
 import com.fpt.swp391.dto.UISubMenuDto;
 import com.fpt.swp391.model.UIMenu;
 import com.fpt.swp391.model.UISubmenu;
-import com.fpt.swp391.repository.MenuRepository;
+import com.fpt.swp391.repository.UIMenuRepository;
 import com.fpt.swp391.repository.SubMenuRepository;
 import org.springframework.stereotype.Service;
 
 @Service
 public class UISubMenuServiceImpl implements UISubMenuService{
     private final SubMenuRepository subMenuRepository;
-    private final MenuRepository menuRepository;
+    private final UIMenuRepository UIMenuRepository;
 
-    public UISubMenuServiceImpl(SubMenuRepository subMenuRepository, MenuRepository menuRepository) {
+    public UISubMenuServiceImpl(SubMenuRepository subMenuRepository, UIMenuRepository UIMenuRepository) {
         this.subMenuRepository = subMenuRepository;
-        this.menuRepository = menuRepository;
+        this.UIMenuRepository = UIMenuRepository;
     }
 
     @Override
@@ -25,7 +25,7 @@ public class UISubMenuServiceImpl implements UISubMenuService{
         sub.setIcon(uiSubmenu.getIcon());
         sub.setSortOrder(uiSubmenu.getSortOrder());
         sub.setEnable(uiSubmenu.isEnable());
-        UIMenu m = menuRepository.findById(uiSubmenu.getMenu_id()).orElse(null);
+        UIMenu m = UIMenuRepository.findById(uiSubmenu.getMenu_id()).orElse(null);
         sub.setMenu(m);
         subMenuRepository.save(sub);
         return sub;

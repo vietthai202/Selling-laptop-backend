@@ -11,5 +11,7 @@ public interface UIMenuService {
     UIMenu createMenu(UIMenu uiMenu);
     UIMenu updateMenu(UIMenu uiMenu);
     void updateMenuPositions(List<UIMenu> menus);
-    void deleteMenu(Long id);
+    boolean deleteMenu(Long id);
+    List<UIMenuDto> listAllSlide();
+    List<UIMenuDto> listAllSlideWithStatus();
 }
