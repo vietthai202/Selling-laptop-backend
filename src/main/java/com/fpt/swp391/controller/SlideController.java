@@ -1,8 +1,9 @@
 package com.fpt.swp391.controller;
 
+import com.fpt.swp391.dto.UIMenuDto;
 import com.fpt.swp391.exceptions.ApiExceptionResponse;
-import com.fpt.swp391.model.Slide;
-import com.fpt.swp391.service.SlideService;
+import com.fpt.swp391.model.UIMenu;
+import com.fpt.swp391.service.UIMenuService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -14,15 +15,16 @@ import java.util.List;
 @RestController
 @RequestMapping("/slide")
 public class SlideController {
-    private final SlideService slideService;
+    private final UIMenuService uiMenuService;
 
-    public SlideController(SlideService slideService) {
-        this.slideService = slideService;
+    public SlideController(UIMenuService uiMenuService) {
+        this.uiMenuService = uiMenuService;
     }
 
     @PostMapping("/create")
-    public ResponseEntity<?> creSlide(@RequestBody Slide slide) {
-        Slide sl = slideService.createSlide(slide);
+    public ResponseEntity<?> creSlide(@RequestBody UIMenu menu) {
+        menu.setMenuType("SLIDE");
+        UIMenu sl = uiMenuService.createMenu(menu);
         if (sl != null) {
             return ResponseEntity.status(HttpStatus.OK).body(sl);
         }
@@ -31,51 +33,43 @@ public class SlideController {
     }
 
     @GetMapping("/list")
-    public ResponseEntity<List<Slide>> getAllSlide() {
-        final List<Slide> listSlide = slideService.listAllSlide();
-        List<Slide> slides = new ArrayList<>();
-        for (Slide slide : listSlide) {
-            Slide s = new Slide();
-            s.setId(slide.getId());
-            s.setName(slide.getName());
-            s.setImage(slide.getImage());
-            s.setStatus(slide.isStatus());
-            s.setUrl(slide.getUrl());
-            slides.add(s);
+    public ResponseEntity<?> getAllSlide() {
+        final List<UIMenuDto> listSlide = uiMenuService.listAllSlide();
+        if(listSlide != null && listSlide.size() > 0) {
+           return ResponseEntity.status(HttpStatus.OK).body(listSlide);
         }
-        return ResponseEntity.status(HttpStatus.OK).body(slides);
+        ApiExceptionResponse response = new ApiExceptionResponse("Fetch Fail!", HttpStatus.OK, LocalDateTime.now());
+        return ResponseEntity.status(HttpStatus.OK).body(response);
     }
 
     @DeleteMapping("/delete/{id}")
-    public ResponseEntity<ApiExceptionResponse> deleteSlide(@PathVariable Long id) {
-        Slide sl = slideService.findById(id);
-        ApiExceptionResponse response;
-        if (sl != null) {
-            boolean isDelete = slideService.deleteSlide(sl.getId());
-            if (isDelete) {
-                response = new ApiExceptionResponse("Delete Success!", HttpStatus.OK, LocalDateTime.now());
-                return ResponseEntity.status(HttpStatus.OK).body(response);
-            }
+    public ResponseEntity<?> deleteSlide(@PathVariable Long id) {
+        boolean isDelete = uiMenuService.deleteMenu(id);
+        if (isDelete) {
+            return ResponseEntity.status(HttpStatus.OK).build();
         }
-        response = new ApiExceptionResponse("Delete Fail!", HttpStatus.OK, LocalDateTime.now());
+        ApiExceptionResponse response = new ApiExceptionResponse("Delete Fail!", HttpStatus.OK, LocalDateTime.now());
         return ResponseEntity.status(HttpStatus.OK).body(response);
     }
 
     @PutMapping("/edit/{id}")
-    public ResponseEntity<ApiExceptionResponse> updateSlide(@PathVariable Long id, @RequestBody Slide slide) {
-        Slide sl = slideService.updateSlide(id, slide);
-        ApiExceptionResponse response;
-        if (sl != null) {
-            response = new ApiExceptionResponse("Update slide successfully!", HttpStatus.OK, LocalDateTime.now());
-            return ResponseEntity.status(HttpStatus.OK).body(response);
+    public ResponseEntity<?> updateSlide(@PathVariable Long id, @RequestBody UIMenuDto dto) {
+        UIMenu ui = uiMenuService.getMenuById(id);
+        ui.setName(dto.getName());
+        ui.setEnable(dto.isEnable());
+        ui.setUrl(dto.getUrl());
+        ui.setImageUrl(dto.getImageUrl());
+        UIMenu uiUpdated = uiMenuService.updateMenu(ui);
+        if(uiUpdated !=null) {
+            return ResponseEntity.status(HttpStatus.OK).build();
         }
-        response = new ApiExceptionResponse("Update slide fail!", HttpStatus.BAD_REQUEST, LocalDateTime.now());
+        ApiExceptionResponse response = new ApiExceptionResponse("Update slide fail!", HttpStatus.BAD_REQUEST, LocalDateTime.now());
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
     }
 
     @GetMapping("/get/{id}")
     public ResponseEntity<?> getSlideById(@PathVariable Long id) {
-        Slide sl = slideService.findById(id);
+        UIMenu sl = uiMenuService.getMenuById(id);
         if (sl != null) {
             return ResponseEntity.status(HttpStatus.OK).body(sl);
         }
@@ -85,8 +79,8 @@ public class SlideController {
 
     @GetMapping("/getAllWithStatus")
     public ResponseEntity<?> getAllSlideWithStatus() {
-        List<Slide> sl = slideService.listAllSlideWithStatus();
-        if (sl != null) {
+        List<UIMenuDto> sl = uiMenuService.listAllSlideWithStatus();
+        if (sl != null && sl.size() > 0) {
             return ResponseEntity.status(HttpStatus.OK).body(sl);
         }
         ApiExceptionResponse response = new ApiExceptionResponse("Get Fail!", HttpStatus.BAD_REQUEST, LocalDateTime.now());
@@ -95,9 +89,9 @@ public class SlideController {
 
     @PutMapping("/onOffSlide/{id}")
     public ResponseEntity<?> updateOnOffSlide(@PathVariable Long id) {
-        Slide sl = slideService.findById(id);
-        sl.setStatus(!sl.isStatus());
-        Slide updated = slideService.updateSlide(id, sl);
+        UIMenu sl = uiMenuService.getMenuById(id);
+        sl.setEnable(!sl.isEnable());
+        UIMenu updated = uiMenuService.updateMenu(sl);
         if (updated != null) {
             return ResponseEntity.status(HttpStatus.OK).body(updated);
         }

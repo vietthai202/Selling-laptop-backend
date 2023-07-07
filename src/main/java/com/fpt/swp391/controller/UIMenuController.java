@@ -40,6 +40,7 @@ public class UIMenuController {
     @PostMapping("/create")
     public ResponseEntity<?> createMenu(@RequestBody UIMenu uiMenu) {
         try {
+            uiMenu.setMenuType("HEADER");
             UIMenu menu = uiMenuService.createMenu(uiMenu);
             if(menu != null) {
                 return ResponseEntity.status(HttpStatus.OK).body(menu);
