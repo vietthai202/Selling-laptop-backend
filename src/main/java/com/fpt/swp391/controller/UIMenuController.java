@@ -2,7 +2,6 @@ package com.fpt.swp391.controller;
 
 import com.fpt.swp391.dto.UIMenuDto;
 import com.fpt.swp391.exceptions.ApiExceptionResponse;
-import com.fpt.swp391.model.Transaction;
 import com.fpt.swp391.model.UIMenu;
 import com.fpt.swp391.service.UIMenuService;
 import org.springframework.http.HttpStatus;
@@ -21,10 +20,10 @@ public class UIMenuController {
         this.uiMenuService = uiMenuService;
     }
 
-    @GetMapping("/list")
-    public ResponseEntity<?> getAllMenu() {
+    @GetMapping("/list/{type}")
+    public ResponseEntity<?> getAllMenu(@PathVariable String type) {
         try {
-            List<UIMenuDto> uiMenuList = uiMenuService.getAllMenus();
+            List<UIMenuDto> uiMenuList = uiMenuService.getAllMenus(type);
             if(uiMenuList != null) {
                 return ResponseEntity.status(HttpStatus.OK).body(uiMenuList);
             } else {
@@ -40,7 +39,6 @@ public class UIMenuController {
     @PostMapping("/create")
     public ResponseEntity<?> createMenu(@RequestBody UIMenu uiMenu) {
         try {
-            uiMenu.setMenuType("HEADER");
             UIMenu menu = uiMenuService.createMenu(uiMenu);
             if(menu != null) {
                 return ResponseEntity.status(HttpStatus.OK).body(menu);

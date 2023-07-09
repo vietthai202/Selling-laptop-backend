@@ -36,7 +36,7 @@ public class UIMenuServiceImpl implements UIMenuService {
     }
 
     @Override
-    public List<UIMenuDto> getAllMenus() {
+    public List<UIMenuDto> getAllMenus(String type) {
         try {
             List<UIMenuDto> uiMenus = uiMenuRepository.findAllByOrderBySortOrderAsc().stream()
                     .map(menu -> convertToMenuDto(menu))
@@ -45,7 +45,7 @@ public class UIMenuServiceImpl implements UIMenuService {
                 List<UIMenuDto> listResult = new ArrayList<>();
                 for (UIMenuDto dto : uiMenus) {
                     if(dto.getMenuType() != null) {
-                        if (dto.getMenuType().equals("HEADER")) {
+                        if (dto.getMenuType().equals(type)) {
                             listResult.add(dto);
                         }
                     }
