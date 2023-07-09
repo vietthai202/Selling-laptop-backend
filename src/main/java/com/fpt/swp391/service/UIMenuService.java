@@ -7,7 +7,7 @@ import java.util.List;
 
 public interface UIMenuService {
     UIMenu getMenuById(Long id);
-    List<UIMenuDto> getAllMenus();
+    List<UIMenuDto> getAllMenus(String type);
     UIMenu createMenu(UIMenu uiMenu);
     UIMenu updateMenu(UIMenu uiMenu);
     void updateMenuPositions(List<UIMenu> menus);
