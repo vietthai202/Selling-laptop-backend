@@ -38,8 +38,8 @@ public class SlideController {
         if(listSlide != null && listSlide.size() > 0) {
            return ResponseEntity.status(HttpStatus.OK).body(listSlide);
         }
-        ApiExceptionResponse response = new ApiExceptionResponse("Fetch Fail!", HttpStatus.OK, LocalDateTime.now());
-        return ResponseEntity.status(HttpStatus.OK).body(response);
+        ApiExceptionResponse response = new ApiExceptionResponse("Fetch Fail!", HttpStatus.NO_CONTENT, LocalDateTime.now());
+        return ResponseEntity.status(HttpStatus.NO_CONTENT).body(response);
     }
 
     @DeleteMapping("/delete/{id}")
