@@ -23,10 +23,12 @@ public class Blog {
     private String name;
     @Column(columnDefinition = "TEXT")
     private String content;
+    @Column(columnDefinition = "VARCHAR(1000)")
     private  String image;
     private Date createdAt;
     @Column(columnDefinition = "VARCHAR(1000)")
     private String shortContent;
+    @Column(columnDefinition = "VARCHAR(1000)")
     private String slug;
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "blog_category_id", nullable = false)

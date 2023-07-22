@@ -15,6 +15,7 @@ public class FAQs {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+    @Column(columnDefinition = "VARCHAR(1000)")
     private String title;
     @Column(columnDefinition = "VARCHAR(1000)")
     private String content;

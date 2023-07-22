@@ -20,9 +20,11 @@ public class Laptop {
     @ManyToOne
     @JoinColumn(name="user_id", nullable=false)
     private User user;
+    @Column(columnDefinition = "VARCHAR(1000)")
     private String title;
     @Column(columnDefinition = "TEXT")
     private String metaTitle;
+    @Column(columnDefinition = "VARCHAR(1000)")
     private String slug;
     @Column(columnDefinition = "TEXT")
     private String summary;
@@ -32,7 +34,6 @@ public class Laptop {
     private Float price;
     private Float discount;
     private int quantity;
-
     private boolean status;
     @OneToMany(mappedBy = "laptop")
     private Set<Metadata> listMetadata;

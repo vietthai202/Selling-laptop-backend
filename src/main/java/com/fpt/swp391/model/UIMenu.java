@@ -16,8 +16,11 @@ public class UIMenu {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+    @Column(columnDefinition = "VARCHAR(1000)")
     private String name;
+    @Column(columnDefinition = "VARCHAR(1000)")
     private String url;
+    @Column(columnDefinition = "VARCHAR(1000)")
     private String imageUrl;
     private int sortOrder;
     private String icon;

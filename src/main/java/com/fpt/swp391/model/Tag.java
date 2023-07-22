@@ -17,10 +17,10 @@ public class Tag {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-
+    @Column(columnDefinition = "VARCHAR(1000)")
     private String name;
+    @Column(columnDefinition = "VARCHAR(1000)")
     private String slug;
-
     @ManyToMany(cascade = { CascadeType.ALL })
     @JoinTable(
             name = "laptop_tag",

@@ -16,7 +16,9 @@ public class BlogCategory {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+    @Column(columnDefinition = "VARCHAR(1000)")
     private String name;
+    @Column(columnDefinition = "TEXT")
     private String content;
     @OneToMany(mappedBy = "blogCategory")
     private Set<Blog> blogs;
