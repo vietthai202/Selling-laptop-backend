@@ -24,6 +24,7 @@ public class Transaction {
     @ManyToOne
     @JoinColumn(name = "user_id", nullable = false)
     private User user;
+    @Column(columnDefinition = "VARCHAR(1000)")
     private String content;
     private Date createdAt;
     private Date updatedAt;

@@ -18,6 +18,7 @@ public class LaptopImg {
     private Long id;
     @Column(columnDefinition = "VARCHAR(1000)")
     private String image;
+    @Column(columnDefinition = "VARCHAR(1000)")
     private String url;
     @ManyToOne()
     @JoinColumn(name = "laptop_id",nullable = false)

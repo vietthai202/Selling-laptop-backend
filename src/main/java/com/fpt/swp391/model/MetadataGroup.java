@@ -16,6 +16,7 @@ public class MetadataGroup {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+    @Column(columnDefinition = "VARCHAR(1000)")
     private String name;
     @OneToMany(mappedBy = "metadataGroup")
     private Set<Metadata> metadatas;

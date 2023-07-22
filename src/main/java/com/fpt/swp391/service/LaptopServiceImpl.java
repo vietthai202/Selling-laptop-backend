@@ -144,12 +144,9 @@ public class LaptopServiceImpl implements LaptopService {
         Laptop lt = new Laptop();
         lt.setTitle(laptop.getTitle());
         lt.setMetaTitle(laptop.getMetaTitle());
-        Date date = new Date();
-        long timestamp = date.getTime();
-        lt.setSlug(laptop.getSlug() + "-" + timestamp);
         lt.setSummary(laptop.getSummary());
         lt.setImage(laptop.getImage());
-        lt.setSku(String.valueOf(timestamp));
+        lt.setSku(laptop.getSku());
         lt.setPrice(laptop.getPrice());
         lt.setDiscount(laptop.getDiscount());
         lt.setQuantity(laptop.getQuantity());
@@ -160,10 +157,13 @@ public class LaptopServiceImpl implements LaptopService {
         Category c = categoryRepository.findById(laptop.getCategoryId()).orElse(null);
         lt.setCategory(c);
 
-        Brand b = brandRepository.findById(laptop.getBrandId()).orElse(new Brand());
+        Brand b = brandRepository.findById(laptop.getBrandId()).orElse(null);
         lt.setBrand(b);
 
         laptopRepository.save(lt);
+        lt.setSlug(lt.getSlug() + "-" + lt.getId());
+        laptopRepository.save(lt);
+
         return lt;
     }
 
@@ -195,9 +195,9 @@ public class LaptopServiceImpl implements LaptopService {
             lt.setId(laptop.getId());
             lt.setTitle(laptop.getTitle());
             lt.setMetaTitle(laptop.getMetaTitle());
-            Date date = new Date();
-            long timestamp = date.getTime();
-            lt.setSlug(laptop.getSlug() + "-" + timestamp);
+            if(!lt.getSlug().equals(laptop.getSlug())) {
+                lt.setSlug(laptop.getSlug() + "-" + laptop.getId());
+            }
             lt.setSummary(laptop.getSummary());
             lt.setImage(laptop.getImage());
             lt.setDiscount(laptop.getDiscount());
@@ -230,7 +230,7 @@ public class LaptopServiceImpl implements LaptopService {
         Set<Laptop> laptops = discount.getLaptops();
         List<LaptopDto> laptopDtos = new ArrayList<>();
         for (Laptop laptop : laptops) {
-            LaptopDto laptopDto =  convertToLaptopDto(laptop);
+            LaptopDto laptopDto = convertToLaptopDto(laptop);
             laptopDtos.add(laptopDto);
         }
         return laptopDtos;
@@ -250,7 +250,7 @@ public class LaptopServiceImpl implements LaptopService {
         dto.setPrice(laptop.getPrice());
         Set<Discount> discountSet = laptop.getDiscounts();
         Set<DiscountDto> discountDtoSet = new HashSet<>();
-        for(Discount discount : discountSet) {
+        for (Discount discount : discountSet) {
             DiscountDto ddto = convertToDiscountDto(discount);
             discountDtoSet.add(ddto);
         }

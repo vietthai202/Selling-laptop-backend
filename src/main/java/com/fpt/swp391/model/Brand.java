@@ -16,7 +16,9 @@ public class Brand {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+    @Column(columnDefinition = "VARCHAR(1000)")
     private String name;
+    @Column(columnDefinition = "VARCHAR(1000)")
     private String description;
     @Column(columnDefinition = "VARCHAR(1000)")
     private String image;

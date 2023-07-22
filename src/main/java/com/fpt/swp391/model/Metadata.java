@@ -17,6 +17,7 @@ public class Metadata {
     private Long id;
     // mã icon
     private String icon;
+    @Column(columnDefinition = "VARCHAR(1000)")
     private String title;
     @Column(columnDefinition = "VARCHAR(1000)")
     private String content;

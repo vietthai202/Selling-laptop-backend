@@ -20,6 +20,7 @@ public class ReceiveAddress {
     private User user;
     private String name;
     private String phone;
+    @Column(columnDefinition = "VARCHAR(1000)")
     private String address;
     private boolean defaultaddress;
 }

@@ -16,6 +16,7 @@ public class Coupon {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private String code;
+    @Column(columnDefinition = "VARCHAR(1000)")
     private String name;
     private Float discount;
 
