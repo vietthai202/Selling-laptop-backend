@@ -151,7 +151,6 @@ public class LaptopServiceImpl implements LaptopService {
         lt.setDiscount(laptop.getDiscount());
         lt.setQuantity(laptop.getQuantity());
         lt.setStatus(laptop.isStatus());
-
         User u = userRepository.findByUsername(laptop.getUserName());
         lt.setUser(u);
         Category c = categoryRepository.findById(laptop.getCategoryId()).orElse(null);
@@ -161,7 +160,7 @@ public class LaptopServiceImpl implements LaptopService {
         lt.setBrand(b);
 
         laptopRepository.save(lt);
-        lt.setSlug(lt.getSlug() + "-" + lt.getId());
+        lt.setSlug(laptop.getSlug() + "-" + lt.getId());
         laptopRepository.save(lt);
 
         return lt;
