@@ -8,7 +8,9 @@ import java.util.List;
 public interface LaptopImgService {
     LaptopImgDto create(LaptopImgDto laptopImg);
 
-    List<LaptopImgDto> listAllImg();
+    void createMultiple(LaptopImgDto laptopImg);
+
+    List<LaptopImgDto> listAllImg(Long id);
 
     boolean deleteImgById(Long id);
 

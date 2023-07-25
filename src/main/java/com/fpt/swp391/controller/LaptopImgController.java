@@ -31,6 +31,17 @@ public class LaptopImgController {
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
     }
 
+    @PostMapping("/create-multiple")
+    public ResponseEntity<?> createMultipleImageForLaptop(@RequestBody LaptopImgDto laptopImg) {
+        try {
+            laptopImgService.createMultiple(laptopImg);
+            return ResponseEntity.status(HttpStatus.OK).build();
+        } catch (Exception e) {
+            final ApiExceptionResponse response = new ApiExceptionResponse("Not Successful", HttpStatus.BAD_REQUEST, LocalDateTime.now());
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
+        }
+    }
+
     @DeleteMapping("/delete/{id}")
     public ResponseEntity<?> deleteLaptopImg(@PathVariable Long id) {
         LaptopImg img = laptopImgService.findById(id);
@@ -45,9 +56,14 @@ public class LaptopImgController {
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
     }
 
-    @GetMapping("/list")
-    public ResponseEntity<List<LaptopImgDto>> getAll() {
-        final List<LaptopImgDto> listImg = laptopImgService.listAllImg();
-        return ResponseEntity.status(HttpStatus.OK).body(listImg);
+    @GetMapping("/list/{id}")
+    public ResponseEntity<?> getAllByLaptopId(@PathVariable Long id) {
+        final List<LaptopImgDto> listImg = laptopImgService.listAllImg(id);
+        if(listImg.size() > 0) {
+            return ResponseEntity.status(HttpStatus.OK).body(listImg);
+        } else {
+            final ApiExceptionResponse response = new ApiExceptionResponse("Not Successful", HttpStatus.BAD_REQUEST, LocalDateTime.now());
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
+        }
     }
 }

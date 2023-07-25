@@ -16,10 +16,8 @@ public class LaptopImg {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    @Column(columnDefinition = "VARCHAR(1000)")
+    @Column(columnDefinition = "TEXT")
     private String image;
-    @Column(columnDefinition = "VARCHAR(1000)")
-    private String url;
     @ManyToOne()
     @JoinColumn(name = "laptop_id",nullable = false)
     private Laptop laptop;
