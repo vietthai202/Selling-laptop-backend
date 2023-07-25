@@ -70,7 +70,7 @@ public class LaptopController {
             @RequestParam(required = false) String priceOrder,
             @RequestParam(value = "minPrice", required = false) Float minPrice,
             @RequestParam(value = "maxPrice", required = false) Float maxPrice,
-            @RequestParam(defaultValue = "12") int pageSize,
+            @RequestParam(defaultValue = "6") int pageSize,
             @RequestParam(defaultValue = "1") int pageNumber) {
         if (minPrice == 0.0 || minPrice == null) minPrice = 0.0F;
         if (maxPrice == 0.0 || maxPrice == null) maxPrice = 9999999999F;
