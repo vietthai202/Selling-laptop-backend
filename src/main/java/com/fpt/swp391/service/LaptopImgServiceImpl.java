@@ -27,7 +27,6 @@ public class LaptopImgServiceImpl implements LaptopImgService {
         Laptop l = laptopRepository.findById(laptopImg.getLaptop_id()).orElse(null);
         if(l != null) {
             img.setImage(laptopImg.getImage());
-            img.setUrl(laptopImg.getUrl());
             img.setLaptop(l);
             laptopImgRepository.save(img);
             LaptopImgDto dto = convertToLaptopImgDto(img);
@@ -37,15 +36,28 @@ public class LaptopImgServiceImpl implements LaptopImgService {
     }
 
     @Override
-    public List<LaptopImgDto> listAllImg() {
+    public void createMultiple(LaptopImgDto laptopImg) {
+        Laptop l = laptopRepository.findById(laptopImg.getLaptop_id()).orElse(null);
+        if(l != null) {
+            String[] imgArray = laptopImg.getImage().split("##swp##");
+            for (int i = 0; i < imgArray.length; i++) {
+                LaptopImg img = new LaptopImg();
+                img.setImage(imgArray[i]);
+                img.setLaptop(l);
+                laptopImgRepository.save(img);
+            }
+        }
+    }
+
+    @Override
+    public List<LaptopImgDto> listAllImg(Long id) {
         try{
-            List<LaptopImg> img = laptopImgRepository.findAll();
+            List<LaptopImg> img = laptopImgRepository.findAllByLaptop_Id(id);
             List<LaptopImgDto> img1 = new ArrayList<>();
             for(LaptopImg l : img){
                 LaptopImgDto dto = new LaptopImgDto();
                 dto.setId(l.getId());
                 dto.setImage(l.getImage());
-                dto.setUrl(l.getUrl());
                 img1.add(dto);
             }
             return img1;
@@ -82,7 +94,6 @@ public class LaptopImgServiceImpl implements LaptopImgService {
         LaptopImgDto lt = new LaptopImgDto();
         lt.setId(laptopImg.getId());
         lt.setImage(laptopImg.getImage());
-        lt.setUrl(laptopImg.getUrl());
         lt.setLaptop_id(laptopImg.getLaptop().getId());
         return lt;
     }
