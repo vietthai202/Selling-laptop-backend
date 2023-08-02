@@ -26,6 +26,7 @@ public class User {
 	@Column(unique = true)
 	private String email;
 	private String address;
+	private String image;
 	@Enumerated(EnumType.STRING)
 	private UserRole userRole;
 	@OneToMany(mappedBy = "user")

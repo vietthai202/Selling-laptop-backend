@@ -187,7 +187,7 @@ public class UIMenuServiceImpl implements UIMenuService {
             List<UIMenu> list = uiMenuRepository.findAll();
             List<UIMenu> listResult = new ArrayList<>();
             for (UIMenu u : list) {
-                if (u.getMenuType().equals("SLIDE")) {
+                if (u.getMenuType() != null && u.getMenuType().equals("SLIDE")) {
                     listResult.add(u);
                 }
             }

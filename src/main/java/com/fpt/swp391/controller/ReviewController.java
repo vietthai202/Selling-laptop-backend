@@ -1,6 +1,7 @@
 package com.fpt.swp391.controller;
 
 import com.fpt.swp391.dto.ReviewDto;
+import com.fpt.swp391.dto.ReviewRequestDto;
 import com.fpt.swp391.exceptions.ApiExceptionResponse;
 import com.fpt.swp391.model.Review;
 import com.fpt.swp391.service.ReviewService;
@@ -65,6 +66,18 @@ public class ReviewController {
         final ApiExceptionResponse response = new ApiExceptionResponse("Không có dữ liệu!", HttpStatus.NO_CONTENT, LocalDateTime.now());
         return ResponseEntity.status(HttpStatus.NO_CONTENT).body(response);
     }
+
+    @GetMapping("/get/{laptopId}")
+    public ResponseEntity<?> getAllBylaptop(@PathVariable Long laptopId) {
+        List<ReviewRequestDto> list = reviewService.getAll(laptopId);
+        if (list.size() > 0) {
+            return ResponseEntity.status(HttpStatus.OK).body(list);
+        }
+        final ApiExceptionResponse response = new ApiExceptionResponse("Không có dữ liệu!", HttpStatus.NO_CONTENT, LocalDateTime.now());
+        return ResponseEntity.status(HttpStatus.NO_CONTENT).body(response);
+    }
+
+
 
     @GetMapping("/getByLaptopId/{laptopId}")
     public ResponseEntity<?> getAllByLaptopId(@PathVariable Long laptopId) {

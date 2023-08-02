@@ -1,6 +1,7 @@
 package com.fpt.swp391.service;
 
 import com.fpt.swp391.dto.ReviewDto;
+import com.fpt.swp391.dto.ReviewRequestDto;
 import com.fpt.swp391.model.Review;
 
 import java.util.List;
@@ -19,4 +20,7 @@ public interface ReviewService {
     List<ReviewDto> listReviewByLaptopId(Long id);
 
     List<ReviewDto> listReviewByUserId(Long id);
+
+    List<ReviewRequestDto> getAll(Long laptopId);
+
 }

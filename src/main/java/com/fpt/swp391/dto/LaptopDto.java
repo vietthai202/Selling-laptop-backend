@@ -28,5 +28,6 @@ public class LaptopDto {
     private Long categoryId;
     private Long brandId;
     private Set<MetadataDto> metadataDtoSet;
+    private Set<ReviewDto> reviewDtoSet;
 }
 

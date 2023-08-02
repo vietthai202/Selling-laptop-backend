@@ -1,6 +1,7 @@
 package com.fpt.swp391.service;
 
 import com.fpt.swp391.dto.ReviewDto;
+import com.fpt.swp391.dto.ReviewRequestDto;
 import com.fpt.swp391.model.Laptop;
 import com.fpt.swp391.model.Review;
 import com.fpt.swp391.model.User;
@@ -11,6 +12,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 
 @Service
 public class ReviewServiceImpl implements ReviewService {
@@ -173,6 +175,18 @@ public class ReviewServiceImpl implements ReviewService {
         return null;
     }
 
+    @Override
+    public List<ReviewRequestDto> getAll(Long laptopId) {
+        Laptop lt = laptopRepository.findById(laptopId).orElse(null);
+        Set<Review> reviews = lt.getReviews();
+        List<ReviewRequestDto> listDto = new ArrayList<>();
+        for(Review rw : reviews){
+            ReviewRequestDto dto = convertToDto(rw);
+            listDto.add(dto);
+        }
+        return listDto;
+    }
+
     private ReviewDto convertReviewDto (Review review){
         ReviewDto rwdto = new ReviewDto();
         rwdto.setId(review.getId());
@@ -183,5 +197,12 @@ public class ReviewServiceImpl implements ReviewService {
         rwdto.setLaptop_id(review.getLaptop().getId());
         rwdto.setUser_id(review.getUser().getId());
         return rwdto;
+    }
+
+    private ReviewRequestDto convertToDto(Review review){
+        ReviewRequestDto dto = new ReviewRequestDto();
+        dto.setLaptop_id(review.getLaptop().getId());
+        dto.setAverageStar(review.getRating());
+        return dto;
     }
 }

@@ -69,6 +69,29 @@ public class UserController {
             dto.setUsername(user.getUsername());
             dto.setUserRole(user.getUserRole().name());
             dto.setAddress(user.getAddress());
+            dto.setImage(user.getImage());
+
+            return ResponseEntity.status(HttpStatus.OK).body(dto);
+        } else {
+            final ApiExceptionResponse response = new ApiExceptionResponse("User not found!", HttpStatus.BAD_REQUEST, LocalDateTime.now());
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
+        }
+    }
+
+    @GetMapping("/getById/{id}")
+    public ResponseEntity<?> getUserByUserId(@PathVariable Long id) {
+        User user = userService.findById(id);
+        if (user != null) {
+
+            UserDto dto = new UserDto();
+            dto.setId(user.getId());
+            dto.setName(user.getName());
+            dto.setDateOfBirth(user.getDateOfBirth());
+            dto.setEmail(user.getEmail());
+            dto.setPhone(user.getPhone());
+            dto.setUsername(user.getUsername());
+            dto.setUserRole(user.getUserRole().name());
+            dto.setAddress(user.getAddress());
 
             return ResponseEntity.status(HttpStatus.OK).body(dto);
         } else {
@@ -163,5 +186,4 @@ public class UserController {
         final ApiExceptionResponse response = new ApiExceptionResponse("Not Successful", HttpStatus.BAD_REQUEST, LocalDateTime.now());
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
     }
-
 }
